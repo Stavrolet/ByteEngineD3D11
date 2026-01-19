@@ -1,4 +1,4 @@
-# Prerequisites
+﻿# Prerequisites
 *.d
 
 # Compiled Object files
@@ -39,3 +39,11 @@
 
 # debug information files
 *.dwo
+
+packages.config
+.cso
+
+.vs/
+x64/
+x86/
+packages/
