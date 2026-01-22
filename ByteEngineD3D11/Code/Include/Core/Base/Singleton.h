@@ -2,7 +2,7 @@
 
 namespace ByteEngine
 {
-    template<typename T>
+    template <typename T>
     class Singleton
     {
         friend class Application;

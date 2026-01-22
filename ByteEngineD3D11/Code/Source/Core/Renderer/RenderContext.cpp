@@ -5,15 +5,15 @@
 #endif
 #include <Windows.h>
 
-#include "RenderManager.h"
-#include "TypesAliases/StdVectorTypesAliases.h"
-#include "Window.h"
+#include "Core/Base/Window.h"
+#include "Core/Renderer/RenderContext.h"
+#include "Collections/Vector.h"
+#include "Utilities/BitFlagsHelper.h"
 #include "DebugLogHelper.h"
-#include "EnumFlagsHelpers.h"
 
 using namespace ByteEngine;
 
-RenderManager::~RenderManager()
+RenderingContext::~RenderingContext()
 {
     Cleanup();
 
@@ -24,7 +24,7 @@ RenderManager::~RenderManager()
 #endif
 }
 
-void RenderManager::Initialize(Window* targetWindow)
+void RenderingContext::Initialize(Window* targetWindow)
 {
     this->targetWindow = targetWindow;
     int32 attempts = 0;
@@ -46,7 +46,7 @@ void RenderManager::Initialize(Window* targetWindow)
     }
 }
 
-void RenderManager::CreateDeviceAndContext()
+void RenderingContext::CreateDeviceAndContext()
 {
     ComPtr<ID3D11Device> baseDevice;
     ComPtr<ID3D11DeviceContext> baseDeviceContext;
@@ -82,7 +82,7 @@ void RenderManager::CreateDeviceAndContext()
         DebugHelper::LogCriticalError("Failed to start the graphics system.\nCheck if your GPU supports DirectX 11.1 or if your GPU driver is working properly.\n", hResult);
 }
 
-void RenderManager::CreateDebugLayer()
+void RenderingContext::CreateDebugLayer()
 {
     ComPtr<ID3D11Debug> debug = nullptr;
     HRESULT hResult = device->QueryInterface(__uuidof(ID3D11Debug), debug.put_void());
@@ -104,7 +104,7 @@ void RenderManager::CreateDebugLayer()
     infoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
 }
 
-void RenderManager::CreateSwapChain()
+void RenderingContext::CreateSwapChain()
 {
     ComPtr<IDXGIDevice1> dxgiDevice;
     HRESULT hResult = device->QueryInterface(__uuidof(IDXGIDevice1), dxgiDevice.put_void());
@@ -240,7 +240,7 @@ void RenderManager::CreateSwapChain()
     }
 }
 
-bool RenderManager::CreateRenderTargetAndDepthStencil()
+bool RenderingContext::CreateRenderTargetAndDepthStencil()
 {
     ComPtr<ID3D11Texture2D> frameBuffer;
     HRESULT hResult = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), frameBuffer.put_void());
@@ -291,7 +291,7 @@ bool RenderManager::CreateRenderTargetAndDepthStencil()
     return true;
 }
 
-void RenderManager::OnUpdate()
+void RenderingContext::OnUpdate()
 {
     if (targetWindow->GetWindowMode() == WindowMode::MINIMIZED)
         return;
@@ -319,9 +319,9 @@ void RenderManager::OnUpdate()
     }
 }
 
-void RenderManager::OnResize(WindowEvents windowEvents)
+void RenderingContext::OnResize(WindowEvents windowEvents)
 {
-    if (HasFlags(windowEvents, WindowEvents::PRINT_SWAP_CHAIN_FULLSCREEN_STATE))
+    if (HasFlags(windowEvents, WindowEvents::PRINT_SWAP_CHAIN_FULLSCREEN_STATE)) // this is a temporary solution
     {
         BOOL previousSwapChainFullscreenState;
         swapChain->GetFullscreenState(&previousSwapChainFullscreenState, nullptr);
@@ -339,7 +339,7 @@ void RenderManager::OnResize(WindowEvents windowEvents)
     ResizeSwapchain();
 }
 
-void RenderManager::OnWindowModeChanged(WindowEvents windowEvents)
+void RenderingContext::OnWindowModeChanged(WindowEvents windowEvents)
 {
     if (!HasFlags(windowEvents, WindowEvents::WINDOW_MODE_CHANGED))
         return;
@@ -368,7 +368,7 @@ void RenderManager::OnWindowModeChanged(WindowEvents windowEvents)
     ResizeSwapchain();
 }
 
-void RenderManager::ResizeSwapchain()
+void RenderingContext::ResizeSwapchain()
 {
     renderTargetView.reset();
     depthStencilView.reset();
@@ -397,7 +397,7 @@ void RenderManager::ResizeSwapchain()
         Reinitialize();
 }
 
-void RenderManager::SetSwapChainFullscreenState(bool fullscreen)
+void RenderingContext::SetSwapChainFullscreenState(bool fullscreen)
 { 
     HRESULT hResult = swapChain->SetFullscreenState(fullscreen, nullptr);
 
@@ -416,7 +416,7 @@ void RenderManager::SetSwapChainFullscreenState(bool fullscreen)
     }
 }
 
-void RenderManager::Cleanup()
+void RenderingContext::Cleanup()
 {
     device.reset();
     deviceContext.reset();

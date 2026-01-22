@@ -1,10 +1,9 @@
 ﻿#pragma once
 
-#include "TypesAliases/PrimitiveTypesAliases.h"
-#include "TypesAliases/StdStringViewTypeAliases.h"
-#include "TypesAliases/StdStringTypesAliases.h"
-#include "WindowEvents.h"
-#include "WindowMode.h"
+#include "Primitives.h"
+#include "Collections/StringView.h"
+#include "Core/Base/WindowEvents.h"
+#include "Core/Base/WindowMode.h"
 
 struct HWND__;
 using HWND = HWND__*;

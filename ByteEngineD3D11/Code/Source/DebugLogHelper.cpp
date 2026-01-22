@@ -2,8 +2,8 @@
 #undef NOMB
 #undef NOUSER
 
-#include "TypesAliases/PrimitiveTypesAliases.h"
-#include "TypesAliases/StdStringTypesAliases.h"
+#include "Primitives.h"
+#include "Collections/String.h"
 #include "DebugLogHelper.h"
 
 #include <filesystem>

@@ -5,10 +5,10 @@
 #include <Windows.h>
 #include <cmath>
 
-#include "Window.h"
+#include "Core/Base/Window.h"
 #include "DebugLogHelper.h"
-#include "EnumFlagsHelpers.h"
-#include "Application.h"
+#include "Utilities/BitFlagsHelper.h"
+#include "Core/Base/Application.h"
 #include "Resource.h"
 
 using namespace ByteEngine;
@@ -203,7 +203,7 @@ LRESULT Window::StaticWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         CREATESTRUCT* createStruct = reinterpret_cast<CREATESTRUCT*>(lParam);
         window = reinterpret_cast<Window*>(createStruct->lpCreateParams);
         SetLastError(0);
-
+        
         if (SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window)) == 0 && GetLastError() != 0)
         {
             DebugHelper::LogDebugError(GetLastError());
@@ -302,7 +302,7 @@ LRESULT Window::WndProc(UINT msg, WPARAM wParam, LPARAM lParam)
             SetWindowMode(WindowMode::BORDERLESS_FULLSCREEN);
         else if (wParam == '4')
             SetWindowMode(WindowMode::EXCLUSIVE_FULLSCREEN);
-        else if (wParam == 'P')
+        else if (wParam == 'P') // this is a temporary solution
             events |= WindowEvents::PRINT_SWAP_CHAIN_FULLSCREEN_STATE;
         return 0;
     }

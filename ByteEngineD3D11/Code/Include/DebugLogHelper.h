@@ -4,8 +4,8 @@
 #include <format>
 #include <type_traits>
 
-#include "TypesAliases/PrimitiveTypesAliases.h"
-#include "TypesAliases/StdStringViewTypeAliases.h"
+#include "Primitives.h"
+#include "Collections/StringView.h"
 
 namespace ByteEngine::DebugHelper
 {

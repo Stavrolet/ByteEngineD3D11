@@ -1,10 +1,10 @@
 ﻿#include <d3d11_1.h>
 #include <Windows.h>
 
-#include "Application.h"
-#include "RenderManager.h"
-#include "Window.h"
-#include "EnumFlagsHelpers.h"
+#include "Core/Base/Application.h"
+#include "Core/Renderer/RenderContext.h"
+#include "Core/Base/Window.h"
+#include "Utilities/BitFlagsHelper.h"
 #include "DebugLogHelper.h"
 
 using namespace ByteEngine;
@@ -16,9 +16,9 @@ int32 Application::Run()
     Window gameWindow;
     gameWindow.Initialize(L"ByteEngine D3D11 Application");
    
-    RenderManager renderManager;
+    RenderingContext renderManager;
     renderManager.Initialize(&gameWindow);
-    RenderManager::SetInstance(&renderManager);
+    RenderingContext::SetInstance(&renderManager);
 
     while (isRunning)
     {

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "Base/Singleton.h"
-#include "TypesAliases/PrimitiveTypesAliases.h"
+#include "Core/Base/Singleton.h"
+#include "Primitives.h"
 
 struct HINSTANCE__;
 using HINSTANCE = HINSTANCE__*;

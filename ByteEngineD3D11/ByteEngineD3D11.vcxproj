@@ -161,15 +161,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Code\Include\Application.h" />
+    <ClInclude Include="Code\Include\Core\Base\Application.h" />
     <ClInclude Include="Code\Include\DebugLogHelper.h" />
-    <ClInclude Include="Code\Include\TypesAliases\ComTypesAlisases.h" />
-    <ClInclude Include="Code\Include\TypesAliases\PrimitiveTypesAliases.h" />
-    <ClInclude Include="Code\Include\TypesAliases\StdFunctionalTypesAliases.h" />
-    <ClInclude Include="Code\Include\TypesAliases\StdStringTypesAliases.h" />
-    <ClInclude Include="Code\Include\TypesAliases\StdStringViewTypeAliases.h" />
-    <ClInclude Include="Code\Include\TypesAliases\StdVectorTypesAliases.h" />
-    <ClInclude Include="Code\Include\Window.h" />
+    <ClInclude Include="Code\Include\Primitives.h" />
+    <ClInclude Include="Code\Include\Collections\String.h" />
+    <ClInclude Include="Code\Include\Collections\StringView.h" />
+    <ClInclude Include="Code\Include\Collections\Vector.h" />
+    <ClInclude Include="Code\Include\Core\Base\Window.h" />
     <ClInclude Include="Code\Include\WinApiExcludingDefs\LeanAndMean.h" />
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoAll.h" />
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoInput.h" />
@@ -178,21 +176,21 @@
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoLocalization.h" />
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoSys.h" />
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoUiAndWindows.h" />
-    <ClInclude Include="Code\Include\RenderManager.h" />
-    <ClInclude Include="Code\Include\EnumFlagsHelpers.h" />
-    <ClInclude Include="Code\Include\WindowEvents.h" />
-    <ClInclude Include="Code\Include\WindowMode.h" />
+    <ClInclude Include="Code\Include\Core\Renderer\RenderContext.h" />
+    <ClInclude Include="Code\Include\Utilities\BitFlagsHelper.h" />
+    <ClInclude Include="Code\Include\Core\Base\WindowEvents.h" />
+    <ClInclude Include="Code\Include\Core\Base\WindowMode.h" />
     <ClInclude Include="Resources\resource.h" />
-    <ClInclude Include="Code\Include\Base\Singleton.h" />
+    <ClInclude Include="Code\Include\Core\Base\Singleton.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Code\Include\GameTime.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\Source\Application.cpp" />
+    <ClCompile Include="Code\Source\Core\Base\Application.cpp" />
     <ClCompile Include="Code\Source\DebugLogHelper.cpp" />
     <ClCompile Include="Code\Source\Main.cpp" />
-    <ClCompile Include="Code\Source\Window.cpp" />
-    <ClCompile Include="Code\Source\RenderManager.cpp" />
+    <ClCompile Include="Code\Source\Core\Base\Window.cpp" />
+    <ClCompile Include="Code\Source\Core\Renderer\RenderContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\ByteEngineD3D11.rc" />
@@ -205,21 +203,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Code\Source\Shaders\PixelShader.hlsl">
+    <FxCompile Include="Code\Shaders\PixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="Code\Source\Shaders\CubeVertexShader.hlsl">
+    <FxCompile Include="Code\Shaders\CubeVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="Code\Source\Shaders\PlaneVertexShader.hlsl">
+    <FxCompile Include="Code\Shaders\PlaneVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

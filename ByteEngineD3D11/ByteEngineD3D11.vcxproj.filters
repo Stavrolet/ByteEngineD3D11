@@ -27,10 +27,10 @@
     <ClInclude Include="Code\Include\GameTime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\Window.h">
+    <ClInclude Include="Code\Include\Core\Base\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\TypesAliases\PrimitiveTypesAliases.h">
+    <ClInclude Include="Code\Include\Primitives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoGdi.h">
@@ -57,40 +57,34 @@
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoAll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\RenderManager.h">
+    <ClInclude Include="Code\Include\Core\Renderer\RenderContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\TypesAliases\StdStringTypesAliases.h">
+    <ClInclude Include="Code\Include\Collections\String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\TypesAliases\StdStringViewTypeAliases.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Include\TypesAliases\StdFunctionalTypesAliases.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Include\TypesAliases\ComTypesAlisases.h">
+    <ClInclude Include="Code\Include\Collections\StringView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\Include\DebugLogHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\TypesAliases\StdVectorTypesAliases.h">
+    <ClInclude Include="Code\Include\Collections\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\Application.h">
+    <ClInclude Include="Code\Include\Core\Base\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\Base\Singleton.h">
+    <ClInclude Include="Code\Include\Core\Base\Singleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\EnumFlagsHelpers.h">
+    <ClInclude Include="Code\Include\Utilities\BitFlagsHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\WindowEvents.h">
+    <ClInclude Include="Code\Include\Core\Base\WindowEvents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\WindowMode.h">
+    <ClInclude Include="Code\Include\Core\Base\WindowMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -98,16 +92,16 @@
     <ClCompile Include="Code\Source\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Source\Window.cpp">
+    <ClCompile Include="Code\Source\Core\Base\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Code\Source\DebugLogHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Source\RenderManager.cpp">
+    <ClCompile Include="Code\Source\Core\Renderer\RenderContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Source\Application.cpp">
+    <ClCompile Include="Code\Source\Core\Base\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,13 +122,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Code\Source\Shaders\PixelShader.hlsl">
+    <FxCompile Include="Code\Shaders\PixelShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Code\Source\Shaders\CubeVertexShader.hlsl">
+    <FxCompile Include="Code\Shaders\CubeVertexShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Code\Source\Shaders\PlaneVertexShader.hlsl">
+    <FxCompile Include="Code\Shaders\PlaneVertexShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

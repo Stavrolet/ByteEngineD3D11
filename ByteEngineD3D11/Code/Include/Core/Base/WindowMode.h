@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "TypesAliases/PrimitiveTypesAliases.h"
+#include "Primitives.h"
 
 namespace ByteEngine
 {

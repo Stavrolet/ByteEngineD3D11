@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "TypesAliases/PrimitiveTypesAliases.h"
 #include <type_traits>
+#include "Primitives.h"
 
 namespace ByteEngine
 {

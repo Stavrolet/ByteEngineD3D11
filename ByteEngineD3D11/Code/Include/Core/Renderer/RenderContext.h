@@ -1,10 +1,9 @@
 ﻿#pragma once
 
-#include "Base/Singleton.h"
-#include "TypesAliases/ComTypesAlisases.h"
-#include "WindowEvents.h"
+#include <wil/com.h>
 
-using namespace wil;
+#include "Core/Base/Singleton.h"
+#include "Core/Base/WindowEvents.h"
 
 struct ID3D11Device1;
 struct ID3D11DeviceContext1;
@@ -14,9 +13,12 @@ struct ID3D11DepthStencilView;
 
 namespace ByteEngine
 {
+    template <typename T>
+    using ComPtr = ::wil::com_ptr_nothrow<T>;
+
     class Window;
 
-    class RenderManager : public Singleton<RenderManager>
+    class RenderingContext : public Singleton<RenderingContext>
     {
         friend class Application;
 
@@ -31,8 +33,8 @@ namespace ByteEngine
         Window* targetWindow = nullptr;
 
     public:
-        RenderManager() = default;
-        virtual ~RenderManager() override; 
+        RenderingContext() = default;
+        virtual ~RenderingContext() override; 
 
         void Initialize(Window* targetWindow);
 

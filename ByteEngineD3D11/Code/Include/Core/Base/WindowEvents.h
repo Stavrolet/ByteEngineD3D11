@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "TypesAliases/PrimitiveTypesAliases.h"
+#include "Primitives.h"
 
 namespace ByteEngine
 {
@@ -12,6 +12,6 @@ namespace ByteEngine
         LOST_FOCUS = 0x4,
         GAINED_FOCUS = 0x8,
         CLOSE = 0x10,
-        PRINT_SWAP_CHAIN_FULLSCREEN_STATE = 0x20
+        PRINT_SWAP_CHAIN_FULLSCREEN_STATE = 0x20 // this is a temporary solution
     };
 }
