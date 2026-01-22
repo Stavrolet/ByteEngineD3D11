@@ -44,9 +44,10 @@ namespace ByteEngine
 
         void OnUpdate();
         void OnResize(WindowEvents resizeEvent);
-        void OnFullScreenStateChanged(WindowEvents fullScreenStateChanged);
+        void OnWindowModeChanged(WindowEvents fullScreenStateChanged);
 
         void ResizeSwapchain();
+        void SetSwapChainFullscreenState(bool fullscreen);
         void Reinitialize()
         {
             Cleanup();

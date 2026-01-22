@@ -8,8 +8,11 @@ namespace ByteEngine
     template<typename T>
     concept EnumType = std::is_enum_v<T>;
 
+    template<typename T>
+    concept SuitableForBitOps = (std::is_enum_v<T> || std::integral<T>) && !std::is_same_v<T, bool>;
+
     template<EnumType T>
-    static constexpr std::underlying_type_t<T> ToUnderlying(T value)
+    constexpr std::underlying_type_t<T> ToUnderlying(T value)
     {
         return static_cast<std::underlying_type_t<T>>(value);
     }
@@ -46,29 +49,25 @@ namespace ByteEngine
         return static_cast<T>(~ToUnderlying<T>(a));
     }
 
-    template<typename T> 
-        requires std::is_enum_v<T> || std::integral<T>
+    template<SuitableForBitOps T>
     constexpr bool HasFlags(T value, T flags)
     {
         return (value & flags) == flags;
     }
 
-    template<typename T, typename U>
-        requires ((std::is_enum_v<T> || std::integral<T>) && !std::is_same_v<T, bool>) && ((std::is_enum_v<U> || std::integral<U>) && !std::is_same_v<U, bool>)
+    template<SuitableForBitOps T, SuitableForBitOps U>
     constexpr bool HasAllFlags(T value, U flags)
     {
         return (value & flags) == flags;
     }
 
-    template<typename T> 
-        requires std::is_enum_v<T> || std::integral<T>
+    template<SuitableForBitOps T>
     constexpr bool HasOneFlag(T value, T flags)
     {
         return (value & flags) != 0;
     }
 
-    template<typename T, typename U>
-        requires ((std::is_enum_v<T> || std::integral<T>) && !std::is_same_v<T, bool>) && ((std::is_enum_v<U> || std::integral<U>) && !std::is_same_v<U, bool>)
+    template<SuitableForBitOps T, SuitableForBitOps U>
     constexpr bool HasOneFlag(T value, U flags)
     {
         return (value & flags) != 0;

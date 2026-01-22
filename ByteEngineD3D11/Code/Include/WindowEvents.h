@@ -8,9 +8,10 @@ namespace ByteEngine
     {
         NONE = 0x0,
         RESIZE = 0x1,
-        FULLSCREEN_STATE_CHANGED = 0x2,
+        WINDOW_MODE_CHANGED = 0x2,
         LOST_FOCUS = 0x4,
         GAINED_FOCUS = 0x8,
-        CLOSE = 0x10
+        CLOSE = 0x10,
+        PRINT_SWAP_CHAIN_FULLSCREEN_STATE = 0x20
     };
 }

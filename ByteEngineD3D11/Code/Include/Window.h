@@ -4,6 +4,7 @@
 #include "TypesAliases/StdStringViewTypeAliases.h"
 #include "TypesAliases/StdStringTypesAliases.h"
 #include "WindowEvents.h"
+#include "WindowMode.h"
 
 struct HWND__;
 using HWND = HWND__*;
@@ -31,32 +32,31 @@ namespace ByteEngine
 
         int32 width = 0;
         int32 height = 0;
-        bool isFullscreen = false;
-        bool isMinimized = false;
+
+        bool initialized = false;
+
+        WindowMode mode = WindowMode::BORDERLESS_FULLSCREEN;
+        WindowMode previousMode = WindowMode::BORDERLESS_FULLSCREEN;
 
         WindowEvents events = WindowEvents::NONE;
-
-        WINDOWPLACEMENT previousWindowPlacement = { };
 
     public:
         ~Window() { Close(); }
 
-        void Initialize(StringWView windowName, bool fullScreen = true, int32 width = 0, int32 height = 0, Window* parent = nullptr);
-        void SetFullscreenState(bool fullscreen);
+        void Initialize(StringWView windowName, WindowMode initialMode = WindowMode::BORDERLESS_FULLSCREEN, int32 width = 0, int32 height = 0, Window* parent = nullptr);
+        void SetWindowMode(WindowMode modeToSet);
 
         void Close();
 
         HWND GetHwnd() const { return hwnd; }
         int32 GetWidth() const { return width; }
         int32 GetHeight() const { return height; }
-        bool IsFullscreen() const { return isFullscreen; }
-        bool IsMinimized() const { return isMinimized; }
+        WindowMode GetWindowMode() const { return mode; }
 
     private:
         static LRESULT __stdcall StaticWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
         LRESULT __stdcall WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
         WindowEvents PollEvents();
-        void SetPreviousPlacement() const;
     };
 }

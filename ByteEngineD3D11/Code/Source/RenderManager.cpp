@@ -204,7 +204,7 @@ void RenderManager::CreateSwapChain()
 
     dxgiFactory->MakeWindowAssociation(targetWindow->GetHwnd(), DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_WINDOW_CHANGES);
 
-    if (targetWindow->IsFullscreen())
+    if (targetWindow->GetWindowMode() == WindowMode::EXCLUSIVE_FULLSCREEN)
     {
         hResult = swapChain->SetFullscreenState(true, nullptr);
         DebugHelper::LogDebugMessage("FullScreen state changed.");
@@ -218,7 +218,7 @@ void RenderManager::CreateSwapChain()
             else if (hResult != DXGI_ERROR_NOT_CURRENTLY_AVAILABLE)
             {
                 MessageBox(targetWindow->GetHwnd(), L"Application failed to enter fullscreen mode. Try again later.", L"Error", MB_OK | MB_ICONERROR);
-                targetWindow->SetFullscreenState(false);
+                targetWindow->SetWindowMode(WindowMode::MAXIMIZED);
                 DebugHelper::LogDebugMessage("FullScreen state changed.");
             }
         }
@@ -293,7 +293,7 @@ bool RenderManager::CreateRenderTargetAndDepthStencil()
 
 void RenderManager::OnUpdate()
 {
-    if (targetWindow->IsMinimized())
+    if (targetWindow->GetWindowMode() == WindowMode::MINIMIZED)
         return;
 
     constexpr float backgroundColor[] = { 0.0f, 0.6f, 0.1f, 1.0f };
@@ -321,43 +321,48 @@ void RenderManager::OnUpdate()
 
 void RenderManager::OnResize(WindowEvents windowEvents)
 {
+    if (HasFlags(windowEvents, WindowEvents::PRINT_SWAP_CHAIN_FULLSCREEN_STATE))
+    {
+        BOOL previousSwapChainFullscreenState;
+        swapChain->GetFullscreenState(&previousSwapChainFullscreenState, nullptr);
+
+        DebugHelper::LogDebugMessage("SwapChain Fullscreen state = {}", previousSwapChainFullscreenState);
+    }
+
     if (!HasFlags(windowEvents, WindowEvents::RESIZE))
         return;
 
-    if (targetWindow->IsMinimized())
+    if (targetWindow->GetWindowMode() == WindowMode::MINIMIZED)
         return;
 
     deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
     ResizeSwapchain();
 }
 
-void RenderManager::OnFullScreenStateChanged(WindowEvents windowEvents)
+void RenderManager::OnWindowModeChanged(WindowEvents windowEvents)
 {
-    if (!HasFlags(windowEvents, WindowEvents::FULLSCREEN_STATE_CHANGED))
+    if (!HasFlags(windowEvents, WindowEvents::WINDOW_MODE_CHANGED))
         return;
 
-    DebugHelper::LogDebugMessage("FullScreen state changed.");
+    DebugHelper::LogDebugMessage("Window mode changed.");
 
-    BOOL previousState;
-    swapChain->GetFullscreenState(&previousState, nullptr);
-
-    if (static_cast<bool>(previousState) == targetWindow->IsFullscreen())
-        return;
-
-    HRESULT hResult = swapChain->SetFullscreenState(targetWindow->IsFullscreen(), nullptr);
-
-    if (FAILED(hResult))
+    if (targetWindow->GetWindowMode() == WindowMode::EXCLUSIVE_FULLSCREEN)
     {
-        if (hResult == DXGI_STATUS_MODE_CHANGE_IN_PROGRESS)
+        BOOL previousSwapChainFullscreenState;
+        swapChain->GetFullscreenState(&previousSwapChainFullscreenState, nullptr);
+
+        if (!static_cast<bool>(previousSwapChainFullscreenState))
         {
-            Sleep(70);
+            SetSwapChainFullscreenState(true);
         }
-        else if (hResult != DXGI_ERROR_NOT_CURRENTLY_AVAILABLE)
-        {
-            DebugHelper::LogDebugError(hResult);
-            MessageBox(targetWindow->GetHwnd(), L"Application failed to enter fullscreen mode. Try again later.", L"Error", MB_OK | MB_ICONERROR);
-            targetWindow->SetFullscreenState(previousState);
-        }
+    }
+    else
+    {
+        BOOL previousSwapChainFullscreenState;
+        swapChain->GetFullscreenState(&previousSwapChainFullscreenState, nullptr);
+
+        if (static_cast<bool>(previousSwapChainFullscreenState))
+            SetSwapChainFullscreenState(false);
     }
 
     ResizeSwapchain();
@@ -390,6 +395,25 @@ void RenderManager::ResizeSwapchain()
 
     if (!CreateRenderTargetAndDepthStencil())
         Reinitialize();
+}
+
+void RenderManager::SetSwapChainFullscreenState(bool fullscreen)
+{ 
+    HRESULT hResult = swapChain->SetFullscreenState(fullscreen, nullptr);
+
+    if (FAILED(hResult))
+    {
+        if (hResult == DXGI_STATUS_MODE_CHANGE_IN_PROGRESS)
+        {
+            Sleep(70);
+        }
+        else if (hResult != DXGI_ERROR_NOT_CURRENTLY_AVAILABLE)
+        {
+            DebugHelper::LogDebugError(hResult);
+            MessageBox(targetWindow->GetHwnd(), L"Application failed to enter fullscreen mode. Try again later.", L"Error", MB_OK | MB_ICONERROR);
+            targetWindow->SetWindowMode(WindowMode::MAXIMIZED);
+        }
+    }
 }
 
 void RenderManager::Cleanup()

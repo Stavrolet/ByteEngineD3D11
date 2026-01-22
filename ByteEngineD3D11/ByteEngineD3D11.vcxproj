@@ -181,6 +181,7 @@
     <ClInclude Include="Code\Include\RenderManager.h" />
     <ClInclude Include="Code\Include\EnumFlagsHelpers.h" />
     <ClInclude Include="Code\Include\WindowEvents.h" />
+    <ClInclude Include="Code\Include\WindowMode.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Code\Include\Base\Singleton.h" />
     <ClInclude Include="targetver.h" />

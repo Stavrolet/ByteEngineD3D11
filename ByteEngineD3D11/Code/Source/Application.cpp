@@ -27,10 +27,8 @@ int32 Application::Run()
         if (HasFlags(events, WindowEvents::CLOSE))
             break;
 
-        renderManager.OnFullScreenStateChanged(events);
+        renderManager.OnWindowModeChanged(events);
         renderManager.OnResize(events);
-
-        gameWindow.SetPreviousPlacement();
 
         renderManager.OnUpdate();
     }

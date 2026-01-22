@@ -13,9 +13,9 @@
 
 using namespace ByteEngine;
 
-void Window::Initialize(StringWView windowName, bool fullScreen, int32 width, int32 height, Window* parent)
+void Window::Initialize(StringWView windowName, WindowMode initialMode, int32 width, int32 height, Window* parent)
 {
-    isFullscreen = fullScreen;
+    mode = initialMode;
 
     HINSTANCE hInstance = GetModuleHandle(nullptr);
     if (hInstance == nullptr)
@@ -40,14 +40,30 @@ void Window::Initialize(StringWView windowName, bool fullScreen, int32 width, in
         return;
     }
 
+    DWORD initialStyle = 0;
+    initialStyle |= initialMode == WindowMode::WINDOWED || initialMode == WindowMode::MAXIMIZED ? WS_OVERLAPPEDWINDOW : (WS_POPUP | WS_VISIBLE);
+
+    if (initialMode == WindowMode::BORDERLESS_FULLSCREEN || initialMode == WindowMode::EXCLUSIVE_FULLSCREEN)
+    {
+        width = GetSystemMetrics(SM_CXSCREEN);
+        height = GetSystemMetrics(SM_CYSCREEN);
+    }
+
+    int32 initialPosX = 0;
+    int32 initialPosY = 0;
+
+    if (initialMode == WindowMode::WINDOWED || initialMode == WindowMode::MAXIMIZED)
+    {
+        initialPosX = CW_USEDEFAULT;
+        initialPosY = CW_USEDEFAULT;
+    }
+
     hwnd = CreateWindowEx(
         WS_EX_APPWINDOW,
         reinterpret_cast<LPCWSTR>(windowName.data()),
         reinterpret_cast<LPCWSTR>(windowName.data()),
-        fullScreen ? WS_POPUP | WS_VISIBLE : WS_OVERLAPPEDWINDOW,
-        fullScreen ? 0 : CW_USEDEFAULT, fullScreen ? 0 : CW_USEDEFAULT,
-        fullScreen ? GetSystemMetrics(SM_CXSCREEN) : width,
-        fullScreen ? GetSystemMetrics(SM_CYSCREEN) : height,
+        initialStyle,
+        initialPosX, initialPosY, width, height,
         parent != nullptr ? parent->GetHwnd() : nullptr,
         nullptr, hInstance, this
     );
@@ -58,68 +74,95 @@ void Window::Initialize(StringWView windowName, bool fullScreen, int32 width, in
         return;
     }
 
-    GetWindowPlacement(hwnd, &previousWindowPlacement);
-    ShowWindow(hwnd, SW_SHOWMAXIMIZED);
+    ShowWindow(hwnd, SW_MAXIMIZE);
 
     this->width = width;
     this->height = height;
+
+    initialized = true;
 }
 
-void Window::SetFullscreenState(bool fullscreen)
+void Window::SetWindowMode(WindowMode modeToSet)
 {
-    DebugHelper::LogDebugMessage("SetFullScreenState request. Requested state: {}, current state: {}", fullscreen, isFullscreen);
+    uint8 a = static_cast<uint8>(mode);
+    uint8 b = static_cast<uint8>(modeToSet);
 
-    if (isFullscreen == fullscreen)
+    DebugHelper::LogDebugMessage("SetWindowMode called. Current mode = {}, mode to set = {}", a, b);
+
+    if (mode == modeToSet)
         return;
 
-    isFullscreen = fullscreen;
-
-    if (isFullscreen)
+    switch (modeToSet)
     {
-        MONITORINFO monInfo = { };
-        monInfo.cbSize = sizeof(MONITORINFO);
-
-        if (GetWindowPlacement(hwnd, &previousWindowPlacement) == 0)
+    case WindowMode::WINDOWED:
+    case WindowMode::MAXIMIZED:
+        if (mode == WindowMode::BORDERLESS_FULLSCREEN || mode == WindowMode::EXCLUSIVE_FULLSCREEN)
         {
-            DebugHelper::LogDebugError(GetLastError());
-            return;
+            DWORD style = static_cast<DWORD>(GetWindowLongPtr(hwnd, GWL_STYLE));
+
+            style &= ~(WS_POPUP | WS_VISIBLE);
+            style |= WS_OVERLAPPEDWINDOW;
+
+            if (SetWindowLongPtr(hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW) == 0)
+            {
+                DebugHelper::LogDebugError(GetLastError());
+                return;
+            }
         }
 
-        if (GetMonitorInfo(MonitorFromWindow(hwnd, MONITOR_DEFAULTTOPRIMARY), &monInfo) == 0)
+        ShowWindow(hwnd, modeToSet == WindowMode::WINDOWED ? SW_RESTORE : SW_MAXIMIZE);
+        break;
+    case WindowMode::BORDERLESS_FULLSCREEN:
+    case WindowMode::EXCLUSIVE_FULLSCREEN:
+        if (mode == WindowMode::WINDOWED || mode == WindowMode::MAXIMIZED)
         {
-            DebugHelper::LogDebugError(GetLastError());
+            MONITORINFO monInfo = { };
+            monInfo.cbSize = sizeof(MONITORINFO);
 
-            monInfo.rcMonitor.right = GetSystemMetrics(SM_CXSCREEN);
-            monInfo.rcMonitor.left = 0;
-            monInfo.rcMonitor.bottom = GetSystemMetrics(SM_CYSCREEN);
-            monInfo.rcMonitor.top = 0;
-        }
+            int32 width = 0;
+            int32 height = 0;
+            int32 posX = 0;
+            int32 posY = 0;
 
-        if (SetWindowLongPtr(hwnd, GWL_STYLE, WS_POPUP) == 0)
-        {
-            DebugHelper::LogDebugError(GetLastError());
-            return;
-        }
+            if (GetMonitorInfo(MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST), &monInfo) != 0)
+            {
+                width = monInfo.rcMonitor.right - monInfo.rcMonitor.left;
+                height = monInfo.rcMonitor.bottom - monInfo.rcMonitor.top;
+                posX = monInfo.rcMonitor.left;
+                posY = monInfo.rcMonitor.top;
+            }
+            else
+            {
+                DebugHelper::LogDebugError(GetLastError());
+                width = GetSystemMetrics(SM_CXSCREEN);
+                height = GetSystemMetrics(SM_CYSCREEN);
+            }
 
-        if (SetWindowPos(hwnd, nullptr, monInfo.rcMonitor.left, monInfo.rcMonitor.top, monInfo.rcMonitor.right - monInfo.rcMonitor.left, monInfo.rcMonitor.bottom - monInfo.rcMonitor.top, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW) == 0)
-        {
-            DebugHelper::LogDebugError(GetLastError());
-            return;
+            DWORD style = static_cast<DWORD>(GetWindowLongPtr(hwnd, GWL_STYLE));
+
+            style &= ~WS_OVERLAPPEDWINDOW;
+            style |= WS_POPUP;
+
+            if (SetWindowLongPtr(hwnd, GWL_STYLE, style) == 0)
+            {
+                DebugHelper::LogDebugError(GetLastError());
+                return;
+            }
+
+            if (SetWindowPos(hwnd, nullptr, posX, posY, width, height, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW) == 0)
+            {
+                DebugHelper::LogDebugError(GetLastError());
+                return;
+            }
         }
+        break;
+    case WindowMode::MINIMIZED:
+        ShowWindow(hwnd, SW_MINIMIZE);
+        break;
     }
-    else
-    {
-        if (SetWindowLongPtr(hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW) == 0)
-        {
-            DebugHelper::LogDebugError(GetLastError());
-            return;
-        }
 
-        if (SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED) == 0)
-            DebugHelper::LogDebugError(GetLastError());
-    }
-
-    events |= WindowEvents::FULLSCREEN_STATE_CHANGED;
+    mode = modeToSet;
+    events |= WindowEvents::WINDOW_MODE_CHANGED;
 }
 
 WindowEvents Window::PollEvents()
@@ -140,15 +183,6 @@ WindowEvents Window::PollEvents()
     }
 
     return events;
-}
-
-void Window::SetPreviousPlacement() const
-{ 
-    if (!isFullscreen && HasFlags(events, WindowEvents::FULLSCREEN_STATE_CHANGED))
-    {
-        if (SetWindowPlacement(hwnd, &previousWindowPlacement) == 0)
-            DebugHelper::LogDebugError(GetLastError());
-    }
 }
 
 void Window::Close()
@@ -189,7 +223,7 @@ LRESULT Window::StaticWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 #ifdef _DEBUG
     if (msg != WM_NCCREATE && msg != WM_NCCALCSIZE)
-        OutputDebugStringA(std::format("[WARNING] window is nullptr in StaticWndProc. Message: {}.", msg).c_str());
+        OutputDebugStringA(std::format("[WARNING] window is nullptr in StaticWndProc. Message = {}.", msg).c_str());
 #endif
 
     return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -199,57 +233,77 @@ LRESULT Window::WndProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
     {
-    case WM_KEYDOWN:
-        if (wParam == VK_ESCAPE)
-            Application::GetInstance().Quit(0);
-        else if (wParam == 'F')
-            SetFullscreenState(!isFullscreen);
-        return 0;
-    case WM_DISPLAYCHANGE:
-        InvalidateRect(hwnd, nullptr, true);
+    case WM_DESTROY:
+        hwnd = nullptr;
+        events |= WindowEvents::CLOSE;
+        PostQuitMessage(0);
         return 0;
     case WM_SIZE:
         width = LOWORD(lParam);
         height = HIWORD(lParam);
 
-        if (wParam == SIZE_MINIMIZED || wParam == SIZE_MAXHIDE)
-            isMinimized = true;
-        else if (wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED)
-            isMinimized = false;
-        
+        if (initialized) [[likely]]
+        {
+            if (wParam == SIZE_MINIMIZED)
+            {
+                previousMode = mode;
+                mode = WindowMode::MINIMIZED;
+            }
+            else if (wParam == SIZE_MAXIMIZED)
+            {
+                mode = WindowMode::MAXIMIZED;
+                DebugHelper::LogDebugMessage("WM_SIZE received. wParam = SIZE_MAXIMIZED");
+            }
+            else if (wParam == SIZE_RESTORED)
+            {
+                mode = WindowMode::WINDOWED;
+            }
+        }
+
         events |= WindowEvents::RESIZE;
         return 0;
     case WM_ACTIVATE:
-        if (LOWORD(wParam) == WA_INACTIVE && isFullscreen)
+        if (LOWORD(wParam) == WA_INACTIVE)
         {
-            DebugHelper::LogDebugMessage("Window gained focus");
+            DebugHelper::LogDebugMessage("Window lost focus");
 
             events &= ~WindowEvents::GAINED_FOCUS;
             events |= WindowEvents::LOST_FOCUS;
-            isMinimized = true;
-            ShowWindow(hwnd, SW_MINIMIZE);
+
+            if (mode == WindowMode::EXCLUSIVE_FULLSCREEN)
+                SetWindowMode(WindowMode::MINIMIZED);
         }
         else
         {
-            DebugHelper::LogDebugMessage("Window lost focus");
+            DebugHelper::LogDebugMessage("Window gained focus");
 
             events &= ~WindowEvents::LOST_FOCUS;
             events |= WindowEvents::GAINED_FOCUS;
 
-            if (isMinimized)
-                ShowWindow(hwnd, SW_MAXIMIZE);
-
-            isMinimized = false;
+            if (mode == WindowMode::MINIMIZED)
+                SetWindowMode(previousMode);
         }
 
         return 0;
     case WM_CLOSE:
         events |= WindowEvents::CLOSE;
         return 0;
-    case WM_DESTROY:
-        hwnd = nullptr;
-        events |= WindowEvents::CLOSE;
-        PostQuitMessage(0);
+    case WM_DISPLAYCHANGE:
+        InvalidateRect(hwnd, nullptr, true);
+        return 0;
+    case WM_KEYDOWN:
+        if (wParam == VK_ESCAPE)
+            Application::GetInstance().Quit(0);
+        else if (wParam == '1')
+            SetWindowMode(WindowMode::WINDOWED);
+        else if (wParam == '2')
+            SetWindowMode(WindowMode::MAXIMIZED);
+        else if (wParam == '3')
+            SetWindowMode(WindowMode::BORDERLESS_FULLSCREEN);
+        else if (wParam == '4')
+            SetWindowMode(WindowMode::EXCLUSIVE_FULLSCREEN);
+        else if (wParam == 'P')
+            events |= WindowEvents::PRINT_SWAP_CHAIN_FULLSCREEN_STATE;
         return 0;
     }
 
