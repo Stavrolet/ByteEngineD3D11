@@ -1,9 +1,11 @@
 ﻿#pragma once
 
+#include <string_view>
+#include <vector>
+
 #include "Primitives.h"
-#include "Collections/StringView.h"
-#include "Core/Base/WindowEvents.h"
 #include "Core/Base/WindowMode.h"
+#include "Core/Events/WindowEvents.h"
 
 struct HWND__;
 using HWND = HWND__*;
@@ -20,30 +22,34 @@ using LPARAM = long;
 #endif
 using UINT = unsigned int;
 
+#define WM_MODECHANGE (WM_APP + 1)
+
 namespace ByteEngine
 {
     class Window
     {
         friend class Application;
 
+    public:
+
     private:
         HWND hwnd = nullptr;
 
-        int32 width = 0;
-        int32 height = 0;
+        int16 width = 0;
+        int16 height = 0;
 
         bool initialized = false;
 
-        WindowMode mode = WindowMode::BORDERLESS_FULLSCREEN;
-        WindowMode previousMode = WindowMode::BORDERLESS_FULLSCREEN;
+        WindowMode mode = WindowMode::BorderlessFullscreen;
+        WindowMode previousMode = WindowMode::BorderlessFullscreen;
 
-        WindowEvents events = WindowEvents::NONE;
+        std::vector<Event> events;
 
     public:
         ~Window() { Close(); }
 
-        void Initialize(StringWView windowName, WindowMode initialMode = WindowMode::BORDERLESS_FULLSCREEN, int32 width = 0, int32 height = 0, Window* parent = nullptr);
-        void SetWindowMode(WindowMode modeToSet);
+        void Initialize(std::wstring_view windowName, WindowMode initialMode = WindowMode::BorderlessFullscreen, int16 width = 0, int16 height = 0, Window* parent = nullptr);
+        void SetWindowMode(WindowMode modeToSet) const;
 
         void Close();
 
@@ -56,6 +62,8 @@ namespace ByteEngine
         static LRESULT __stdcall StaticWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
         LRESULT __stdcall WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
-        WindowEvents PollEvents();
+        const std::vector<Event>& PollEvents();
+
+        void HandleWindowModeChangeMessage(WindowMode modeToSet);
     };
 }

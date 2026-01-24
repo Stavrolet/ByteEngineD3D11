@@ -3,7 +3,6 @@
 #include <wil/com.h>
 
 #include "Core/Base/Singleton.h"
-#include "Core/Base/WindowEvents.h"
 
 struct ID3D11Device1;
 struct ID3D11DeviceContext1;
@@ -13,8 +12,8 @@ struct ID3D11DepthStencilView;
 
 namespace ByteEngine
 {
-    template <typename T>
-    using ComPtr = ::wil::com_ptr_nothrow<T>;
+    struct WindowResizeEvent;
+    struct WindowModeChangeEvent;
 
     class Window;
 
@@ -23,12 +22,12 @@ namespace ByteEngine
         friend class Application;
 
     private:
-        ComPtr<ID3D11Device1> device;
-        ComPtr<ID3D11DeviceContext1> deviceContext;
+        wil::com_ptr_nothrow<ID3D11Device1> device;
+        wil::com_ptr_nothrow<ID3D11DeviceContext1> deviceContext;
 
-        ComPtr<IDXGISwapChain1> swapChain;
-        ComPtr<ID3D11RenderTargetView> renderTargetView;
-        ComPtr<ID3D11DepthStencilView> depthStencilView;
+        wil::com_ptr_nothrow<IDXGISwapChain1> swapChain;
+        wil::com_ptr_nothrow<ID3D11RenderTargetView> renderTargetView;
+        wil::com_ptr_nothrow<ID3D11DepthStencilView> depthStencilView;
 
         Window* targetWindow = nullptr;
 
@@ -45,16 +44,18 @@ namespace ByteEngine
         bool CreateRenderTargetAndDepthStencil();
 
         void OnUpdate();
-        void OnResize(WindowEvents resizeEvent);
-        void OnWindowModeChanged(WindowEvents fullScreenStateChanged);
+        void OnResize(const WindowResizeEvent* event);
+        void OnWindowModeChanged(const WindowModeChangeEvent* event);
 
         void ResizeSwapchain();
         void SetSwapChainFullscreenState(bool fullscreen);
+
         void Reinitialize()
         {
             Cleanup();
             Initialize(targetWindow);
         }
+
         void Cleanup();
     };
 }

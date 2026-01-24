@@ -162,11 +162,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Code\Include\Core\Base\Application.h" />
+    <ClInclude Include="Code\Include\Core\Events\WindowEvents.h" />
     <ClInclude Include="Code\Include\DebugLogHelper.h" />
     <ClInclude Include="Code\Include\Primitives.h" />
-    <ClInclude Include="Code\Include\Collections\String.h" />
-    <ClInclude Include="Code\Include\Collections\StringView.h" />
-    <ClInclude Include="Code\Include\Collections\Vector.h" />
     <ClInclude Include="Code\Include\Core\Base\Window.h" />
     <ClInclude Include="Code\Include\WinApiExcludingDefs\LeanAndMean.h" />
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoAll.h" />
@@ -178,7 +176,6 @@
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoUiAndWindows.h" />
     <ClInclude Include="Code\Include\Core\Renderer\RenderContext.h" />
     <ClInclude Include="Code\Include\Utilities\BitFlagsHelper.h" />
-    <ClInclude Include="Code\Include\Core\Base\WindowEvents.h" />
     <ClInclude Include="Code\Include\Core\Base\WindowMode.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Code\Include\Core\Base\Singleton.h" />

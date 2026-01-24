@@ -5,15 +5,15 @@
 #include <Windows.h>
 #include <cmath>
 
-#include "Core/Base/Window.h"
-#include "DebugLogHelper.h"
-#include "Utilities/BitFlagsHelper.h"
 #include "Core/Base/Application.h"
+#include "Core/Base/Window.h"
+#include "Utilities/BitFlagsHelper.h"
+#include "DebugLogHelper.h"
 #include "Resource.h"
 
 using namespace ByteEngine;
 
-void Window::Initialize(StringWView windowName, WindowMode initialMode, int32 width, int32 height, Window* parent)
+void Window::Initialize(std::wstring_view windowName, WindowMode initialMode, int16 width, int16 height, Window* parent)
 {
     mode = initialMode;
 
@@ -41,9 +41,9 @@ void Window::Initialize(StringWView windowName, WindowMode initialMode, int32 wi
     }
 
     DWORD initialStyle = 0;
-    initialStyle |= initialMode == WindowMode::WINDOWED || initialMode == WindowMode::MAXIMIZED ? WS_OVERLAPPEDWINDOW : (WS_POPUP | WS_VISIBLE);
+    initialStyle |= initialMode == WindowMode::Windowed || initialMode == WindowMode::Mazimized ? WS_OVERLAPPEDWINDOW : (WS_POPUP | WS_VISIBLE);
 
-    if (initialMode == WindowMode::BORDERLESS_FULLSCREEN || initialMode == WindowMode::EXCLUSIVE_FULLSCREEN)
+    if (initialMode == WindowMode::BorderlessFullscreen || initialMode == WindowMode::ExclusiveFullscreen)
     {
         width = GetSystemMetrics(SM_CXSCREEN);
         height = GetSystemMetrics(SM_CYSCREEN);
@@ -52,7 +52,7 @@ void Window::Initialize(StringWView windowName, WindowMode initialMode, int32 wi
     int32 initialPosX = 0;
     int32 initialPosY = 0;
 
-    if (initialMode == WindowMode::WINDOWED || initialMode == WindowMode::MAXIMIZED)
+    if (initialMode == WindowMode::Windowed || initialMode == WindowMode::Mazimized)
     {
         initialPosX = CW_USEDEFAULT;
         initialPosY = CW_USEDEFAULT;
@@ -79,10 +79,22 @@ void Window::Initialize(StringWView windowName, WindowMode initialMode, int32 wi
     this->width = width;
     this->height = height;
 
+    RAWINPUTDEVICE rid = { };
+    rid.usUsagePage = 0x01;
+    rid.usUsage = 0x02;
+    rid.dwFlags = 0;
+    rid.hwndTarget = hwnd;
+
+    if (RegisterRawInputDevices(&rid, 1, sizeof(rid)) == false)
+    {
+        DebugHelper::LogCriticalError("Failed to create the program Window", GetLastError());
+        return;
+    }
+
     initialized = true;
 }
 
-void Window::SetWindowMode(WindowMode modeToSet)
+void Window::SetWindowMode(WindowMode modeToSet) const
 {
     uint8 a = static_cast<uint8>(mode);
     uint8 b = static_cast<uint8>(modeToSet);
@@ -92,29 +104,54 @@ void Window::SetWindowMode(WindowMode modeToSet)
     if (mode == modeToSet)
         return;
 
+    PostMessage(hwnd, WM_MODECHANGE, static_cast<WPARAM>(modeToSet), 0);
+}
+
+const std::vector<Event>& Window::PollEvents()
+{
+    events.clear();
+
+    MSG msg = { };
+    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+    {
+        if (msg.message == WM_QUIT)
+        {
+            events.push_back(WindowCloseEvent());
+            break;
+        }
+
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return events;
+}
+
+void Window::HandleWindowModeChangeMessage(WindowMode modeToSet)
+{
     switch (modeToSet)
     {
-    case WindowMode::WINDOWED:
-    case WindowMode::MAXIMIZED:
-        if (mode == WindowMode::BORDERLESS_FULLSCREEN || mode == WindowMode::EXCLUSIVE_FULLSCREEN)
+    case WindowMode::Windowed:
+    case WindowMode::Mazimized:
+        if (mode == WindowMode::BorderlessFullscreen || mode == WindowMode::ExclusiveFullscreen)
         {
             DWORD style = static_cast<DWORD>(GetWindowLongPtr(hwnd, GWL_STYLE));
 
             style &= ~(WS_POPUP | WS_VISIBLE);
             style |= WS_OVERLAPPEDWINDOW;
 
-            if (SetWindowLongPtr(hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW) == 0)
+            if (SetWindowLongPtr(hwnd, GWL_STYLE, style) == 0)
             {
                 DebugHelper::LogDebugError(GetLastError());
                 return;
             }
         }
 
-        ShowWindow(hwnd, modeToSet == WindowMode::WINDOWED ? SW_RESTORE : SW_MAXIMIZE);
+        ShowWindow(hwnd, modeToSet == WindowMode::Windowed ? SW_RESTORE : SW_MAXIMIZE);
         break;
-    case WindowMode::BORDERLESS_FULLSCREEN:
-    case WindowMode::EXCLUSIVE_FULLSCREEN:
-        if (mode == WindowMode::WINDOWED || mode == WindowMode::MAXIMIZED)
+    case WindowMode::BorderlessFullscreen:
+    case WindowMode::ExclusiveFullscreen:
+        if (mode == WindowMode::Windowed || mode == WindowMode::Mazimized)
         {
             MONITORINFO monInfo = { };
             monInfo.cbSize = sizeof(MONITORINFO);
@@ -156,33 +193,13 @@ void Window::SetWindowMode(WindowMode modeToSet)
             }
         }
         break;
-    case WindowMode::MINIMIZED:
+    case WindowMode::Minimized:
         ShowWindow(hwnd, SW_MINIMIZE);
         break;
     }
 
     mode = modeToSet;
-    events |= WindowEvents::WINDOW_MODE_CHANGED;
-}
-
-WindowEvents Window::PollEvents()
-{
-    events = WindowEvents::NONE;
-
-    MSG msg = { };
-    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-    {
-        if (msg.message == WM_QUIT)
-        {
-            events = WindowEvents::CLOSE;
-            break;
-        }
-
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-
-    return events;
+    events.push_back(WindowModeChangeEvent { modeToSet });
 }
 
 void Window::Close()
@@ -203,7 +220,7 @@ LRESULT Window::StaticWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         CREATESTRUCT* createStruct = reinterpret_cast<CREATESTRUCT*>(lParam);
         window = reinterpret_cast<Window*>(createStruct->lpCreateParams);
         SetLastError(0);
-        
+
         if (SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window)) == 0 && GetLastError() != 0)
         {
             DebugHelper::LogDebugError(GetLastError());
@@ -235,7 +252,7 @@ LRESULT Window::WndProc(UINT msg, WPARAM wParam, LPARAM lParam)
     {
     case WM_DESTROY:
         hwnd = nullptr;
-        events |= WindowEvents::CLOSE;
+        events.push_back(WindowCloseEvent());
         PostQuitMessage(0);
         return 0;
     case WM_SIZE:
@@ -247,46 +264,44 @@ LRESULT Window::WndProc(UINT msg, WPARAM wParam, LPARAM lParam)
             if (wParam == SIZE_MINIMIZED)
             {
                 previousMode = mode;
-                mode = WindowMode::MINIMIZED;
+                mode = WindowMode::Minimized;
             }
             else if (wParam == SIZE_MAXIMIZED)
             {
-                mode = WindowMode::MAXIMIZED;
+                mode = WindowMode::Mazimized;
                 DebugHelper::LogDebugMessage("WM_SIZE received. wParam = SIZE_MAXIMIZED");
             }
             else if (wParam == SIZE_RESTORED)
             {
-                mode = WindowMode::WINDOWED;
+                mode = WindowMode::Windowed;
             }
         }
 
-        events |= WindowEvents::RESIZE;
+        events.push_back(WindowResizeEvent { width, height });
         return 0;
     case WM_ACTIVATE:
         if (LOWORD(wParam) == WA_INACTIVE)
         {
             DebugHelper::LogDebugMessage("Window lost focus");
 
-            events &= ~WindowEvents::GAINED_FOCUS;
-            events |= WindowEvents::LOST_FOCUS;
+            events.push_back(WindowLoseFocusEvent());
 
-            if (mode == WindowMode::EXCLUSIVE_FULLSCREEN)
-                SetWindowMode(WindowMode::MINIMIZED);
+            if (mode == WindowMode::ExclusiveFullscreen)
+                SetWindowMode(WindowMode::Minimized);
         }
         else
         {
             DebugHelper::LogDebugMessage("Window gained focus");
 
-            events &= ~WindowEvents::LOST_FOCUS;
-            events |= WindowEvents::GAINED_FOCUS;
+            events.push_back(WindowGetFocusEvent());
 
-            if (mode == WindowMode::MINIMIZED)
+            if (mode == WindowMode::Minimized)
                 SetWindowMode(previousMode);
         }
 
         return 0;
     case WM_CLOSE:
-        events |= WindowEvents::CLOSE;
+        events.push_back(WindowCloseEvent());
         return 0;
     case WM_DISPLAYCHANGE:
         InvalidateRect(hwnd, nullptr, true);
@@ -295,15 +310,16 @@ LRESULT Window::WndProc(UINT msg, WPARAM wParam, LPARAM lParam)
         if (wParam == VK_ESCAPE)
             Application::GetInstance().Quit(0);
         else if (wParam == '1')
-            SetWindowMode(WindowMode::WINDOWED);
+            SetWindowMode(WindowMode::Windowed);
         else if (wParam == '2')
-            SetWindowMode(WindowMode::MAXIMIZED);
+            SetWindowMode(WindowMode::Mazimized);
         else if (wParam == '3')
-            SetWindowMode(WindowMode::BORDERLESS_FULLSCREEN);
+            SetWindowMode(WindowMode::BorderlessFullscreen);
         else if (wParam == '4')
-            SetWindowMode(WindowMode::EXCLUSIVE_FULLSCREEN);
-        else if (wParam == 'P') // this is a temporary solution
-            events |= WindowEvents::PRINT_SWAP_CHAIN_FULLSCREEN_STATE;
+            SetWindowMode(WindowMode::ExclusiveFullscreen);
+        return 0;
+    case WM_MODECHANGE:
+        HandleWindowModeChangeMessage(static_cast<WindowMode>(wParam));
         return 0;
     }
 

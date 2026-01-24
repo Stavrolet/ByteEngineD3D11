@@ -2,8 +2,8 @@
 #include <Windows.h>
 
 #include "Core/Base/Application.h"
-#include "Core/Renderer/RenderContext.h"
 #include "Core/Base/Window.h"
+#include "Core/Renderer/RenderContext.h"
 #include "Utilities/BitFlagsHelper.h"
 #include "DebugLogHelper.h"
 
@@ -16,21 +16,34 @@ int32 Application::Run()
     Window gameWindow;
     gameWindow.Initialize(L"ByteEngine D3D11 Application");
    
-    RenderingContext renderManager;
-    renderManager.Initialize(&gameWindow);
-    RenderingContext::SetInstance(&renderManager);
+    RenderingContext renderingContext;
+    renderingContext.Initialize(&gameWindow);
+    RenderingContext::SetInstance(&renderingContext);
 
     while (isRunning)
     {
-        WindowEvents events = gameWindow.PollEvents();
+        const std::vector<Event>& events = gameWindow.PollEvents();
 
-        if (HasFlags(events, WindowEvents::CLOSE))
-            break;
+        const WindowResizeEvent* windowResizeEvent = nullptr;
+        const WindowModeChangeEvent* windowModeChangeEvent = nullptr;
 
-        renderManager.OnWindowModeChanged(events);
-        renderManager.OnResize(events);
+        for (const Event& event : events)
+        {
+            switch (event.index())
+            {
+            case 0:
+                windowResizeEvent = &std::get<0>(event);
+                break;
+            case 1:
+                windowModeChangeEvent = &std::get<1>(event);
+                break;
+            }
+        }
 
-        renderManager.OnUpdate();
+        renderingContext.OnWindowModeChanged(windowModeChangeEvent);
+        renderingContext.OnResize(windowResizeEvent);
+
+        renderingContext.OnUpdate();
     }
 
     gameWindow.Close();

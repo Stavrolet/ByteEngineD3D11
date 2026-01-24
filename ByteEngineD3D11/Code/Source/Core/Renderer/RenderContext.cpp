@@ -7,8 +7,6 @@
 
 #include "Core/Base/Window.h"
 #include "Core/Renderer/RenderContext.h"
-#include "Collections/Vector.h"
-#include "Utilities/BitFlagsHelper.h"
 #include "DebugLogHelper.h"
 
 using namespace ByteEngine;
@@ -18,7 +16,7 @@ RenderingContext::~RenderingContext()
     Cleanup();
 
 #ifdef _DEBUG
-    ComPtr<IDXGIDebug1> debug;
+    wil::com_ptr_nothrow<IDXGIDebug1> debug;
     DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), debug.put_void());
     debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
 #endif
@@ -48,8 +46,8 @@ void RenderingContext::Initialize(Window* targetWindow)
 
 void RenderingContext::CreateDeviceAndContext()
 {
-    ComPtr<ID3D11Device> baseDevice;
-    ComPtr<ID3D11DeviceContext> baseDeviceContext;
+    wil::com_ptr_nothrow<ID3D11Device> baseDevice;
+    wil::com_ptr_nothrow<ID3D11DeviceContext> baseDeviceContext;
 
     D3D_FEATURE_LEVEL featureLevels[] =
     {
@@ -84,7 +82,7 @@ void RenderingContext::CreateDeviceAndContext()
 
 void RenderingContext::CreateDebugLayer()
 {
-    ComPtr<ID3D11Debug> debug = nullptr;
+    wil::com_ptr_nothrow<ID3D11Debug> debug = nullptr;
     HRESULT hResult = device->QueryInterface(__uuidof(ID3D11Debug), debug.put_void());
     if (FAILED(hResult))
     {
@@ -92,7 +90,7 @@ void RenderingContext::CreateDebugLayer()
         return;
     }
 
-    ComPtr<ID3D11InfoQueue> infoQueue = nullptr;
+    wil::com_ptr_nothrow<ID3D11InfoQueue> infoQueue = nullptr;
     hResult = debug->QueryInterface(__uuidof(ID3D11InfoQueue), infoQueue.put_void());
     if (FAILED(hResult))
     {
@@ -106,17 +104,17 @@ void RenderingContext::CreateDebugLayer()
 
 void RenderingContext::CreateSwapChain()
 {
-    ComPtr<IDXGIDevice1> dxgiDevice;
+    wil::com_ptr_nothrow<IDXGIDevice1> dxgiDevice;
     HRESULT hResult = device->QueryInterface(__uuidof(IDXGIDevice1), dxgiDevice.put_void());
     if (FAILED(hResult))
         DebugHelper::LogDebugError(hResult);
 
-    ComPtr<IDXGIAdapter> adapter;
+    wil::com_ptr_nothrow<IDXGIAdapter> adapter;
     hResult = dxgiDevice->GetAdapter(adapter.put());
     if (FAILED(hResult))
         DebugHelper::LogDebugError(hResult);
 
-    ComPtr<IDXGIAdapter1> adapter1;
+    wil::com_ptr_nothrow<IDXGIAdapter1> adapter1;
     hResult = adapter->QueryInterface(__uuidof(IDXGIAdapter1), adapter1.put_void());
     if (FAILED(hResult))
         DebugHelper::LogDebugError(hResult);
@@ -128,17 +126,17 @@ void RenderingContext::CreateSwapChain()
     OutputDebugStringW(adapterDesc.Description);
     OutputDebugStringA("\n");
 
-    ComPtr<IDXGIFactory2> dxgiFactory;
+    wil::com_ptr_nothrow<IDXGIFactory2> dxgiFactory;
     hResult = adapter1->GetParent(__uuidof(IDXGIFactory2), dxgiFactory.put_void());
     if (FAILED(hResult))
         DebugHelper::LogDebugError(hResult);
 
-    ComPtr<IDXGIOutput> output;
+    wil::com_ptr_nothrow<IDXGIOutput> output;
     hResult = adapter1->EnumOutputs(0, output.put());
     if (FAILED(hResult))
         DebugHelper::LogDebugError(hResult);
 
-    ComPtr<IDXGIOutput1> output1;
+    wil::com_ptr_nothrow<IDXGIOutput1> output1;
     hResult = output->QueryInterface(__uuidof(IDXGIOutput1), output1.put_void());
     if (FAILED(hResult))
         DebugHelper::LogDebugError(hResult);
@@ -204,7 +202,7 @@ void RenderingContext::CreateSwapChain()
 
     dxgiFactory->MakeWindowAssociation(targetWindow->GetHwnd(), DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_WINDOW_CHANGES);
 
-    if (targetWindow->GetWindowMode() == WindowMode::EXCLUSIVE_FULLSCREEN)
+    if (targetWindow->GetWindowMode() == WindowMode::ExclusiveFullscreen)
     {
         hResult = swapChain->SetFullscreenState(true, nullptr);
         DebugHelper::LogDebugMessage("FullScreen state changed.");
@@ -218,7 +216,7 @@ void RenderingContext::CreateSwapChain()
             else if (hResult != DXGI_ERROR_NOT_CURRENTLY_AVAILABLE)
             {
                 MessageBox(targetWindow->GetHwnd(), L"Application failed to enter fullscreen mode. Try again later.", L"Error", MB_OK | MB_ICONERROR);
-                targetWindow->SetWindowMode(WindowMode::MAXIMIZED);
+                targetWindow->SetWindowMode(WindowMode::Mazimized);
                 DebugHelper::LogDebugMessage("FullScreen state changed.");
             }
         }
@@ -242,7 +240,7 @@ void RenderingContext::CreateSwapChain()
 
 bool RenderingContext::CreateRenderTargetAndDepthStencil()
 {
-    ComPtr<ID3D11Texture2D> frameBuffer;
+    wil::com_ptr_nothrow<ID3D11Texture2D> frameBuffer;
     HRESULT hResult = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), frameBuffer.put_void());
 
     if (FAILED(hResult))
@@ -268,7 +266,7 @@ bool RenderingContext::CreateRenderTargetAndDepthStencil()
     depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     
-    ComPtr<ID3D11Texture2D> depthBuffer;
+    wil::com_ptr_nothrow<ID3D11Texture2D> depthBuffer;
     device->CreateTexture2D(&depthBufferDesc, nullptr, depthBuffer.put());
     if (FAILED(hResult))
         DebugHelper::LogCriticalError("Failed to start the graphics system.\nCheck if your GPU supports DirectX 11.1 or if your GPU driver is working properly.\n", hResult);
@@ -293,7 +291,7 @@ bool RenderingContext::CreateRenderTargetAndDepthStencil()
 
 void RenderingContext::OnUpdate()
 {
-    if (targetWindow->GetWindowMode() == WindowMode::MINIMIZED)
+    if (targetWindow->GetWindowMode() == WindowMode::Minimized)
         return;
 
     constexpr float backgroundColor[] = { 0.0f, 0.6f, 0.1f, 1.0f };
@@ -319,34 +317,26 @@ void RenderingContext::OnUpdate()
     }
 }
 
-void RenderingContext::OnResize(WindowEvents windowEvents)
+void RenderingContext::OnResize(const WindowResizeEvent* event)
 {
-    if (HasFlags(windowEvents, WindowEvents::PRINT_SWAP_CHAIN_FULLSCREEN_STATE)) // this is a temporary solution
-    {
-        BOOL previousSwapChainFullscreenState;
-        swapChain->GetFullscreenState(&previousSwapChainFullscreenState, nullptr);
-
-        DebugHelper::LogDebugMessage("SwapChain Fullscreen state = {}", previousSwapChainFullscreenState);
-    }
-
-    if (!HasFlags(windowEvents, WindowEvents::RESIZE))
+    if (event == nullptr)
         return;
 
-    if (targetWindow->GetWindowMode() == WindowMode::MINIMIZED)
+    if (targetWindow->GetWindowMode() == WindowMode::Minimized)
         return;
 
     deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
     ResizeSwapchain();
 }
 
-void RenderingContext::OnWindowModeChanged(WindowEvents windowEvents)
+void RenderingContext::OnWindowModeChanged(const WindowModeChangeEvent* event)
 {
-    if (!HasFlags(windowEvents, WindowEvents::WINDOW_MODE_CHANGED))
+    if (event == nullptr)
         return;
 
     DebugHelper::LogDebugMessage("Window mode changed.");
 
-    if (targetWindow->GetWindowMode() == WindowMode::EXCLUSIVE_FULLSCREEN)
+    if (targetWindow->GetWindowMode() == WindowMode::ExclusiveFullscreen)
     {
         BOOL previousSwapChainFullscreenState;
         swapChain->GetFullscreenState(&previousSwapChainFullscreenState, nullptr);
@@ -410,8 +400,8 @@ void RenderingContext::SetSwapChainFullscreenState(bool fullscreen)
         else if (hResult != DXGI_ERROR_NOT_CURRENTLY_AVAILABLE)
         {
             DebugHelper::LogDebugError(hResult);
-            MessageBox(targetWindow->GetHwnd(), L"Application failed to enter fullscreen mode. Try again later.", L"Error", MB_OK | MB_ICONERROR);
-            targetWindow->SetWindowMode(WindowMode::MAXIMIZED);
+            MessageBox(targetWindow->GetHwnd(), L"Application failed to enter exclusive fullscreen mode. Try again later.", L"Error", MB_OK | MB_ICONERROR);
+            targetWindow->SetWindowMode(WindowMode::Mazimized);
         }
     }
 }

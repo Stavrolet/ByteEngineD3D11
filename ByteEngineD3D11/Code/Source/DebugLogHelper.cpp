@@ -2,20 +2,20 @@
 #undef NOMB
 #undef NOUSER
 
-#include "Primitives.h"
-#include "Collections/String.h"
-#include "DebugLogHelper.h"
-
-#include <filesystem>
 #include <chrono>
+#include <filesystem>
+#include <string>
 #include <Windows.h>
+
+#include "Primitives.h"
+#include "DebugLogHelper.h"
 
 namespace ByteEngine::DebugHelper
 {
 #ifndef _DEBUG
     [[noreturn]]
 #endif
-    void LogCriticalError(StringView errorMessageForUser, uint32 errorCode, const ::std::source_location& loc)
+    void LogCriticalError(std::string_view errorMessageForUser, uint32 errorCode, const ::std::source_location& loc)
     {
 #ifdef _DEBUG
         LogDebugError(errorCode, loc);
@@ -28,7 +28,7 @@ namespace ByteEngine::DebugHelper
             exit(errorCode);
         }
 
-        String formattedMessage = std::format("{} The applcation will be closed.\nError Code: {}", errorMessageForUser, errorCode);
+        std::string formattedMessage = std::format("{} The applcation will be closed.\nError Code: {}", errorMessageForUser, errorCode);
         MessageBoxA(nullptr, formattedMessage.c_str(), "Critical Error", MB_OK | MB_ICONERROR);
         exit(errorCode);
 #endif
@@ -57,7 +57,7 @@ namespace ByteEngine::DebugHelper
         static_cast<char*>(formattedMessageBuff)[messageLength - 2] = '\0';
         static_cast<char*>(formattedMessageBuff)[messageLength - 1] = ' ';
 
-        String formattedOutput = std::format(
+        std::string formattedOutput = std::format(
             "[DEBUG ERROR] {} Code: 0x{:x}. Function: {}, file: {}:{}.\n",
             static_cast<const char*>(formattedMessageBuff), errorCode,
             loc.function_name(), loc.file_name(), loc.line()
@@ -73,16 +73,16 @@ namespace ByteEngine::DebugHelper
 
     void LogDebugMessageInternal(FmtWithLocation fmt, std::format_args args)
     {
-        String fmtStr(fmt.fmt);
+        std::string fmtStr(fmt.fmt);
 
         if (fmtStr[fmtStr.length() - 1] != '.')
             fmtStr += '.';
 
         fmtStr += " [FILE: " + std::filesystem::path(fmt.loc.file_name()).filename().string() + ":" + std::to_string(fmt.loc.line()) + "]\n";
 
-        String time = std::format("[TIME {:%T}] ", std::chrono::system_clock::now());
+        std::string time = std::format("[TIME {:%T}] ", std::chrono::system_clock::now());
 
-        String formattedMessage = time + std::vformat(fmtStr, args);
+        std::string formattedMessage = time + std::vformat(fmtStr, args);
         OutputDebugStringA(formattedMessage.c_str());
     }
 }

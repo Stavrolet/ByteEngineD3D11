@@ -60,16 +60,7 @@
     <ClInclude Include="Code\Include\Core\Renderer\RenderContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\Collections\String.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Include\Collections\StringView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Include\DebugLogHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Include\Collections\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\Include\Core\Base\Application.h">
@@ -81,10 +72,10 @@
     <ClInclude Include="Code\Include\Utilities\BitFlagsHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\Core\Base\WindowEvents.h">
+    <ClInclude Include="Code\Include\Core\Base\WindowMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Include\Core\Base\WindowMode.h">
+    <ClInclude Include="Code\Include\Core\Events\WindowEvents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

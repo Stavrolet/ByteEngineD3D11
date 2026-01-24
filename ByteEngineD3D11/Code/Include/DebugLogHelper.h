@@ -1,17 +1,17 @@
 ﻿#pragma once
 
-#include <source_location>
 #include <format>
+#include <source_location>
+#include <string_view>
 #include <type_traits>
 
 #include "Primitives.h"
-#include "Collections/StringView.h"
 
 namespace ByteEngine::DebugHelper
 {
     struct FmtWithLocation
     {
-        StringView fmt;
+        std::string_view fmt;
         std::source_location loc;
 
         template <typename T> requires std::convertible_to<T, std::string_view>
@@ -20,7 +20,7 @@ namespace ByteEngine::DebugHelper
         { }
     };
 
-    void LogCriticalError(StringView errorMessageForUser, uint32 errorCode, const ::std::source_location& loc = ::std::source_location::current());
+    void LogCriticalError(std::string_view errorMessageForUser, uint32 errorCode, const ::std::source_location& loc = ::std::source_location::current());
     void LogDebugError(uint32 errorCode, const ::std::source_location& loc = ::std::source_location::current());
     void LogDebugMessageInternal(FmtWithLocation fmt, std::format_args args);
 
