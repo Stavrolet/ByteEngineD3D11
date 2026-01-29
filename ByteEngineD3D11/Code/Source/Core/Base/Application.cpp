@@ -55,10 +55,10 @@ int32 Application::Run()
                 break;
             }
             case MOUSE_MOVE_EVENT_INDEX:
-                input.ProcessKeyEvent(std::get<MOUSE_MOVE_EVENT_INDEX>(event));
+                input.ProcessMouseMoveEvent(std::get<MOUSE_MOVE_EVENT_INDEX>(event));
                 break;
             case MOUSE_WHEEL_EVENT_INDEX:
-                input.ProcessKeyEvent(std::get<MOUSE_WHEEL_EVENT_INDEX>(event));
+                input.ProcessMouseWheelEvent(std::get<MOUSE_WHEEL_EVENT_INDEX>(event));
                 break;
             }
         }

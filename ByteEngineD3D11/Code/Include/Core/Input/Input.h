@@ -71,12 +71,12 @@ namespace ByteEngine
             isAnyKeyPressed = true;
         }
 
-        void ProcessKeyEvent(const MouseMoveEvent& event) { mouseDelta += event.delta; }
-
-        void ProcessKeyEvent(const MouseWheelEvent& event)
+        void ProcessMouseWheelEvent(const MouseWheelEvent& event)
         {
             horizontalWheelDelta += event.horizontalDelta;
             verticalWheelDelta += event.verticalDelta;
         }
+
+        void ProcessMouseMoveEvent(const MouseMoveEvent& event) { mouseDelta += event.delta; }
     };
 }
