@@ -31,7 +31,7 @@ int32 Application::Run()
 
         const WindowResizeEvent* windowResizeEvent = nullptr;
         const WindowModeChangeEvent* windowModeChangeEvent = nullptr;
-        std::vector<float> backGroundColor{ 0.0f, 0.1f, 0.15f };
+        std::vector<float> backGroundColor { 0.0f, 0.1f, 0.15f };
 
         input.Update();
 
@@ -45,15 +45,12 @@ int32 Application::Run()
             case WINDOW_MODE_CHANGE_EVENT_INDEX:
                 windowModeChangeEvent = &std::get<WINDOW_MODE_CHANGE_EVENT_INDEX>(event);
                 break;
+            case WINDOW_CLOSE_EVENT_INDEX:
+                Quit(0);
+                break;
             case KEY_EVENT_INDEX:
-            {
-                const KeyEvent& e = std::get<KEY_EVENT_INDEX>(event);
-                if (e.code == KeyCode::MouseWheelDown || e.code == KeyCode::MouseWheelUp)
-                    DebugHelper::LogDebugMessage("-------------Mouse wheel key event");
-
                 input.ProcessKeyEvent(std::get<KEY_EVENT_INDEX>(event));
                 break;
-            }
             case MOUSE_MOVE_EVENT_INDEX:
                 input.ProcessMouseMoveEvent(std::get<MOUSE_MOVE_EVENT_INDEX>(event));
                 break;
@@ -69,7 +66,7 @@ int32 Application::Run()
         renderingContext.OnWindowModeChanged(windowModeChangeEvent);
         renderingContext.OnResize(windowResizeEvent);
 
-        renderingContext.Update(backGroundColor.data());        
+        renderingContext.Update(backGroundColor.data());
     }
 
     gameWindow.Close();
