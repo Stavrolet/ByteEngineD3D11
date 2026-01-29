@@ -35,9 +35,6 @@ void Window::Initialize(std::wstring_view windowName, WindowMode initialMode, in
     if (RegisterClassEx(&winClass) == 0)
         DebugHelper::LogCriticalError("Failed to create the application Window", GetLastError());
 
-    DWORD initialStyle = 0;
-    initialStyle |= initialMode == WindowMode::Windowed || initialMode == WindowMode::Mazimized ? WS_OVERLAPPEDWINDOW : (WS_POPUP | WS_VISIBLE);
-
     if (initialMode == WindowMode::BorderlessFullscreen || initialMode == WindowMode::ExclusiveFullscreen)
     {
         width = GetSystemMetrics(SM_CXSCREEN);
@@ -57,7 +54,7 @@ void Window::Initialize(std::wstring_view windowName, WindowMode initialMode, in
         WS_EX_APPWINDOW,
         reinterpret_cast<LPCWSTR>(windowName.data()),
         reinterpret_cast<LPCWSTR>(windowName.data()),
-        initialStyle,
+        initialMode == WindowMode::Windowed || initialMode == WindowMode::Mazimized ? WS_OVERLAPPEDWINDOW : (WS_POPUP | WS_VISIBLE),
         initialPosX, initialPosY, width, height,
         parent != nullptr ? parent->GetHwnd() : nullptr,
         nullptr, hInstance, this
@@ -136,8 +133,8 @@ void Window::HandleWindowModeChangeMessage(WindowMode modeToSet)
         {
             DWORD style = static_cast<DWORD>(GetWindowLongPtr(hwnd, GWL_STYLE));
 
-            style &= ~(WS_POPUP | WS_VISIBLE);
-            style |= WS_OVERLAPPEDWINDOW;
+            BitFlags::ClearFlags(style, WS_POPUP | WS_VISIBLE);
+            BitFlags::SetFlags(style, WS_OVERLAPPEDWINDOW);
 
             if (SetWindowLongPtr(hwnd, GWL_STYLE, style) == 0)
             {
@@ -176,8 +173,8 @@ void Window::HandleWindowModeChangeMessage(WindowMode modeToSet)
 
             DWORD style = static_cast<DWORD>(GetWindowLongPtr(hwnd, GWL_STYLE));
 
-            style &= ~WS_OVERLAPPEDWINDOW;
-            style |= WS_POPUP;
+            BitFlags::ClearFlags(style, WS_OVERLAPPEDWINDOW);
+            BitFlags::SetFlags(style, WS_POPUP);
 
             if (SetWindowLongPtr(hwnd, GWL_STYLE, style) == 0)
             {
@@ -215,7 +212,7 @@ void Window::HandleRawInputMessage(HRAWINPUT handle)
     {
         const RAWKEYBOARD& keyboard = raw->data.keyboard;
         uint16 scanCode = 0;
-        bool isKeyPressed = !HasOneFlag(keyboard.Flags, (uint16)RI_KEY_BREAK);
+        bool isKeyPressed = !BitFlags::HasOneFlag(keyboard.Flags, (uint16)RI_KEY_BREAK);
 
         if (keyboard.MakeCode == KEYBOARD_OVERRUN_MAKE_CODE)
             return;
@@ -230,7 +227,7 @@ void Window::HandleRawInputMessage(HRAWINPUT handle)
         {
             uint16 scanCode = MAKEWORD(
                 keyboard.MakeCode & 0x7f,
-                (HasOneFlag<uint16, uint16>(keyboard.Flags, RI_KEY_E0) ? 0xe0 : (HasOneFlag<uint16, uint16>(keyboard.Flags, RI_KEY_E1) ? 0xe1 : 0x00))
+                (BitFlags::HasOneFlag<uint16, uint16>(keyboard.Flags, RI_KEY_E0) ? 0xe0 : (BitFlags::HasOneFlag<uint16, uint16>(keyboard.Flags, RI_KEY_E1) ? 0xe1 : 0x00))
             );
 
             events.push_back(KeyEvent { static_cast<KeyCode>(scanCode), isKeyPressed });
@@ -245,10 +242,10 @@ void Window::HandleRawInputMessage(HRAWINPUT handle)
     {
         const RAWMOUSE& mouse = raw->data.mouse;
 
-        if (HasOneFlag(mouse.usFlags, (uint16)MOUSE_MOVE_RELATIVE))
+        if (BitFlags::HasOneFlag(mouse.usFlags, (uint16)MOUSE_MOVE_RELATIVE))
             events.push_back(MouseMoveEvent { Vector2(static_cast<float>(mouse.lLastX), static_cast<float>(mouse.lLastY)) });
 
-        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_WHEEL))
+        if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_WHEEL))
         {
             float delta = static_cast<int16>(mouse.usButtonData) / (float)WHEEL_DELTA;
             events.push_back(MouseWheelEvent { 0.0f, delta });
@@ -258,7 +255,7 @@ void Window::HandleRawInputMessage(HRAWINPUT handle)
             else
                 events.push_back(KeyEvent { KeyCode::MouseWheelDown, true });
         }
-        else if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_HWHEEL))
+        else if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_HWHEEL))
         {
             float delta = static_cast<int16>(mouse.usButtonData) / (float)WHEEL_DELTA;
             events.push_back(MouseWheelEvent { delta, 0.0f });
@@ -269,34 +266,34 @@ void Window::HandleRawInputMessage(HRAWINPUT handle)
                 events.push_back(KeyEvent { KeyCode::MouseWheelLeft, true });
         }
 
-        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_LEFT_BUTTON_DOWN))
+        if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_LEFT_BUTTON_DOWN))
             events.push_back(KeyEvent { KeyCode::MouseLeft, true });
 
-        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_LEFT_BUTTON_UP))
+        if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_LEFT_BUTTON_UP))
             events.push_back(KeyEvent { KeyCode::MouseLeft, false });
 
-        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_RIGHT_BUTTON_DOWN))
+        if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_RIGHT_BUTTON_DOWN))
             events.push_back(KeyEvent { KeyCode::MouseRight, true });
 
-        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_RIGHT_BUTTON_UP))
+        if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_RIGHT_BUTTON_UP))
             events.push_back(KeyEvent { KeyCode::MouseRight, false });
 
-        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_MIDDLE_BUTTON_DOWN))
+        if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_MIDDLE_BUTTON_DOWN))
             events.push_back(KeyEvent { KeyCode::MouseMiddle, true });
 
-        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_MIDDLE_BUTTON_UP))
+        if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_MIDDLE_BUTTON_UP))
             events.push_back(KeyEvent { KeyCode::MouseMiddle, false });
 
-        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_4_DOWN))
+        if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_4_DOWN))
             events.push_back(KeyEvent { KeyCode::MouseExtended1, true });
 
-        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_4_UP))
+        if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_4_UP))
             events.push_back(KeyEvent { KeyCode::MouseExtended1, false });
 
-        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_5_DOWN))
+        if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_5_DOWN))
             events.push_back(KeyEvent { KeyCode::MouseExtended2, true });
 
-        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_5_UP))
+        if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_5_UP))
             events.push_back(KeyEvent { KeyCode::MouseExtended2, false });
     }
 }

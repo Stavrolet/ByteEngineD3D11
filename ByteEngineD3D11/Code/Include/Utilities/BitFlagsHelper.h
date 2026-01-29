@@ -3,7 +3,7 @@
 #include <type_traits>
 #include "Primitives.h"
 
-namespace ByteEngine
+namespace ByteEngine::BitFlags
 {
     template<typename T>
     concept SuitableForBitOps = (std::is_enum_v<T> || std::integral<T>) && !std::is_same_v<T, bool>;
