@@ -98,6 +98,13 @@ namespace ByteEngine
         }
 
         float& operator[](int32 index) { return data[index]; }
-        const float& operator[](int32 index) const { return data[index]; }
+        float operator[](int32 index) const { return data[index]; }
     };
+
+    static inline constexpr Vector2 Zero(0.0f);
+    static inline constexpr Vector2 One(1.0f);
+    static inline constexpr Vector2 Up(0.0f, 1.0f);
+    static inline constexpr Vector2 Down(0.0f, -1.0f);
+    static inline constexpr Vector2 Left(-1.0f, 0.0f);
+    static inline constexpr Vector2 Right(1.0f, 0.0f);
 }

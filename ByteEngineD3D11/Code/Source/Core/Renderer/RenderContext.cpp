@@ -5,7 +5,7 @@
 #endif
 #include <Windows.h>
 
-#include "Core/Base/Window.h"
+#include "Core/Base/Window/Window.h"
 #include "Core/Renderer/RenderContext.h"
 #include "DebugLogHelper.h"
 
@@ -280,8 +280,8 @@ bool RenderingContext::CreateRenderTargetAndDepthStencil()
     D3D11_VIEWPORT viewport = { };
     viewport.TopLeftX = 0.0f;
     viewport.TopLeftY = 0.0f;
-    viewport.Width = static_cast<float32>(targetWindow->GetWidth());
-    viewport.Height = static_cast<float32>(targetWindow->GetHeight());
+    viewport.Width = static_cast<float>(targetWindow->GetWidth());
+    viewport.Height = static_cast<float>(targetWindow->GetHeight());
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     deviceContext->RSSetViewports(1, &viewport);
@@ -289,12 +289,11 @@ bool RenderingContext::CreateRenderTargetAndDepthStencil()
     return true;
 }
 
-void RenderingContext::OnUpdate()
+void RenderingContext::Update(const float* backgroundColor)
 {
     if (targetWindow->GetWindowMode() == WindowMode::Minimized)
         return;
 
-    constexpr float backgroundColor[] = { 0.0f, 0.6f, 0.1f, 1.0f };
     deviceContext->ClearRenderTargetView(renderTargetView.get(), backgroundColor);
     deviceContext->ClearDepthStencilView(depthStencilView.get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 

@@ -2,11 +2,12 @@
 #undef NOSYSMETRICS
 #undef NOVIRTUALKEYCODES
 
-#include <Windows.h>
 #include <cmath>
+#include <Windows.h>
+#include <hidusage.h>
 
 #include "Core/Base/Application.h"
-#include "Core/Base/Window.h"
+#include "Core/Base/Window/Window.h"
 #include "Utilities/BitFlagsHelper.h"
 #include "DebugLogHelper.h"
 #include "Resource.h"
@@ -19,10 +20,7 @@ void Window::Initialize(std::wstring_view windowName, WindowMode initialMode, in
 
     HINSTANCE hInstance = GetModuleHandle(nullptr);
     if (hInstance == nullptr)
-    {
         DebugHelper::LogCriticalError("Failed to create the program Window", GetLastError());
-        return;
-    }
 
     WNDCLASSEX winClass = { };
     winClass.cbSize = sizeof(WNDCLASSEX);
@@ -35,10 +33,7 @@ void Window::Initialize(std::wstring_view windowName, WindowMode initialMode, in
     winClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     if (RegisterClassEx(&winClass) == 0)
-    {
         DebugHelper::LogCriticalError("Failed to create the application Window", GetLastError());
-        return;
-    }
 
     DWORD initialStyle = 0;
     initialStyle |= initialMode == WindowMode::Windowed || initialMode == WindowMode::Mazimized ? WS_OVERLAPPEDWINDOW : (WS_POPUP | WS_VISIBLE);
@@ -69,27 +64,31 @@ void Window::Initialize(std::wstring_view windowName, WindowMode initialMode, in
     );
 
     if (hwnd == nullptr)
-    {
         DebugHelper::LogCriticalError("Failed to create the program Window", GetLastError());
-        return;
-    }
 
     ShowWindow(hwnd, SW_MAXIMIZE);
 
     this->width = width;
     this->height = height;
 
-    RAWINPUTDEVICE rid = { };
-    rid.usUsagePage = 0x01;
-    rid.usUsage = 0x02;
-    rid.dwFlags = 0;
-    rid.hwndTarget = hwnd;
-
-    if (RegisterRawInputDevices(&rid, 1, sizeof(rid)) == false)
+    RAWINPUTDEVICE rids[] =
     {
-        DebugHelper::LogCriticalError("Failed to create the program Window", GetLastError());
-        return;
-    }
+        {
+            .usUsagePage = HID_USAGE_PAGE_GENERIC,
+            .usUsage = HID_USAGE_GENERIC_KEYBOARD,
+            .dwFlags = 0,
+            .hwndTarget = hwnd
+        },
+        {
+            .usUsagePage = HID_USAGE_PAGE_GENERIC,
+            .usUsage = HID_USAGE_GENERIC_MOUSE,
+            .dwFlags = 0,
+            .hwndTarget = hwnd
+        }
+    };
+
+    if (RegisterRawInputDevices(rids, 2, sizeof(RAWINPUTDEVICE)) == false)
+        DebugHelper::LogCriticalError("Failed to initialize input devices.", GetLastError());
 
     initialized = true;
 }
@@ -202,6 +201,106 @@ void Window::HandleWindowModeChangeMessage(WindowMode modeToSet)
     events.push_back(WindowModeChangeEvent { modeToSet });
 }
 
+void Window::HandleRawInputMessage(HRAWINPUT handle)
+{
+    uint32 size = 0;
+    GetRawInputData(handle, RID_INPUT, nullptr, &size, sizeof(RAWINPUTHEADER));
+
+    std::vector<uint8> buffer(size);
+    GetRawInputData(handle, RID_INPUT, buffer.data(), &size, sizeof(RAWINPUTHEADER));
+
+    RAWINPUT* raw = (RAWINPUT*)buffer.data();
+
+    if (raw->header.dwType == RIM_TYPEKEYBOARD)
+    {
+        const RAWKEYBOARD& keyboard = raw->data.keyboard;
+        uint16 scanCode = 0;
+        bool isKeyPressed = !HasOneFlag(keyboard.Flags, (uint16)RI_KEY_BREAK);
+
+        if (keyboard.MakeCode == KEYBOARD_OVERRUN_MAKE_CODE)
+            return;
+
+        if (keyboard.VKey == VK_PAUSE)
+        {
+            events.push_back(KeyEvent { KeyCode::Pause, true });
+            return;
+        }
+
+        if (keyboard.MakeCode != 0)
+        {
+            uint16 scanCode = MAKEWORD(
+                keyboard.MakeCode & 0x7f,
+                (HasOneFlag<uint16, uint16>(keyboard.Flags, RI_KEY_E0) ? 0xe0 : (HasOneFlag<uint16, uint16>(keyboard.Flags, RI_KEY_E1) ? 0xe1 : 0x00))
+            );
+
+            events.push_back(KeyEvent { static_cast<KeyCode>(scanCode), isKeyPressed });
+        }
+
+        char keyNameBuffer[MAX_PATH] = { };
+        GetKeyNameTextA((LONG)MAKELPARAM(0, (HIBYTE(scanCode) ? KF_EXTENDED : 0x00) | LOBYTE(scanCode)), keyNameBuffer, MAX_PATH);
+
+        DebugHelper::LogDebugMessage("Key pressed. Name: {}, is pressed = {}", keyNameBuffer, isKeyPressed);
+    }
+    else if (raw->header.dwType == RIM_TYPEMOUSE)
+    {
+        const RAWMOUSE& mouse = raw->data.mouse;
+
+        if (HasOneFlag(mouse.usFlags, (uint16)MOUSE_MOVE_RELATIVE))
+            events.push_back(MouseMoveEvent { Vector2(static_cast<float>(mouse.lLastX), static_cast<float>(mouse.lLastY)) });
+
+        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_WHEEL))
+        {
+            float delta = static_cast<int16>(mouse.usButtonData) / (float)WHEEL_DELTA;
+            events.push_back(MouseWheelEvent { 0.0f, delta });
+
+            if (delta > 0.0f)
+                events.push_back(KeyEvent { KeyCode::MouseWheelUp, true });
+            else
+                events.push_back(KeyEvent { KeyCode::MouseWheelDown, true });
+        }
+        else if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_HWHEEL))
+        {
+            float delta = static_cast<int16>(mouse.usButtonData) / (float)WHEEL_DELTA;
+            events.push_back(MouseWheelEvent { delta, 0.0f });
+
+            if (delta > 0)
+                events.push_back(KeyEvent { KeyCode::MouseWheelRight, true });
+            else
+                events.push_back(KeyEvent { KeyCode::MouseWheelLeft, true });
+        }
+
+        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_LEFT_BUTTON_DOWN))
+            events.push_back(KeyEvent { KeyCode::MouseLeft, true });
+
+        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_LEFT_BUTTON_UP))
+            events.push_back(KeyEvent { KeyCode::MouseLeft, false });
+
+        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_RIGHT_BUTTON_DOWN))
+            events.push_back(KeyEvent { KeyCode::MouseRight, true });
+
+        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_RIGHT_BUTTON_UP))
+            events.push_back(KeyEvent { KeyCode::MouseRight, false });
+
+        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_MIDDLE_BUTTON_DOWN))
+            events.push_back(KeyEvent { KeyCode::MouseMiddle, true });
+
+        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_MIDDLE_BUTTON_UP))
+            events.push_back(KeyEvent { KeyCode::MouseMiddle, false });
+
+        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_4_DOWN))
+            events.push_back(KeyEvent { KeyCode::MouseExtended1, true });
+
+        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_4_UP))
+            events.push_back(KeyEvent { KeyCode::MouseExtended1, false });
+
+        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_5_DOWN))
+            events.push_back(KeyEvent { KeyCode::MouseExtended2, true });
+
+        if (HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_5_UP))
+            events.push_back(KeyEvent { KeyCode::MouseExtended2, false });
+    }
+}
+
 void Window::Close()
 {
     if (hwnd != nullptr)
@@ -234,7 +333,7 @@ LRESULT Window::StaticWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
         window = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
     }
-
+    
     if (window != nullptr)
         return window->WndProc(msg, wParam, lParam);
 
@@ -305,6 +404,9 @@ LRESULT Window::WndProc(UINT msg, WPARAM wParam, LPARAM lParam)
         return 0;
     case WM_DISPLAYCHANGE:
         InvalidateRect(hwnd, nullptr, true);
+        return 0;
+    case WM_INPUT:
+        HandleRawInputMessage(reinterpret_cast<HRAWINPUT>(lParam));
         return 0;
     case WM_KEYDOWN:
         if (wParam == VK_ESCAPE)

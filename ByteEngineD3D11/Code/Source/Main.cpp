@@ -1,4 +1,5 @@
 ﻿#include <Windows.h>
+#include <strsafe.h>
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
@@ -6,15 +7,15 @@
 #include <WICTextureLoader.h>
 #include <string>
 #include <initializer_list>
-
+#include <format>
 #include "GameTime.h"
-#include "Application.h"
+#include "Core/Base/Application.h"
 
 using namespace DirectX;
 using namespace ByteEngine;
 using Microsoft::WRL::ComPtr;
 
-constexpr bool FULLSCREEN = true;
+constexpr bool FULLSCREEN = false;
 
 int ScreenWidth = 0;
 int ScreenHeight = 0;
@@ -390,9 +391,10 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARA
 {
     switch (message)
     {
-    case WM_KEYDOWN:
-        HandleKeyboardInput(wParam);
-        return 0;
+        /*case WM_KEYDOWN:
+            if (wParam == VK_NUMLOCK)
+                OutputDebugString(L"Ура");
+            return 0;*/
     case WM_INPUT:
     {
         UINT size = 0;
@@ -409,6 +411,9 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARA
         {
             const RAWMOUSE& mouse = raw->data.mouse;
 
+            if (mouse.usButtonFlags != 0)
+                OutputDebugStringA(std::format("mouse button flags = {:#016b}\n", mouse.usButtonFlags).c_str());
+
             if (mouse.usButtonFlags & RI_MOUSE_WHEEL)
             {
                 SHORT wheelDelta = (SHORT)mouse.usButtonData;
@@ -423,6 +428,37 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARA
                 if (cameraFovAngle > 120.0f)
                     cameraFovAngle = 120.0f;
             }
+        }
+        else if (raw->header.dwType == RIM_TYPEKEYBOARD)
+        {
+            const RAWKEYBOARD& keyboard = raw->data.keyboard;
+            WORD scanCode = 0;
+            BOOL keyUp = keyboard.Flags & RI_KEY_BREAK;
+
+            // Ignore key overrun state and keys not mapped to any virtual key code
+            if (keyboard.MakeCode == KEYBOARD_OVERRUN_MAKE_CODE || keyboard.VKey >= UCHAR_MAX)
+                return 0;
+
+            if (keyboard.MakeCode)
+            {
+                // Compose the full scan code value with its extended byte
+                scanCode = MAKEWORD(keyboard.MakeCode & 0x7f, ((keyboard.Flags & RI_KEY_E0) ? 0xe0 : ((keyboard.Flags & RI_KEY_E1) ? 0xe1 : 0x00)));
+            }
+            else
+            {
+                // Scan code value may be empty for some buttons (for example multimedia buttons)
+                // Try to get the scan code from the virtual key code
+                scanCode = LOWORD(MapVirtualKey(keyboard.VKey, MAPVK_VK_TO_VSC_EX));
+            }
+
+            // Get the key name for debug output
+            TCHAR keyNameBuffer[MAX_PATH] = { };
+            GetKeyNameText((LONG)MAKELPARAM(0, (HIBYTE(scanCode) ? KF_EXTENDED : 0x00) | LOBYTE(scanCode)), keyNameBuffer, MAX_PATH);
+
+            // Debug output
+            TCHAR printBuffer[MAX_PATH] = { };
+            StringCchPrintf(printBuffer, MAX_PATH, TEXT("Keyboard: scanCode=%X virtualKeyCode=%X keyName=%s\r\n"), scanCode, keyboard.VKey, keyNameBuffer);
+            OutputDebugString(printBuffer);
         }
 
         return 0;
@@ -448,60 +484,65 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARA
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int nCmdShow)
 {
-    /*if (FULLSCREEN)
-    {
-        ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-        ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
-    }
-    else
-    {
-        ScreenWidth = 800;
-        ScreenHeight = 600;
-    }
+    //if (FULLSCREEN)
+    //{
+    //    ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+    //    ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+    //}
+    //else
+    //{
+    //    ScreenWidth = 800;
+    //    ScreenHeight = 600;
+    //}
 
-    WNDCLASSEXW winClass = { };
-    winClass.cbSize = sizeof(WNDCLASSEXW);
-    winClass.style = CS_HREDRAW | CS_VREDRAW;
-    winClass.lpfnWndProc = WindowProc;
-    winClass.hInstance = hInstance;
-    winClass.hIcon = LoadIcon(0, IDI_APPLICATION);
-    winClass.hCursor = LoadCursor(0, IDC_ARROW);
-    winClass.lpszClassName = L"D3D11Class";
-    winClass.hIconSm = LoadIconW(0, IDI_APPLICATION);
-    RegisterClassEx(&winClass);
+    //WNDCLASSEXW winClass = { };
+    //winClass.cbSize = sizeof(WNDCLASSEXW);
+    //winClass.style = CS_HREDRAW | CS_VREDRAW;
+    //winClass.lpfnWndProc = WindowProc;
+    //winClass.hInstance = hInstance;
+    //winClass.hIcon = LoadIcon(0, IDI_APPLICATION);
+    //winClass.hCursor = LoadCursor(0, IDC_ARROW);
+    //winClass.lpszClassName = L"D3D11Class";
+    //winClass.hIconSm = LoadIconW(0, IDI_APPLICATION);
+    //RegisterClassEx(&winClass);
 
-    HWND hwnd = CreateWindowEx(WS_EX_APPWINDOW, L"D3D11Class", L"Full Screen Cube", WS_POPUP | WS_VISIBLE,
-        0, 0, ScreenWidth, ScreenHeight, nullptr, nullptr, hInstance, nullptr);
+    //HWND hwnd = CreateWindowEx(WS_EX_APPWINDOW, L"D3D11Class", L"Full Screen Cube", WS_OVERLAPPEDWINDOW,
+    //    CW_USEDEFAULT, CW_USEDEFAULT, ScreenWidth, ScreenHeight, nullptr, nullptr, hInstance, nullptr);
 
-    ShowWindow(hwnd, nCmdShow);
+    //ShowWindow(hwnd, nCmdShow);
 
-    RAWINPUTDEVICE rid = { };
-    rid.usUsagePage = 0x01;
-    rid.usUsage = 0x02;
-    rid.dwFlags = RIDEV_EXINPUTSINK;
-    rid.hwndTarget = hwnd;
+    //RAWINPUTDEVICE rids[] =
+    //{
+    //    {
+    //        .usUsagePage = 0x01,
+    //        .usUsage = 0x02,
+    //        .dwFlags = 0,
+    //        .hwndTarget = hwnd
+    //    },
+    //    {
+    //        .usUsagePage = 0x01,
+    //        .usUsage = 0x06,
+    //        .dwFlags = 0,
+    //        .hwndTarget = hwnd
+    //    }
+    //};
 
-    RegisterRawInputDevices(&rid, 1, sizeof(rid));
+    //RegisterRawInputDevices(rids, 2, sizeof(RAWINPUTDEVICE));
 
-    hCursor = LoadCursor(nullptr, IDC_ARROW);
+    //hCursor = LoadCursor(nullptr, IDC_ARROW);
 
-    InitD3D(hwnd);
+    ///*InitD3D(hwnd);*/
 
-    MSG msg = { 0 };
-    while (msg.message != WM_QUIT)
-    {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-        else
-        {
-            UpdateTime();
-            Render();
-        }
-    }*/
-    
+    //MSG msg = { 0 };
+    //while (msg.message != WM_QUIT)
+    //{
+    //    if (GetMessage(&msg, nullptr, 0, 0) > 0)
+    //    {
+    //        TranslateMessage(&msg);
+    //        DispatchMessage(&msg);
+    //    }
+    //}
+
     Application app;
     return app.Run();
 }

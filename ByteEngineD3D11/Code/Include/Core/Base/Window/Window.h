@@ -4,13 +4,15 @@
 #include <vector>
 
 #include "Primitives.h"
-#include "Core/Base/WindowMode.h"
-#include "Core/Events/WindowEvents.h"
+#include "Core/Base/Window/WindowMode.h"
+#include "Core/Events/Event.h"
 
 struct HWND__;
 using HWND = HWND__*;
 struct HINSTANCE__;
 using HINSTANCE = HINSTANCE__*;
+struct HRAWINPUT__;
+using HRAWINPUT = HRAWINPUT__*;
 #ifdef _WIN64
 using LRESULT = __int64;
 using WPARAM = unsigned __int64;
@@ -65,5 +67,6 @@ namespace ByteEngine
         const std::vector<Event>& PollEvents();
 
         void HandleWindowModeChangeMessage(WindowMode modeToSet);
+        void HandleRawInputMessage(HRAWINPUT handle);
     };
 }

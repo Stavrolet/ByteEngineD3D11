@@ -12,10 +12,7 @@
 
 namespace ByteEngine::DebugHelper
 {
-#ifndef _DEBUG
-    [[noreturn]]
-#endif
-    void LogCriticalError(std::string_view errorMessageForUser, uint32 errorCode, const ::std::source_location& loc)
+    [[noreturn]] void LogCriticalError(std::string_view errorMessageForUser, uint32 errorCode, const ::std::source_location& loc)
     {
 #ifdef _DEBUG
         LogDebugError(errorCode, loc);
@@ -45,7 +42,7 @@ namespace ByteEngine::DebugHelper
             MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
             reinterpret_cast<LPSTR>(&formattedMessageBuff),
             0, nullptr
-        );
+        );        
 
         if (formatResult == 0)
         {

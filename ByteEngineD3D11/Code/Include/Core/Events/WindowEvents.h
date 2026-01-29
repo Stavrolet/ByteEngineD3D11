@@ -1,9 +1,7 @@
 ﻿#pragma once
 
-#include <variant>
-
 #include "Primitives.h"
-#include "Core/Base/WindowMode.h"
+#include "Core/Base/Window/WindowMode.h"
 
 namespace ByteEngine
 {
@@ -21,6 +19,4 @@ namespace ByteEngine
     struct WindowLoseFocusEvent { };
     struct WindowGetFocusEvent { };
     struct WindowCloseEvent { };
-
-    using Event = std::variant<WindowResizeEvent, WindowModeChangeEvent, WindowLoseFocusEvent, WindowGetFocusEvent, WindowCloseEvent>;
 }

@@ -43,7 +43,7 @@ namespace ByteEngine
         void CreateSwapChain();
         bool CreateRenderTargetAndDepthStencil();
 
-        void OnUpdate();
+        void Update(const float* backgroundColor);
         void OnResize(const WindowResizeEvent* event);
         void OnWindowModeChanged(const WindowModeChangeEvent* event);
 

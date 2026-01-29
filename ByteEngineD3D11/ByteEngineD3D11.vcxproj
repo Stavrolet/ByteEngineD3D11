@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -162,10 +162,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Code\Include\Core\Base\Application.h" />
+    <ClInclude Include="Code\Include\Core\Base\Window\Window.h" />
+    <ClInclude Include="Code\Include\Core\Events\Event.h" />
     <ClInclude Include="Code\Include\Core\Events\WindowEvents.h" />
+    <ClInclude Include="Code\Include\Core\Base\Window\WindowMode.h" />
+    <ClInclude Include="Code\Include\Core\Input\Input.h" />
+    <ClInclude Include="Code\Include\Core\Events\InputEvents.h" />
+    <ClInclude Include="Code\Include\Core\Input\KeyCode.h" />
     <ClInclude Include="Code\Include\DebugLogHelper.h" />
+    <ClInclude Include="Code\Include\Math\Vector2.h" />
     <ClInclude Include="Code\Include\Primitives.h" />
-    <ClInclude Include="Code\Include\Core\Base\Window.h" />
+    <ClInclude Include="Code\Include\Utilities\EnumFlagsOperators.h" />
     <ClInclude Include="Code\Include\WinApiExcludingDefs\LeanAndMean.h" />
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoAll.h" />
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoInput.h" />
@@ -176,7 +183,6 @@
     <ClInclude Include="Code\Include\WinApiExcludingDefs\NoUiAndWindows.h" />
     <ClInclude Include="Code\Include\Core\Renderer\RenderContext.h" />
     <ClInclude Include="Code\Include\Utilities\BitFlagsHelper.h" />
-    <ClInclude Include="Code\Include\Core\Base\WindowMode.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Code\Include\Core\Base\Singleton.h" />
     <ClInclude Include="targetver.h" />
@@ -184,9 +190,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Source\Core\Base\Application.cpp" />
+    <ClCompile Include="Code\Source\Core\Input\Input.cpp" />
     <ClCompile Include="Code\Source\DebugLogHelper.cpp" />
     <ClCompile Include="Code\Source\Main.cpp" />
-    <ClCompile Include="Code\Source\Core\Base\Window.cpp" />
+    <ClCompile Include="Code\Source\Core\Base\Window\Window.cpp" />
     <ClCompile Include="Code\Source\Core\Renderer\RenderContext.cpp" />
   </ItemGroup>
   <ItemGroup>

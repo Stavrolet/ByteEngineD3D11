@@ -20,7 +20,7 @@ namespace ByteEngine::DebugHelper
         { }
     };
 
-    void LogCriticalError(std::string_view errorMessageForUser, uint32 errorCode, const ::std::source_location& loc = ::std::source_location::current());
+    [[noreturn]] void LogCriticalError(std::string_view errorMessageForUser, uint32 errorCode, const ::std::source_location& loc = ::std::source_location::current());
     void LogDebugError(uint32 errorCode, const ::std::source_location& loc = ::std::source_location::current());
     void LogDebugMessageInternal(FmtWithLocation fmt, std::format_args args);
 
