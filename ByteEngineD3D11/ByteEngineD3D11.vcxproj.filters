@@ -96,6 +96,9 @@
     <ClInclude Include="Code\Include\Utilities\EnumFlagsOperators.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Include\Math\Math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Source\Main.cpp">

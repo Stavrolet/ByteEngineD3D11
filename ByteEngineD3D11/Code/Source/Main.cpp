@@ -10,6 +10,7 @@
 #include <format>
 #include "GameTime.h"
 #include "Core/Base/Application.h"
+#include "Math/Math.h"
 
 using namespace DirectX;
 using namespace ByteEngine;
@@ -544,5 +545,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR,
     //}
 
     Application app;
+    Math::Log(10.0f);
     return app.Run();
 }

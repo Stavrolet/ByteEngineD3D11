@@ -170,6 +170,7 @@
     <ClInclude Include="Code\Include\Core\Events\InputEvents.h" />
     <ClInclude Include="Code\Include\Core\Input\KeyCode.h" />
     <ClInclude Include="Code\Include\DebugLogHelper.h" />
+    <ClInclude Include="Code\Include\Math\Math.h" />
     <ClInclude Include="Code\Include\Math\Vector2.h" />
     <ClInclude Include="Code\Include\Primitives.h" />
     <ClInclude Include="Code\Include\Utilities\EnumFlagsOperators.h" />
