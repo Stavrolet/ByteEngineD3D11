@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <concepts>
+#include <iterator>
 #include <limits>
 #include <cassert>
 
@@ -11,6 +12,15 @@
 #include "Primitives.h"
 
 namespace ByteEngine::Math
+{
+
+    using RadiansF = float;
+    using RadiansD = double;
+    using DegreesF = float;
+    using DegreesD = double;
+}
+
+namespace ByteEngine::Math::Math
 {
     template<typename T>
     concept FloatingPointNumber = std::floating_point<T> && !std::same_as<T, long double>;
@@ -24,11 +34,6 @@ namespace ByteEngine::Math
     template <typename It, typename T>
     concept ForwardIteratorTo = std::forward_iterator<It> && std::same_as<typename std::iterator_traits<It>::value_type, T>;
 
-    using RadiansF = float;
-    using RadiansD = double;
-    using DegreesF = float;
-    using DegreesD = double;
-
     constexpr float Infinity = std::numeric_limits<float>::infinity();
     constexpr double InfinityD = std::numeric_limits<double>::infinity();
     constexpr float NegativeInfinity = -std::numeric_limits<float>::infinity();
@@ -38,6 +43,8 @@ namespace ByteEngine::Math
     constexpr double PID = 3.141592653589793;
 
     constexpr float Epsilon = 1e-5f;
+    constexpr RadiansF AngleEpsilon = 1e-4f;
+    constexpr float UnitSizeEpsilon = 1e-4f;
 
     constexpr RadiansF DegToRad(DegreesF deg) noexcept { return deg * (PI / 180.0f); }
     constexpr RadiansD DegToRad(DegreesD deg) noexcept { return deg * (PID / 180.0); }
@@ -217,8 +224,8 @@ namespace ByteEngine::Math
     //-------------------------------------------------------------------------------------
     [[nodiscard]] constexpr void SinCos(float* sin, float* cos, RadiansF rad) noexcept
     {
-        assert(sin == nullptr);
-        assert(cos == nullptr);
+        assert(sin);
+        assert(cos);
 
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
         float quotient = 1.0f / PI * 2.0f * rad;
@@ -332,8 +339,8 @@ namespace ByteEngine::Math
     [[nodiscard]] inline float Fmod(float x, float y) noexcept { return std::fmod(x, y); }
     [[nodiscard]] inline double Fmod(double x, double y) noexcept { return std::fmod(x, y); }
 
-    [[nodiscard]] constexpr float IsEqualApproximetly(float right, float left, float tolerance = Epsilon) noexcept { return Abs(left - right) < tolerance; }
-    [[nodiscard]] constexpr double IsEqualApproximetly(double right, double left, double tolerance = Epsilon) noexcept { return Abs(left - right) < tolerance; }
+    [[nodiscard]] constexpr bool IsEqualApproximetly(float right, float left, float tolerance = Epsilon) noexcept { return Abs(left - right) < tolerance; }
+    [[nodiscard]] constexpr bool IsEqualApproximetly(double right, double left, double tolerance = Epsilon) noexcept { return Abs(left - right) < tolerance; }
 
     [[nodiscard]] constexpr float LoopValue(float t, float start, float end)
     {
