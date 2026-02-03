@@ -545,8 +545,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR,
     //    }
     //}
 
+    using namespace ByteEngine::Math;
+    using namespace ByteEngine::Math::Math;
+
     Application app;
-    Math::Vector2 a(10.49794f);
-    Math::Math::Log(a.y);
+    Vector2 a(10.49794f);
+    Log(a.y);
+
     return app.Run();
 }

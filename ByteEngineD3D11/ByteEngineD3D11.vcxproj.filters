@@ -122,6 +122,9 @@
     <ClCompile Include="Code\Source\Core\Math\Vector2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Source\Core\Math\Math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\ByteEngineD3D11.rc">
