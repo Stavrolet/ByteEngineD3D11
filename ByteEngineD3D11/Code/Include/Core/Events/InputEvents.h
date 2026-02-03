@@ -5,6 +5,8 @@
 
 namespace ByteEngine
 {
+    using namespace ::ByteEngine::Math;
+
     struct KeyEvent
     {
         KeyCode code;

@@ -12,6 +12,8 @@
 
 namespace ByteEngine
 {
+    using namespace ::ByteEngine::Math;
+
     class Input : public Singleton<Input>
     {
         friend class Application;

@@ -32,14 +32,14 @@ namespace ByteEngine::Math
         }
     }
 
-    RadiansF Vector2::AngleBetween(Vector2 from, Vector2 to)
+    RadianF Vector2::AngleBetween(Vector2 from, Vector2 to)
     {
         float cross = Cross(from, to);
         float dot = Dot(from, to);
         return Math::Atan2(cross, dot);
     }
 
-    RadiansF Vector2::UnsigedAngleBetween(Vector2 from, Vector2 to) { return Math::Abs(AngleBetween(from, to)); }
+    RadianF Vector2::UnsigedAngleBetween(Vector2 from, Vector2 to) { return Math::Abs(AngleBetween(from, to)); }
 
     Vector2 Vector2::Direction(Vector2 from, Vector2 to)
     {
@@ -48,7 +48,7 @@ namespace ByteEngine::Math
         return dir;
     }
 
-    RadiansF Vector2::DirectionAngle(Vector2 from, Vector2 to)
+    RadianF Vector2::DirectionAngle(Vector2 from, Vector2 to)
     {
         Vector2 dir = to - from;
         dir.Normalize();

@@ -1,10 +1,10 @@
 ﻿#pragma once
 
+#include <cassert>
 #include <cmath>
 #include <concepts>
 #include <iterator>
 #include <limits>
-#include <cassert>
 
 #undef min
 #undef max
@@ -13,26 +13,63 @@
 
 namespace ByteEngine::Math
 {
+    // not type aliases for type safety
 
-    using RadiansF = float;
-    using RadiansD = double;
-    using DegreesF = float;
-    using DegreesD = double;
+    struct RadianF
+    {
+        float value;
+
+        constexpr RadianF(float value)
+            : value(value)
+        { }
+
+        constexpr operator float() const { return value; }
+    };
+
+    struct RadianD
+    {
+        double value;
+
+        constexpr RadianD(double value)
+            : value(value)
+        { }
+
+        constexpr operator double() const { return value; }
+    };
+
+    struct DegreeF
+    {
+        float value;
+
+        constexpr DegreeF(float value)
+            : value(value)
+        { }
+
+        constexpr operator float() const { return value; }
+    };
+
+    struct DegreeD
+    {
+        double value;
+
+        constexpr DegreeD(double value)
+            : value(value)
+        { }
+
+        constexpr operator double() const { return value; }
+    };
 }
 
 namespace ByteEngine::Math::Math
 {
     template<typename T>
-    concept FloatingPointNumber = std::floating_point<T> && !std::same_as<T, long double>;
+    concept FloatingPointNumber = (std::floating_point<T> && !std::same_as<T, long double>) || std::is_same_v<T, RadianD> || std::is_same_v<T, RadianF> || std::is_same_v<T, DegreeD> || std::is_same_v<T, DegreeF>;
 
     template<typename T>
     concept IntegerNumber = std::integral<T> && !std::is_same_v<T, bool>;
 
     template<typename T>
     concept AnyNumber = IntegerNumber<T> || FloatingPointNumber<T>;
-
-    template <typename It, typename T>
-    concept ForwardIteratorTo = std::forward_iterator<It> && std::same_as<typename std::iterator_traits<It>::value_type, T>;
 
     constexpr float Infinity = std::numeric_limits<float>::infinity();
     constexpr double InfinityD = std::numeric_limits<double>::infinity();
@@ -43,14 +80,14 @@ namespace ByteEngine::Math::Math
     constexpr double PID = 3.141592653589793;
 
     constexpr float Epsilon = 1e-5f;
-    constexpr RadiansF AngleEpsilon = 1e-4f;
+    constexpr RadianF AngleEpsilon = 1e-4f;
     constexpr float UnitSizeEpsilon = 1e-4f;
 
-    constexpr RadiansF DegToRad(DegreesF deg) noexcept { return deg * (PI / 180.0f); }
-    constexpr RadiansD DegToRad(DegreesD deg) noexcept { return deg * (PID / 180.0); }
+    constexpr RadianF DegToRad(DegreeF deg) noexcept { return deg * (PI / 180.0f); }
+    constexpr RadianD DegToRad(DegreeD deg) noexcept { return deg * (PID / 180.0); }
 
-    constexpr DegreesF RadToDeg(RadiansF rad) noexcept { return rad * (180.0f / PI); }
-    constexpr DegreesD RadToDeg(RadiansD rad) noexcept { return rad * (180.0 / PID); }
+    constexpr DegreeF RadToDeg(RadianF rad) noexcept { return rad * (180.0f / PI); }
+    constexpr DegreeD RadToDeg(RadianD rad) noexcept { return rad * (180.0 / PID); }
 
     // From DirectXMath.h
     // 
@@ -62,7 +99,7 @@ namespace ByteEngine::Math::Math
     //
     // http://go.microsoft.com/fwlink/?LinkID=615560
     //-------------------------------------------------------------------------------------
-    [[nodiscard]] constexpr float Sin(RadiansF rad) noexcept
+    [[nodiscard]] constexpr float Sin(RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
         float quotient = 1.0f / PI * 2.0f * rad;
@@ -91,7 +128,7 @@ namespace ByteEngine::Math::Math
         return (((((-2.3889859e-08f * y2 + 2.7525562e-06f) * y2 - 0.00019840874f) * y2 + 0.0083333310f) * y2 - 0.16666667f) * y2 + 1.0f) * y;
     }
 
-    [[nodiscard]] inline double Sin(RadiansD rad) { return std::sin(rad); }
+    [[nodiscard]] inline double Sin(RadianD rad) { return std::sin(rad); }
 
     // From DirectXMath.h
     // 
@@ -103,7 +140,7 @@ namespace ByteEngine::Math::Math
     //
     // http://go.microsoft.com/fwlink/?LinkID=615560
     //-------------------------------------------------------------------------------------
-    [[nodiscard]] constexpr float Cos(RadiansF rad) noexcept
+    [[nodiscard]] constexpr float Cos(RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
         float quotient = 1.0f / PI * 2.0f * rad;
@@ -140,10 +177,10 @@ namespace ByteEngine::Math::Math
         return sign * p;
     }
 
-    [[nodiscard]] inline double Cos(RadiansD rad) { return std::cos(rad); }
+    [[nodiscard]] inline double Cos(RadianD rad) { return std::cos(rad); }
 
-    [[nodiscard]] inline float Tan(RadiansF rad) noexcept { return std::tan(rad); }
-    [[nodiscard]] inline double Tan(RadiansD rad) { return std::tan(rad); }
+    [[nodiscard]] inline float Tan(RadianF rad) noexcept { return std::tan(rad); }
+    [[nodiscard]] inline double Tan(RadianD rad) { return std::tan(rad); }
 
     // From DirectXMath.h
     // 
@@ -155,7 +192,7 @@ namespace ByteEngine::Math::Math
     //
     // http://go.microsoft.com/fwlink/?LinkID=615560
     //-------------------------------------------------------------------------------------
-    [[nodiscard]] inline RadiansF Asin(float value) noexcept
+    [[nodiscard]] inline RadianF Asin(float value) noexcept
     {
         // Clamp input to [-1,1].
         bool nonnegative = (value >= 0.0f);
@@ -175,7 +212,7 @@ namespace ByteEngine::Math::Math
         return (nonnegative ? PI / 2.0f - result : result - PI / 2.0f);
     }
 
-    [[nodiscard]] inline RadiansD Asin(double value) { return std::asin(value); }
+    [[nodiscard]] inline RadianD Asin(double value) { return std::asin(value); }
 
     // From DirectXMath.h
     // 
@@ -187,7 +224,7 @@ namespace ByteEngine::Math::Math
     //
     // http://go.microsoft.com/fwlink/?LinkID=615560
     //-------------------------------------------------------------------------------------
-    [[nodiscard]] inline RadiansF Acos(float value) noexcept
+    [[nodiscard]] inline RadianF Acos(float value) noexcept
     {
         // Clamp input to [-1,1].
         bool nonnegative = (value >= 0.0f);
@@ -207,10 +244,10 @@ namespace ByteEngine::Math::Math
         return (nonnegative ? result : PI - result);
     }
 
-    [[nodiscard]] inline RadiansD Acos(double value) { return std::acos(value); }
+    [[nodiscard]] inline RadianD Acos(double value) { return std::acos(value); }
 
-    [[nodiscard]] inline RadiansF Atan(float value) noexcept { return std::atan(value); }
-    [[nodiscard]] inline RadiansD Atan(double value) { return std::atan(value); }
+    [[nodiscard]] inline RadianF Atan(float value) noexcept { return std::atan(value); }
+    [[nodiscard]] inline RadianD Atan(double value) { return std::atan(value); }
 
     // From DirectXMath.h
     // 
@@ -222,7 +259,7 @@ namespace ByteEngine::Math::Math
     //
     // http://go.microsoft.com/fwlink/?LinkID=615560
     //-------------------------------------------------------------------------------------
-    [[nodiscard]] constexpr void SinCos(float& sin, float& cos, RadiansF rad) noexcept
+    [[nodiscard]] constexpr void SinCos(float& sin, float& cos, RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
         float quotient = 1.0f / PI * 2.0f * rad;
@@ -263,8 +300,8 @@ namespace ByteEngine::Math::Math
         cos = sign * p;
     }
 
-    [[nodiscard]] inline RadiansF Atan2(float x, float y) noexcept { return std::atan2(y, x); }
-    [[nodiscard]] inline RadiansD Atan2(double x, double y) { return std::atan2(y, x); }
+    [[nodiscard]] inline RadianF Atan2(float x, float y) noexcept { return std::atan2(y, x); }
+    [[nodiscard]] inline RadianD Atan2(double x, double y) { return std::atan2(y, x); }
 
     [[nodiscard]] inline float Sqrt(float value) noexcept { return std::sqrt(value); }
     [[nodiscard]] inline double Sqrt(double value) { return std::sqrt(value); }
@@ -379,11 +416,11 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] constexpr float InverseLerp(float from, float to, float t) noexcept { return (t - from) / (to - from); }
     [[nodiscard]] constexpr double InverseLerp(double from, double to, double t) noexcept { return (t - from) / (to - from); }
 
-    [[nodiscard]] inline DegreesF LerpAngle(DegreesF from, DegreesF to, DegreesF t) noexcept { return from + AngleDifference(from, to) * t; }
-    [[nodiscard]] inline DegreesD LerpAngle(DegreesD from, DegreesD to, DegreesD t) noexcept { return from + AngleDifference(from, to) * t; }
+    [[nodiscard]] inline DegreeF LerpAngle(DegreeF from, DegreeF to, DegreeF t) noexcept { return from + AngleDifference(from, to) * t; }
+    [[nodiscard]] inline DegreeD LerpAngle(DegreeD from, DegreeD to, DegreeD t) noexcept { return from + AngleDifference(from, to) * t; }
 
-    [[nodiscard]] inline DegreesF LerpAngleClamped(DegreesF from, DegreesF to, DegreesF t) noexcept { return from + AngleDifference(from, to) * Clamp(t); }
-    [[nodiscard]] inline DegreesD LerpAngleClamped(DegreesD from, DegreesD to, DegreesD t) noexcept { return from + AngleDifference(from, to) * Clamp(t); }
+    [[nodiscard]] inline DegreeF LerpAngleClamped(DegreeF from, DegreeF to, DegreeF t) noexcept { return from + AngleDifference(from, to) * Clamp(t); }
+    [[nodiscard]] inline DegreeD LerpAngleClamped(DegreeD from, DegreeD to, DegreeD t) noexcept { return from + AngleDifference(from, to) * Clamp(t); }
 
     [[nodiscard]] constexpr float MoveTowards(float current, float target, float maxDelta) noexcept
     {

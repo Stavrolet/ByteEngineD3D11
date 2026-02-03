@@ -38,7 +38,7 @@ namespace ByteEngine::Math
         Vector2 Normalized() const;
         constexpr bool IsNormalized() const { return Math::IsEqualApproximetly(1.0f, LengthSquared(), Math::UnitSizeEpsilon); }
 
-        constexpr void RotateBy(RadiansF angle)
+        constexpr void RotateBy(RadianF angle)
         {
             float sin, cos;
             Math::SinCos(sin, cos, angle);
@@ -47,7 +47,7 @@ namespace ByteEngine::Math
             y = oldX * sin + y * cos;
         }
 
-        constexpr Vector2 RotatedBy(RadiansF angle) const
+        constexpr Vector2 RotatedBy(RadianF angle) const
         {
             Vector2 copy = *this;
             copy.RotateBy(angle);
@@ -56,26 +56,26 @@ namespace ByteEngine::Math
 
         void LimitLength(float maxLength = 1.0f);
 
-        static RadiansF AngleBetween(Vector2 from, Vector2 to);
-        static RadiansF UnsigedAngleBetween(Vector2 from, Vector2 to);
+        static RadianF AngleBetween(Vector2 from, Vector2 to);
+        static RadianF UnsigedAngleBetween(Vector2 from, Vector2 to);
 
         static float Distcance(Vector2 a, Vector2 b) { return Math::Sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)); }
         static constexpr float DistcanceSquared(Vector2 a, Vector2 b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y); }
 
         static Vector2 Direction(Vector2 from, Vector2 to);
-        static RadiansF DirectionAngle(Vector2 from, Vector2 to);
+        static RadianF DirectionAngle(Vector2 from, Vector2 to);
 
         static constexpr float Cross(Vector2 a, Vector2 b) { return a.x * b.y - a.y * b.x; }
         static constexpr float Dot(Vector2 a, Vector2 b) { return a.x * b.x + a.y * b.y; }
 
-        static constexpr Vector2 FromAngle(RadiansF angle)
+        static constexpr Vector2 FromAngle(RadianF angle)
         {
             Vector2 vec;
             Math::SinCos(vec.x, vec.y, angle);
             return vec;
         }
 
-        static constexpr Vector2 FromAngle(RadiansF angle, float length) { return FromAngle(angle) * length; }
+        static constexpr Vector2 FromAngle(RadianF angle, float length) { return FromAngle(angle) * length; }
 
         static constexpr Vector2 Lerp(Vector2 from, Vector2 to, float t) { return from + (to - from) * t; }
         static constexpr Vector2 LerpClamped(Vector2 from, Vector2 to, float t) { return from + (to - from) * Math::Clamp(t); } 

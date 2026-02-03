@@ -11,6 +11,7 @@
 #include "GameTime.h"
 #include "Core/Base/Application.h"
 #include "Math/Math.h"
+#include "Math/Vector2.h"
 
 using namespace DirectX;
 using namespace ByteEngine;
@@ -545,6 +546,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR,
     //}
 
     Application app;
-    Math::Log(10.0f);
+    Math::Vector2 a(10.49794f);
+    Math::Math::Log(a.y);
     return app.Run();
 }
