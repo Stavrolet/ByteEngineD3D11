@@ -70,21 +70,21 @@ namespace ByteEngine::Math::Math
     float Fmod(float x, float y) noexcept { return std::fmod(x, y); }
     double Fmod(double x, double y) noexcept { return std::fmod(x, y); }
 
-    float AngleDifference(float from, float to) noexcept
+    RadianF AngleDifference(RadianF from, RadianF to) noexcept
     {
-        float difference = Fmod(to - from, 360.0f);
-        return Fmod(2.0f * difference, 360.0f) - difference;
+        float difference = Fmod(to - from, 2.0f * PI);
+        return Fmod(2.0f * difference, 2.0f * PI) - difference;
     }
 
-    double AngleDifference(double from, double to) noexcept
+    RadianD AngleDifference(RadianD from, RadianD to) noexcept
     {
-        double difference = Fmod(to - from, 360.0);
-        return Fmod(2.0 * difference, 360.0) - difference;
+        double difference = Fmod(to - from, 2.0 * PI_D);
+        return Fmod(2.0 * difference, 2.0 * PI_D) - difference;
     }
 
-    DegreeF LerpAngle(DegreeF from, DegreeF to, float t) noexcept { return from + AngleDifference(from, to) * t; }
-    DegreeD LerpAngle(DegreeD from, DegreeD to, double t) noexcept { return from + AngleDifference(from, to) * t; }
+    RadianF LerpAngle(RadianF from, RadianF to, float t) noexcept { return from + AngleDifference(from, to) * t; }
+    RadianD LerpAngle(RadianD from, RadianD to, double t) noexcept { return from + AngleDifference(from, to) * t; }
 
-    DegreeF LerpAngleClamped(DegreeF from, DegreeF to, float t) noexcept { return LerpAngle(from, to, Clamp(t)); }
-    DegreeD LerpAngleClamped(DegreeD from, DegreeD to, double t) noexcept { return LerpAngle(from, to, Clamp(t)); }
+    RadianF LerpAngleClamped(RadianF from, RadianF to, float t) noexcept { return LerpAngle(from, to, Clamp(t)); }
+    RadianD LerpAngleClamped(RadianD from, RadianD to, double t) noexcept { return LerpAngle(from, to, Clamp(t)); }
 }

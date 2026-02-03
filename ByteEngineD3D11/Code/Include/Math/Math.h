@@ -77,17 +77,17 @@ namespace ByteEngine::Math::Math
     constexpr double NegativeInfinityD = -std::numeric_limits<double>::infinity();
 
     constexpr float PI = 3.141592654f;
-    constexpr double PID = 3.141592653589793;
+    constexpr double PI_D = 3.141592653589793;
 
     constexpr float Epsilon = 1e-5f;
     constexpr RadianF AngleEpsilon = 1e-4f;
     constexpr float UnitSizeEpsilon = 1e-4f;
 
     constexpr RadianF DegToRad(DegreeF deg) noexcept { return deg * (PI / 180.0f); }
-    constexpr RadianD DegToRad(DegreeD deg) noexcept { return deg * (PID / 180.0); }
+    constexpr RadianD DegToRad(DegreeD deg) noexcept { return deg * (PI_D / 180.0); }
 
     constexpr DegreeF RadToDeg(RadianF rad) noexcept { return rad * (180.0f / PI); }
-    constexpr DegreeD RadToDeg(RadianD rad) noexcept { return rad * (180.0 / PID); }
+    constexpr DegreeD RadToDeg(RadianD rad) noexcept { return rad * (180.0 / PI_D); }
 
     // From DirectXMath.h
     // 
@@ -357,8 +357,8 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] constexpr float PingPong(float t, float length) noexcept { return (length != 0.0f) ? Abs(Fract((t - length) / (length * 2.0f)) * length * 2.0f - length) : 0.0f; }
     [[nodiscard]] constexpr double PingPong(double t, double length) noexcept { return (length != 0.0) ? Abs(Fract((t - length) / (length * 2.0)) * length * 2.0 - length) : 0.0; }
 
-    [[nodiscard]] float AngleDifference(float from, float to) noexcept;
-    [[nodiscard]] double AngleDifference(double from, double to) noexcept;
+    [[nodiscard]] RadianF AngleDifference(RadianF from, RadianF to) noexcept;
+    [[nodiscard]] RadianD AngleDifference(RadianD from, RadianD to) noexcept;
 
     [[nodiscard]] constexpr float Lerp(float from, float to, float t) noexcept { return from + (to - from) * t; }
     [[nodiscard]] constexpr double Lerp(double from, double to, double t) noexcept { return from + (to - from) * t; }
@@ -369,11 +369,11 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] constexpr float InverseLerp(float from, float to, float t) noexcept { return (t - from) / (to - from); }
     [[nodiscard]] constexpr double InverseLerp(double from, double to, double t) noexcept { return (t - from) / (to - from); }
 
-    [[nodiscard]] DegreeF LerpAngle(DegreeF from, DegreeF to, float t) noexcept;
-    [[nodiscard]] DegreeD LerpAngle(DegreeD from, DegreeD to, double t) noexcept;
+    [[nodiscard]] RadianF LerpAngle(RadianF from, RadianF to, float t) noexcept;
+    [[nodiscard]] RadianD LerpAngle(RadianD from, RadianD to, double t) noexcept;
 
-    [[nodiscard]] DegreeF LerpAngleClamped(DegreeF from, DegreeF to, float t) noexcept;
-    [[nodiscard]] DegreeD LerpAngleClamped(DegreeD from, DegreeD to, double t) noexcept;
+    [[nodiscard]] RadianF LerpAngleClamped(RadianF from, RadianF to, float t) noexcept;
+    [[nodiscard]] RadianD LerpAngleClamped(RadianD from, RadianD to, double t) noexcept;
 
     [[nodiscard]] constexpr float MoveTowards(float current, float target, float maxDelta) noexcept
     {
