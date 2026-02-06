@@ -172,6 +172,7 @@
     <ClInclude Include="Code\Include\DebugLogHelper.h" />
     <ClInclude Include="Code\Include\Math\Math.h" />
     <ClInclude Include="Code\Include\Math\Vector2.h" />
+    <ClInclude Include="Code\Include\Math\Vector3.h" />
     <ClInclude Include="Code\Include\Primitives.h" />
     <ClInclude Include="Code\Include\Utilities\EnumFlagsOperators.h" />
     <ClInclude Include="Code\Include\WinApiExcludingDefs\LeanAndMean.h" />
@@ -190,10 +191,11 @@
     <ClInclude Include="Code\Include\GameTime.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Source\Math\Vector3.cpp" />
     <ClCompile Include="Code\Source\Core\Base\Application.cpp" />
     <ClCompile Include="Code\Source\Core\Input\Input.cpp" />
-    <ClCompile Include="Code\Source\Core\Math\Math.cpp" />
-    <ClCompile Include="Code\Source\Core\Math\Vector2.cpp" />
+    <ClCompile Include="Code\Source\Math\Math.cpp" />
+    <ClCompile Include="Code\Source\Math\Vector2.cpp" />
     <ClCompile Include="Code\Source\DebugLogHelper.cpp" />
     <ClCompile Include="Code\Source\Main.cpp" />
     <ClCompile Include="Code\Source\Core\Base\Window\Window.cpp" />
