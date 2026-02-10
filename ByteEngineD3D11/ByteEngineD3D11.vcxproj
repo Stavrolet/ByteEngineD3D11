@@ -171,6 +171,7 @@
     <ClInclude Include="Code\Include\Core\Input\KeyCode.h" />
     <ClInclude Include="Code\Include\DebugLogHelper.h" />
     <ClInclude Include="Code\Include\Math\Math.h" />
+    <ClInclude Include="Code\Include\Math\Quaternion.h" />
     <ClInclude Include="Code\Include\Math\Vector2.h" />
     <ClInclude Include="Code\Include\Math\Vector3.h" />
     <ClInclude Include="Code\Include\Primitives.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="Code\Include\GameTime.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Source\Math\Quaternion.cpp" />
     <ClCompile Include="Code\Source\Math\Vector3.cpp" />
     <ClCompile Include="Code\Source\Core\Base\Application.cpp" />
     <ClCompile Include="Code\Source\Core\Input\Input.cpp" />

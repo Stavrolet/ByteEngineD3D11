@@ -1,6 +1,4 @@
-﻿#include "./pch.h"
-
-#include "Math/Vector3.h"
+﻿#include "Math/Vector3.h"
 
 namespace ByteEngine::Math
 {

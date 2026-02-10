@@ -11,7 +11,7 @@
 #include "GameTime.h"
 #include "Core/Base/Application.h"
 #include "Math/Math.h"
-#include "Math/Vector3.h"
+#include "Math/Quaternion.h"
 
 using namespace DirectX;
 using namespace ByteEngine;
@@ -550,6 +550,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR,
 
     Application app;
     Vector3 a(10.49794f);
+    Quaternion q = Quaternion::FromEuler(90.0f, 0.0f, 0.0f);
     Log(a.y);
 
     return app.Run();

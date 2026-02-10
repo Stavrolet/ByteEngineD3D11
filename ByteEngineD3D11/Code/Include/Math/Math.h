@@ -19,7 +19,7 @@ namespace ByteEngine::Math
     {
         float value;
 
-        constexpr RadianF(float value)
+        constexpr RadianF(float value = 0.0f)
             : value(value)
         { }
 
@@ -30,7 +30,7 @@ namespace ByteEngine::Math
     {
         double value;
 
-        constexpr RadianD(double value)
+        constexpr RadianD(double value = 0.0)
             : value(value)
         { }
 
@@ -41,7 +41,7 @@ namespace ByteEngine::Math
     {
         float value;
 
-        constexpr DegreeF(float value)
+        constexpr DegreeF(float value = 0.0f)
             : value(value)
         { }
 
@@ -52,7 +52,7 @@ namespace ByteEngine::Math
     {
         double value;
 
-        constexpr DegreeD(double value)
+        constexpr DegreeD(double value = 0.0)
             : value(value)
         { }
 

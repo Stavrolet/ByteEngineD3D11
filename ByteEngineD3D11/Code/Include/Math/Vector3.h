@@ -168,14 +168,23 @@ namespace ByteEngine::Math
             assert(index >= 0 && index < 3);
             return data[index];
         }
+
+        static const Vector3 Zero;
+        static const Vector3 One;
+        static const Vector3 Up;
+        static const Vector3 Down;
+        static const Vector3 Left;
+        static const Vector3 Right;
+        static const Vector3 Forward;
+        static const Vector3 Back;
     };
 
-    static inline constexpr Vector3 Zero(0.0f);
-    static inline constexpr Vector3 One(1.0f);
-    static inline constexpr Vector3 Up(0.0f, 1.0f, 0.0f);
-    static inline constexpr Vector3 Down(0.0f, -1.0f, 0.0f);
-    static inline constexpr Vector3 Left(-1.0f, 0.0f, 0.0f);
-    static inline constexpr Vector3 Right(1.0f, 0.0f, 0.0f);
-    static inline constexpr Vector3 Forward(0.0f, 0.0f, 1.0f);
-    static inline constexpr Vector3 Back(0.0f, 0.0f, -1.0f);
+    inline constexpr Vector3 Vector3::Zero(0.0f);
+    inline constexpr Vector3 Vector3::One(1.0f);
+    inline constexpr Vector3 Vector3::Up(0.0f, 1.0f, 0.0f);
+    inline constexpr Vector3 Vector3::Down(0.0f, -1.0f, 0.0f);
+    inline constexpr Vector3 Vector3::Left(-1.0f, 0.0f, 0.0f);
+    inline constexpr Vector3 Vector3::Right(1.0f, 0.0f, 0.0f);
+    inline constexpr Vector3 Vector3::Forward(0.0f, 0.0f, 1.0f);
+    inline constexpr Vector3 Vector3::Back(0.0f, 0.0f, -1.0f);
 }
