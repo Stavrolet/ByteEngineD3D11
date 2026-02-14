@@ -1,7 +1,0 @@
-<Solution>
-  <Configurations>
-    <Platform Name="x64" />
-    <Platform Name="x86" />
-  </Configurations>
-  <Project Path="ByteEngineD3D11/ByteEngineD3D11.vcxproj" Id="798388e4-9dc2-427b-8811-4caaaea04934" />
-</Solution>

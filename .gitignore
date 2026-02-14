@@ -40,10 +40,12 @@
 # debug information files
 *.dwo
 
-packages.config
 .cso
+CMakeUserPresets.json
 
 .vs/
-x64/
-x86/
-packages/
+out/
+build/
+ByteEngineD3D11/Platform/Windows/Resources/*
+!ByteEngineD3D11/Platform/Windows/Resources/*/
+!ByteEngineD3D11/Platform/Windows/Resources/*.*
