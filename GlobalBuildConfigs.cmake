@@ -5,8 +5,7 @@ set(COMMON_COMPILER_FLAGS $<$<CXX_COMPILER_ID:MSVC>:
     /utf-8;
     /sdl;
     /W2;/WX-;
-    /diagnostics:column;
-    /GM-;/GS;/GS;
+    /diagnostics:column;/GS;
     /Zc:wchar_t;/Zc:forScope;/Zc:inline;
     /Gd;/nologo;/FC;
     /errorReport:prompt;
@@ -14,8 +13,6 @@ set(COMMON_COMPILER_FLAGS $<$<CXX_COMPILER_ID:MSVC>:
 )
 
 set(WINDOWS_DEFINES 
-    UNICODE
-    _UNICODE
     _WINDOWS
     WIN32
     _HAS_EXCEPTIONS=0

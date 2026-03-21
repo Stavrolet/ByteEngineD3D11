@@ -1,0 +1,90 @@
+﻿#include "ByteEngine/Math/Math.h"
+
+namespace ByteEngine::Math::Math
+{
+    BYTEENGINE_API double Sin(RadianD rad) { return std::sin(rad); }
+    BYTEENGINE_API double Cos(RadianD rad) { return std::cos(rad); }
+
+    BYTEENGINE_API float Tan(RadianF rad) noexcept { return std::tan(rad); }
+    BYTEENGINE_API double Tan(RadianD rad) { return std::tan(rad); }
+
+    BYTEENGINE_API RadianF Asin(float value) noexcept
+    {
+        // Clamp input to [-1,1].
+        bool nonnegative = (value >= 0.0f);
+        float x = fabsf(value);
+        float omx = 1.0f - x;
+        if (omx < 0.0f)
+        {
+            omx = 0.0f;
+        }
+        float root = sqrtf(omx);
+
+        // 7-degree minimax approximation
+        float result = ((((((-0.0012624911f * x + 0.0066700901f) * x - 0.0170881256f) * x + 0.0308918810f) * x - 0.0501743046f) * x + 0.0889789874f) * x - 0.2145988016f) * x + 1.5707963050f;
+        result *= root;  // acos(|x|)
+
+        // acos(x) = pi - acos(-x) when x < 0, asin(x) = pi/2 - acos(x)
+        return (nonnegative ? PI / 2.0f - result : result - PI / 2.0f);
+    }
+
+    BYTEENGINE_API RadianD Asin(double value) { return std::asin(value); }
+
+    BYTEENGINE_API RadianF Acos(float value) noexcept
+    {
+        // Clamp input to [-1,1].
+        bool nonnegative = (value >= 0.0f);
+        float x = fabsf(value);
+        float omx = 1.0f - x;
+        if (omx < 0.0f)
+        {
+            omx = 0.0f;
+        }
+        float root = sqrtf(omx);
+
+        // 7-degree minimax approximation
+        float result = ((((((-0.0012624911f * x + 0.0066700901f) * x - 0.0170881256f) * x + 0.0308918810f) * x - 0.0501743046f) * x + 0.0889789874f) * x - 0.2145988016f) * x + 1.5707963050f;
+        result *= root;
+
+        // acos(x) = pi - acos(-x) when x < 0
+        return (nonnegative ? result : PI - result);
+    }
+
+    BYTEENGINE_API RadianD Acos(double value) { return std::acos(value); }
+
+    BYTEENGINE_API RadianF Atan(float value) noexcept { return std::atan(value); }
+    BYTEENGINE_API RadianD Atan(double value) { return std::atan(value); }
+
+    BYTEENGINE_API RadianF Atan2(float x, float y) noexcept { return std::atan2(x, y); }
+    BYTEENGINE_API RadianD Atan2(double x, double y) { return std::atan2(x, y); }
+
+    BYTEENGINE_API float Sqrt(float value) noexcept { return std::sqrt(value); }
+    BYTEENGINE_API double Sqrt(double value) { return std::sqrt(value); }
+
+    BYTEENGINE_API float Pow(float value, float power) noexcept { return std::pow(value, power); }
+    BYTEENGINE_API double Pow(double value, double power) noexcept { return std::pow(value, power); }
+
+    BYTEENGINE_API float LogN(float value, float base) noexcept { return Log(value) / Log(base); }
+    BYTEENGINE_API double LogN(double value, double base) noexcept { return Log(value) / Log(base); }
+
+    BYTEENGINE_API float Fmod(float x, float y) noexcept { return std::fmod(x, y); }
+    BYTEENGINE_API double Fmod(double x, double y) noexcept { return std::fmod(x, y); }
+
+    BYTEENGINE_API RadianF AngleDifference(RadianF from, RadianF to) noexcept
+    {
+        float difference = Fmod(to - from, 2.0f * PI);
+        return Fmod(2.0f * difference, 2.0f * PI) - difference;
+    }
+
+    BYTEENGINE_API RadianD AngleDifference(RadianD from, RadianD to) noexcept
+    {
+        double difference = Fmod(to - from, 2.0 * PI_D);
+        return Fmod(2.0 * difference, 2.0 * PI_D) - difference;
+    }
+
+    BYTEENGINE_API RadianF LerpAngle(RadianF from, RadianF to, float t) noexcept { return from + AngleDifference(from, to) * t; }
+    BYTEENGINE_API RadianD LerpAngle(RadianD from, RadianD to, double t) noexcept { return from + AngleDifference(from, to) * t; }
+
+    BYTEENGINE_API RadianF LerpAngleClamped(RadianF from, RadianF to, float t) noexcept { return LerpAngle(from, to, Clamp(t)); }
+    BYTEENGINE_API RadianD LerpAngleClamped(RadianD from, RadianD to, double t) noexcept { return LerpAngle(from, to, Clamp(t)); }
+}

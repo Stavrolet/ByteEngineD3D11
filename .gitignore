@@ -46,6 +46,7 @@ CMakeUserPresets.json
 .vs/
 out/
 build/
-ByteEngineD3D11/Platform/Windows/Resources/*
-!ByteEngineD3D11/Platform/Windows/Resources/*/
-!ByteEngineD3D11/Platform/Windows/Resources/*.*
+Resources/*
+!Resources/*/
+!Resources/*.*
+*.hint

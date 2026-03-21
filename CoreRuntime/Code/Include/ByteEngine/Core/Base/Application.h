@@ -1,0 +1,38 @@
+﻿#pragma once
+
+#include "ByteEngine/CoreDefs.h"
+#include "ByteEngine/Core/Base/Singleton.h"
+#include "ByteEngine/Core/EventSystem/Delegate.h"
+#include "ByteEngine/Primitives.h"
+
+#ifdef _WINDOWS
+struct HINSTANCE__;
+using HINSTANCE = HINSTANCE__*;
+#endif
+
+namespace ByteEngine
+{
+    using namespace EventSystem;
+
+    class MainWindow;
+
+    class Application : public Singleton<Application>
+    {
+#ifdef _WINDOWS
+        friend extern int __stdcall ::WinMain(HINSTANCE, HINSTANCE, char*, int);
+#endif
+
+    private:
+        int32 exitCode = 0;
+        bool isRunning = true;
+
+        Delegate<bool> quitRequest;
+
+    public:
+        BYTEENGINE_API void Quit(int32 exitCode);
+        Delegate<bool>& QuitRequest() { return quitRequest; }
+
+    private:
+        BYTEENGINE_API int32 Run(MainWindow& mainWindow);
+    };
+}

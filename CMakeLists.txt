@@ -8,4 +8,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(${CMAKE_SOURCE_DIR}/GlobalBuildConfigs.cmake)
 
-add_subdirectory("ByteEngineD3D11")
+add_subdirectory(CoreRuntime)
+add_subdirectory(WindowsLauncher)
