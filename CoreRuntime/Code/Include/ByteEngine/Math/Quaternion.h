@@ -138,6 +138,18 @@ namespace ByteEngine::Math
         constexpr bool operator==(Quaternion other) const { return x == other.x && y == other.y && z == other.z && w == other.w; }
         constexpr bool operator!=(Quaternion other) const { return !(*this == other); }
 
+        float& operator[](int32 index)
+        {
+            assert(index >= 0 && index < 4);
+            return data[index];
+        }
+
+        float operator[](int32 index) const
+        {
+            assert(index >= 0 && index < 4);
+            return data[index];
+        }
+
         [[nodiscard]] constexpr explicit operator Vector3() const { return Vector3(x, y, z); }
         [[nodiscard]] constexpr explicit operator Vector2() const { return Vector2(x, y); }
     };
