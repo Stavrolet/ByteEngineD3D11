@@ -11,6 +11,7 @@
 
 #include "ByteEngine/CoreDefs.h"
 #include "ByteEngine/Primitives.h"
+#include "ByteEngine/Math/Concepts.h"
 
 namespace ByteEngine::Math
 {
@@ -63,15 +64,6 @@ namespace ByteEngine::Math
 
 namespace ByteEngine::Math::Math
 {
-    template<typename T>
-    concept FloatingPointNumber = (std::floating_point<T> && !std::same_as<T, long double>) || std::is_same_v<T, RadianD> || std::is_same_v<T, RadianF> || std::is_same_v<T, DegreeD> || std::is_same_v<T, DegreeF>;
-
-    template<typename T>
-    concept IntegerNumber = std::integral<T> && !std::is_same_v<T, bool>;
-
-    template<typename T>
-    concept AnyNumber = IntegerNumber<T> || FloatingPointNumber<T>;
-
     constexpr float Infinity = std::numeric_limits<float>::infinity();
     constexpr double InfinityD = std::numeric_limits<double>::infinity();
     constexpr float NegativeInfinity = -std::numeric_limits<float>::infinity();
@@ -263,11 +255,54 @@ namespace ByteEngine::Math::Math
         cos = sign * p;
     }
 
+    [[nodiscard]] constexpr void SinCos(double& sin, double& cos, RadianD rad) noexcept
+    {
+        // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
+        double quotient = 1.0 / PI_D * 2.0 * rad;
+        if (rad >= 0.0)
+        {
+            quotient = static_cast<double>(static_cast<int64>(quotient + 0.5));
+        }
+        else
+        {
+            quotient = static_cast<double>(static_cast<int64>(quotient - 0.5));
+        }
+        double y = rad - PI_D * 2.0 * quotient;
+
+        // Map y to [-pi/2,pi/2] with sin(y) = sin(Value).
+        double sign;
+        if (y > PI_D / 2.0)
+        {
+            y = PI_D - y;
+            sign = -1.0;
+        }
+        else if (y < -PI_D / 2.0)
+        {
+            y = -PI_D - y;
+            sign = -1.0;
+        }
+        else
+        {
+            sign = +1.0;
+        }
+
+        double y2 = y * y;
+
+        // 11-degree minimax approximation
+        sin = (((((-2.3889859e-08 * y2 + 2.7525562e-06) * y2 - 0.00019840874) * y2 + 0.0083333310) * y2 - 0.16666667) * y2 + 1.0) * y;
+
+        // 10-degree minimax approximation
+        double p = ((((-2.6051615e-07 * y2 + 2.4760495e-05) * y2 - 0.0013888378) * y2 + 0.041666638) * y2 - 0.5) * y2 + 1.0;
+        cos = sign * p;
+    }
+
     BYTEENGINE_API [[nodiscard]] RadianF Atan2(float x, float y) noexcept;
     BYTEENGINE_API [[nodiscard]] RadianD Atan2(double x, double y);
 
     BYTEENGINE_API [[nodiscard]] float Sqrt(float value) noexcept;
     BYTEENGINE_API [[nodiscard]] double Sqrt(double value);
+    BYTEENGINE_API float Sqrt(int32 value) noexcept;
+    BYTEENGINE_API double Sqrt(int64 value) noexcept;
 
     template<AnyNumber T>
     [[nodiscard]] constexpr T Abs(T value) noexcept { return std::abs(value); }
@@ -318,23 +353,29 @@ namespace ByteEngine::Math::Math
     template<FloatingPointNumber T>
     [[nodiscard]] inline T Exp(T value) noexcept { return std::exp(value); }
 
-    BYTEENGINE_API [[nodiscard]] inline float Pow(float value, float power) noexcept;
-    BYTEENGINE_API [[nodiscard]] inline double Pow(double value, double power) noexcept;
+    BYTEENGINE_API [[nodiscard]] float Pow(float value, float power) noexcept;
+    BYTEENGINE_API [[nodiscard]] double Pow(double value, double power) noexcept;
+    BYTEENGINE_API int32 Pow(int32 value, int32 power) noexcept;
+    BYTEENGINE_API int64 Pow(int64 value, int64 power) noexcept;
 
-    template<FloatingPointNumber T>
+    template<AnyNumber T>
     [[nodiscard]] inline T Log(T value) noexcept { return std::log(value); }
 
-    template<FloatingPointNumber T>
+    template<AnyNumber T>
     [[nodiscard]] inline T Log10(T value) noexcept { return std::log10(value); }
 
-    template<FloatingPointNumber T>
+    template<AnyNumber T>
     [[nodiscard]] inline T Log2(T value) noexcept { return std::log2(value); }
 
     BYTEENGINE_API [[nodiscard]] float LogN(float value, float base) noexcept;
     BYTEENGINE_API [[nodiscard]] double LogN(double value, double base) noexcept;
+    BYTEENGINE_API [[nodiscard]] float LogN(int32 value, int32 base) noexcept;
+    BYTEENGINE_API [[nodiscard]] double LogN(int64 value, int64 base) noexcept;
 
     BYTEENGINE_API [[nodiscard]] float Fmod(float x, float y) noexcept;
     BYTEENGINE_API [[nodiscard]] double Fmod(double x, double y) noexcept;
+    BYTEENGINE_API [[nodiscard]] float Fmod(int32 x, int32 y) noexcept;
+    BYTEENGINE_API [[nodiscard]] double Fmod(int64 x, int64 y) noexcept;
 
     [[nodiscard]] constexpr bool IsEqualApproximetly(float right, float left, float tolerance = Epsilon) noexcept { return Abs(left - right) < tolerance; }
     [[nodiscard]] constexpr bool IsEqualApproximetly(double right, double left, double tolerance = Epsilon) noexcept { return Abs(left - right) < tolerance; }
@@ -344,7 +385,7 @@ namespace ByteEngine::Math::Math
         float length = end - start;
         float offsetValue = t - start;
 
-        return start + (offsetValue - (Floor(offsetValue / length) * length) + (offsetValue < 0 ? length : 0));
+        return start + (offsetValue - (Floor(offsetValue / length) * length) + (offsetValue < 0.0f ? length : 0.0f));
     }
 
     [[nodiscard]] constexpr double LoopValue(double t, double start, double end)
@@ -352,7 +393,7 @@ namespace ByteEngine::Math::Math
         double length = end - start;
         double offsetValue = t - start;
 
-        return start + (offsetValue - (Floor(offsetValue / length) * length) + (offsetValue < 0 ? length : 0));
+        return start + (offsetValue - (Floor(offsetValue / length) * length) + (offsetValue < 0.0 ? length : 0.0));
     }
 
     [[nodiscard]] constexpr float PingPong(float t, float length) noexcept { return (length != 0.0f) ? Abs(Fract((t - length) / (length * 2.0f)) * length * 2.0f - length) : 0.0f; }

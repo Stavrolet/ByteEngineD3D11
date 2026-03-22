@@ -61,14 +61,23 @@ namespace ByteEngine::Math::Math
     BYTEENGINE_API float Sqrt(float value) noexcept { return std::sqrt(value); }
     BYTEENGINE_API double Sqrt(double value) { return std::sqrt(value); }
 
+    BYTEENGINE_API float Sqrt(int32 value) noexcept { return std::sqrt(value); }
+    BYTEENGINE_API double Sqrt(int64 value) noexcept { return std::sqrt(value); }
+
     BYTEENGINE_API float Pow(float value, float power) noexcept { return std::pow(value, power); }
     BYTEENGINE_API double Pow(double value, double power) noexcept { return std::pow(value, power); }
+    BYTEENGINE_API int32 Pow(int32 value, int32 power) noexcept { return std::pow(value, power); }
+    BYTEENGINE_API int64 Pow(int64 value, int64 power) noexcept { return std::pow(value, power); }
 
     BYTEENGINE_API float LogN(float value, float base) noexcept { return Log(value) / Log(base); }
     BYTEENGINE_API double LogN(double value, double base) noexcept { return Log(value) / Log(base); }
+    BYTEENGINE_API float LogN(int32 value, int32 base) noexcept { return Log(value) / (float)Log(base); }
+    BYTEENGINE_API double LogN(int64 value, int64 base) noexcept { return Log(value) / (float)Log(base); }
 
     BYTEENGINE_API float Fmod(float x, float y) noexcept { return std::fmod(x, y); }
     BYTEENGINE_API double Fmod(double x, double y) noexcept { return std::fmod(x, y); }
+    BYTEENGINE_API [[nodiscard]] float Fmod(int32 x, int32 y) noexcept { return std::fmod(x, y); }
+    BYTEENGINE_API [[nodiscard]] double Fmod(int64 x, int64 y) noexcept { return std::fmod(x, y); }
 
     BYTEENGINE_API RadianF AngleDifference(RadianF from, RadianF to) noexcept
     {
