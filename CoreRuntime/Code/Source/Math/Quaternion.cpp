@@ -187,6 +187,4 @@ namespace ByteEngine::Math
     }
 
     Quaternion Quaternion::Slerp(Quaternion from, Quaternion to, float t) { return SlerpUnclamped(from, to, Math::Clamp(t)); }
-
-    Quaternion::operator Vector2() const { return Vector2(x, y); }
 }

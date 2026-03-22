@@ -1,11 +1,10 @@
 ﻿#pragma once
 
+#include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Math/Vector3.h"
 
 namespace ByteEngine::Math
 {
-    struct Vector2;
-
     struct Quaternion
     {
         union
@@ -140,6 +139,6 @@ namespace ByteEngine::Math
         constexpr bool operator!=(Quaternion other) const { return !(*this == other); }
 
         [[nodiscard]] constexpr explicit operator Vector3() const { return Vector3(x, y, z); }
-        [[nodiscard]] explicit operator Vector2() const;
+        [[nodiscard]] constexpr explicit operator Vector2() const { return Vector2(x, y); }
     };
 }

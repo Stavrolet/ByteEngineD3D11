@@ -7,7 +7,7 @@
 #include "ByteEngine/Core/EventSystem/Delegate.h"
 #include "ByteEngine/Core/EventSystem/MulticastDelegate.h"
 #include "ByteEngine/Core/Input/KeyCode.h"
-#include "ByteEngine/Math/Vector2i.h"
+#include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Primitives.h"
 
 namespace ByteEngine

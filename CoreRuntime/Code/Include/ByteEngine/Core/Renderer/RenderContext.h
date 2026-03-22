@@ -3,7 +3,7 @@
 #include <wil/com.h>
 
 #include "ByteEngine/Core/Base/Singleton.h"
-#include "ByteEngine/Math/Vector2i.h"
+#include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Primitives.h"
 
 struct ID3D11Device1;

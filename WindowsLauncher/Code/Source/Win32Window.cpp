@@ -5,7 +5,7 @@
 #include "resources.h"
 #include "Win32Window.h"
 #include "ByteEngine/DebugLogHelper.h"
-#include "ByteEngine/Math/Vector2i.h"
+#include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Utilities/BitFlagsHelper.h"
 
 #define WM_MODECHANGE (WM_APP + 1)
