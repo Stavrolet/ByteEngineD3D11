@@ -10,6 +10,9 @@ namespace ByteEngine::Math
     struct Vector3t;
 
     template<AnyNumber T>
+    struct Vector4t;
+
+    template<AnyNumber T>
     struct Vector2t
     {
         using RadianT = std::conditional_t<sizeof(T) == 8, RadianD, RadianF>;
@@ -68,7 +71,7 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        constexpr bool IsNormalized() const { return Math::IsEqualApproximetly(1, LengthSquared(), Math::UnitSizeEpsilon); }
+        constexpr bool IsNormalized() const { return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon)); }
 
         constexpr void RotateBy(RadianT angle)
         {
@@ -113,14 +116,7 @@ namespace ByteEngine::Math
         {
             Vector2t dir = to - from;
             dir.Normalize();
-            return dir;        
-        }
-
-        static RadianT DirectionAngle(Vector2t from, Vector2t to)
-        {
-            Vector2t dir = to - from;
-            dir.Normalize();
-            return Math::Atan2(static_cast<FloatT>(dir.x), dir.y);
+            return dir;
         }
 
         static constexpr T Cross(Vector2t a, Vector2t b) { return a.x * b.y - a.y * b.x; }
@@ -137,6 +133,7 @@ namespace ByteEngine::Math
 
         static constexpr Vector2t Lerp(Vector2t from, Vector2t to, FloatT t) { return from + (to - from) * t; }
         static constexpr Vector2t LerpClamped(Vector2t from, Vector2t to, FloatT t) { return from + (to - from) * Math::Clamp(t); }
+
         static Vector2t Slerp(Vector2t from, Vector2t to, FloatT t)
         {
             assert(t >= 0 && t <= 1);
@@ -267,14 +264,20 @@ namespace ByteEngine::Math
         }
 
         template<AnyNumber U>
-            requires !std::is_same_v<T, U> && std::is_convertible_v<T, U>
+            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
         operator Vector2t<U>() const { return Vector2t<U>(static_cast<U>(x), static_cast<U>(y)); }
 
         operator Vector3t<T>() const;
 
         template<AnyNumber U>
-            requires !std::is_same_v<T, U>&& std::is_convertible_v<T, U>
+            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
         operator Vector3t<U>() const;
+
+        operator Vector4t<T>() const;
+
+        template<AnyNumber U>
+            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
+        operator Vector4t<U>() const;
     };
 
     using Vector2f = Vector2t<float>;

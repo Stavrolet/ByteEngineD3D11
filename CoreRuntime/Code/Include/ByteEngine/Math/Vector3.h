@@ -9,6 +9,9 @@ namespace ByteEngine::Math
     struct Vector2t;
 
     template<AnyNumber T>
+    struct Vector4t;
+
+    template<AnyNumber T>
     struct Vector3t
     {
         using RadianT = std::conditional_t<sizeof(T) == 8, RadianD, RadianF>;
@@ -231,19 +234,24 @@ namespace ByteEngine::Math
         }
         
         template<AnyNumber U>
-            requires !std::is_same_v<T, U>&& std::is_convertible_v<T, U>
+            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
         operator Vector3t<U>() const { return Vector3t<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z)); }
 
         operator Vector2t<T>() const;
 
         template<AnyNumber U>
-            requires !std::is_same_v<T, U>&& std::is_convertible_v<T, U>
+            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
         operator Vector2t<U>() const;
+
+        operator Vector4t<T>() const;
+
+        template<AnyNumber U>
+            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
+        operator Vector4t<U>() const;
     };
 
     using Vector3f = Vector3t<float>;
     using Vector3d = Vector3t<double>;
     using Vector3i = Vector3t<int32>;
     using Vector3 = Vector3f;
-
 }
