@@ -145,7 +145,10 @@ namespace ByteEngine::Math
         { return FromAngle(angle) * length; }
 
         static constexpr Vector2t Lerp(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
-        { return from + (to - from) * t; }
+        {
+            assert(t >= 0 && t <= 1);
+            return from + (to - from) * t;
+        }
 
         static constexpr Vector2t LerpClamped(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
         { return from + (to - from) * Math::Clamp(t); }
@@ -189,10 +192,16 @@ namespace ByteEngine::Math
         }
 
         static constexpr Vector2t ProjectNormalized(Vector2t vec, Vector2t projectOnto) requires FloatingPointNumber<T>
-        { return projectOnto * Dot(vec, projectOnto); }
+        {
+            assert(projectOnto.IsNormalized());
+            return projectOnto * Dot(vec, projectOnto);
+        }
 
         static constexpr Vector2t Reflect(Vector2t vec, Vector2t normal) requires FloatingPointNumber<T>
-        { return vec - T(2) * Dot(vec, normal) * normal; }
+        {
+            assert(normal.IsNormalized());
+            return vec - T(2) * Dot(vec, normal) * normal;
+        }
 
         static constexpr bool IsEqualApproximetly(Vector2t a, Vector2t b) requires FloatingPointNumber<T> { return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y); }
 
