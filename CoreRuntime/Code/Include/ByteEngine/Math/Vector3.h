@@ -47,7 +47,7 @@ namespace ByteEngine::Math
         FloatT Length() const { return Math::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y + z * z; }
 
-        void Normalize()
+        void Normalize() requires FloatingPointNumber<T>
         {
             FloatT length = LengthSquared();
 
@@ -55,16 +55,19 @@ namespace ByteEngine::Math
                 *this /= Math::Sqrt(length);
         }
 
-        Vector3t Normalized() const
+        Vector3t Normalized() const requires FloatingPointNumber<T>
         {
             Vector3t copy = *this;
             copy.Normalize();
             return copy;
         }
 
-        constexpr bool IsNormalized() const { return Math::IsEqualApproximetly(1, LengthSquared(), Math::UnitSizeEpsilon); }
+        constexpr bool IsNormalized() const requires FloatingPointNumber<T>
+        {
+            return Math::IsEqualApproximetly(1, LengthSquared(), Math::UnitSizeEpsilon);
+        }
 
-        void LimitLength(FloatT maxLength = 1)
+        void LimitLength(FloatT maxLength = 1) requires FloatingPointNumber<T>
         {
             FloatT currentLength = LengthSquared();
 
@@ -75,7 +78,7 @@ namespace ByteEngine::Math
             }
         }
 
-        static RadianF AngleBetween(Vector3t from, Vector3t to, Vector3t rotationAxis)
+        static RadianF AngleBetween(Vector3t from, Vector3t to, Vector3t rotationAxis) requires FloatingPointNumber<T>
         {
             Vector3t cross = Cross(from, to);
             FloatT unsignedAngle = Math::Atan2(cross.Length(), Dot(from, to));
@@ -83,7 +86,10 @@ namespace ByteEngine::Math
             return unsignedAngle * sign;
         }
 
-        static RadianF UnsigedAngleBetween(Vector3t from, Vector3t to) { return Math::Atan2(Cross(from, to).Length(), Dot(from, to)); }
+        static RadianF UnsigedAngleBetween(Vector3t from, Vector3t to) requires FloatingPointNumber<T>
+        {
+            return Math::Atan2(Cross(from, to).Length(), Dot(from, to));
+        }
 
         static FloatT Distcance(Vector3t a, Vector3t b) { return Math::Sqrt(DistcanceSquared(a, b)); }
         static constexpr FloatT DistcanceSquared(Vector3t a, Vector3t b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z); }
@@ -91,11 +97,14 @@ namespace ByteEngine::Math
         static Vector3t Direction(Vector3t from, Vector3t to)
         {
             Vector3t dir = to - from;
-            dir.Normalize();
+
+            if constexpr (FloatingPointNumber<T>)
+                dir.Normalize();
+
             return dir;
         }
 
-        static constexpr Vector3t Cross(Vector3t a, Vector3t b)
+        static constexpr Vector3t Cross(Vector3t a, Vector3t b) requires FloatingPointNumber<T>
         {
             return Vector3t(
                 a.y * b.z - a.z * b.y,
@@ -104,12 +113,21 @@ namespace ByteEngine::Math
             );
         }
 
-        static constexpr FloatT Dot(Vector3t a, Vector3t b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
+        static constexpr FloatT Dot(Vector3t a, Vector3t b) requires FloatingPointNumber<T>
+        {
+            return a.x * b.x + a.y * b.y + a.z * b.z;
+        }
 
-        static constexpr Vector3t Lerp(Vector3t from, Vector3t to, FloatT t) { return from + (to - from) * t; }
-        static constexpr Vector3t LerpClamped(Vector3t from, Vector3t to, FloatT t) { return from + (to - from) * Math::Clamp(t); }
+        static constexpr Vector3t Lerp(Vector3t from, Vector3t to, FloatT t) requires FloatingPointNumber<T>
+        {
+            return from + (to - from) * t;
+        }
+        static constexpr Vector3t LerpClamped(Vector3t from, Vector3t to, FloatT t) requires FloatingPointNumber<T>
+        {
+            return from + (to - from) * Math::Clamp(t);
+        }
 
-        static Vector3t MoveTowards(Vector3t current, Vector3t target, FloatT maxDelta)
+        static Vector3t MoveTowards(Vector3t current, Vector3t target, FloatT maxDelta) requires FloatingPointNumber<T>
         {
             Vector3t vd = target - current;
             FloatT length = vd.Length();
@@ -120,10 +138,20 @@ namespace ByteEngine::Math
                 return current + vd / length * maxDelta;
         }
 
-        static constexpr Vector3t Project(Vector3t vec, Vector3t projectOnto) { return projectOnto * (Dot(vec, projectOnto) / projectOnto.LengthSquared()); }
-        static constexpr Vector3t ProjectNormalized(Vector3t vec, Vector3t projectOnto) { return projectOnto * Dot(vec, projectOnto); }
+        static constexpr Vector3t Project(Vector3t vec, Vector3t projectOnto) requires FloatingPointNumber<T>
+        {
+            return projectOnto * (Dot(vec, projectOnto) / projectOnto.LengthSquared());
+        }
 
-        static constexpr Vector3t Reflect(Vector3t vec, Vector3t normal) { return vec - 2 * Dot(vec, normal) * normal; }
+        static constexpr Vector3t ProjectNormalized(Vector3t vec, Vector3t projectOnto) requires FloatingPointNumber<T>
+        {
+            return projectOnto * Dot(vec, projectOnto);
+        }
+
+        static constexpr Vector3t Reflect(Vector3t vec, Vector3t normal) requires FloatingPointNumber<T>
+        {
+            return vec - 2 * Dot(vec, normal) * normal;
+        }
 
         static constexpr bool IsEqualApproximetly(Vector3t a, Vector3t b) requires FloatingPointNumber<T>
         {
@@ -232,7 +260,7 @@ namespace ByteEngine::Math
             assert(index >= 0 && index < 3);
             return data[index];
         }
-        
+
         template<AnyNumber U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
         operator Vector3t<U>() const { return Vector3t<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z)); }
