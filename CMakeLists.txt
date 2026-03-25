@@ -8,5 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(${CMAKE_SOURCE_DIR}/GlobalBuildConfigs.cmake)
 
+enable_testing()
+
 add_subdirectory(CoreRuntime)
 add_subdirectory(WindowsLauncher)
+add_subdirectory(Tests)

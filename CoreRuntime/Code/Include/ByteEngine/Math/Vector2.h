@@ -52,28 +52,33 @@ namespace ByteEngine::Math
         FloatT Length() const { return Math::Sqrt(x * x + y * y); }
         constexpr FloatT LengthSquared() const { return x * x + y * y; }
 
-        void Normalize()
+        void Normalize() requires FloatingPointNumber<T>
         {
             T length = LengthSquared();
 
-            if (length != 0)
+            if (length > Math::Epsilon)
             {
                 length = Math::Sqrt(length);
                 x /= length;
                 y /= length;
             }
+            else
+            {
+                *this = Zero();
+            }
         }
 
-        Vector2t Normalized() const
+        Vector2t Normalized() const requires FloatingPointNumber<T>
         {
             Vector2t copy = *this;
             copy.Normalize();
             return copy;
         }
 
-        constexpr bool IsNormalized() const { return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon)); }
+        constexpr bool IsNormalized() const requires FloatingPointNumber<T> 
+        { return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon)); }
 
-        constexpr void RotateBy(RadianT angle)
+        constexpr void RotateBy(RadianT angle) requires FloatingPointNumber<T>
         {
             FloatT sin, cos;
             Math::SinCos(sin, cos, angle);
@@ -82,14 +87,14 @@ namespace ByteEngine::Math
             y = oldX * sin + y * cos;
         }
 
-        constexpr Vector2t RotatedBy(RadianT angle) const
+        constexpr Vector2t RotatedBy(RadianT angle) const requires FloatingPointNumber<T>
         {
             Vector2t copy = *this;
             copy.RotateBy(angle);
             return copy;
         }
 
-        void LimitLength(T maxLength = 1)
+        void LimitLength(T maxLength = 1) requires FloatingPointNumber<T>
         {
             T currentLength = LengthSquared();
 
@@ -100,14 +105,15 @@ namespace ByteEngine::Math
             }
         }
 
-        static RadianT AngleBetween(Vector2t from, Vector2t to)
+        static RadianT AngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
         {
             FloatT cross = Cross(from, to);
             FloatT dot = Dot(from, to);
             return Math::Atan2(cross, dot);
         }
 
-        static RadianT UnsigedAngleBetween(Vector2t from, Vector2t to) { return Math::Abs(AngleBetween(from, to)); }
+        static RadianT UnsigedAngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
+        { return Math::Abs(AngleBetween(from, to)); }
 
         static T Distcance(Vector2t a, Vector2t b) { return Math::Sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)); }
         static constexpr T DistcanceSquared(Vector2t a, Vector2t b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y); }
@@ -115,26 +121,36 @@ namespace ByteEngine::Math
         static Vector2t Direction(Vector2t from, Vector2t to)
         {
             Vector2t dir = to - from;
-            dir.Normalize();
+
+            if constexpr (FloatingPointNumber<T>)
+                dir.Normalize();
+
             return dir;
         }
 
-        static constexpr T Cross(Vector2t a, Vector2t b) { return a.x * b.y - a.y * b.x; }
-        static constexpr T Dot(Vector2t a, Vector2t b) { return a.x * b.x + a.y * b.y; }
+        static constexpr T Cross(Vector2t a, Vector2t b) requires FloatingPointNumber<T>
+        { return a.x * b.y - a.y * b.x; }
 
-        static constexpr Vector2t FromAngle(RadianT angle)
+        static constexpr T Dot(Vector2t a, Vector2t b) requires FloatingPointNumber<T>
+        { return a.x * b.x + a.y * b.y; }
+
+        static constexpr Vector2t FromAngle(RadianT angle) requires FloatingPointNumber<T>
         {
             Vector2t<FloatT> vec;
             Math::SinCos(vec.x, vec.y, angle);
             return vec;
         }
 
-        static constexpr Vector2t FromAngle(RadianT angle, T length) { return FromAngle(angle) * length; }
+        static constexpr Vector2t FromAngle(RadianT angle, T length) requires FloatingPointNumber<T>
+        { return FromAngle(angle) * length; }
 
-        static constexpr Vector2t Lerp(Vector2t from, Vector2t to, FloatT t) { return from + (to - from) * t; }
-        static constexpr Vector2t LerpClamped(Vector2t from, Vector2t to, FloatT t) { return from + (to - from) * Math::Clamp(t); }
+        static constexpr Vector2t Lerp(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
+        { return from + (to - from) * t; }
 
-        static Vector2t Slerp(Vector2t from, Vector2t to, FloatT t)
+        static constexpr Vector2t LerpClamped(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
+        { return from + (to - from) * Math::Clamp(t); }
+
+        static Vector2t Slerp(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
         {
             assert(t >= 0 && t <= 1);
 
@@ -152,7 +168,7 @@ namespace ByteEngine::Math
             return from * (resultLength / startLength);
         }
 
-        static Vector2t MoveTowards(Vector2t current, Vector2t target, FloatT maxDelta)
+        static Vector2t MoveTowards(Vector2t current, Vector2t target, FloatT maxDelta) requires FloatingPointNumber<T>
         {
             Vector2t vd = target - current;
             T length = vd.Length();
@@ -163,10 +179,20 @@ namespace ByteEngine::Math
                 return current + vd / length * maxDelta;
         }
 
-        static constexpr Vector2t Project(Vector2t vec, Vector2t projectOnto) { return projectOnto * (Dot(vec, projectOnto) / projectOnto.LengthSquared()); }
-        static constexpr Vector2t ProjectNormalized(Vector2t vec, Vector2t projectOnto) { return projectOnto * Dot(vec, projectOnto); }
+        static constexpr Vector2t Project(Vector2t vec, Vector2t projectOnto) requires FloatingPointNumber<T>
+        {
+            T dot = Dot(vec, projectOnto);
+            if (dot < Math::Epsilon)
+                return Zero();
 
-        static constexpr Vector2t Reflect(Vector2t vec, Vector2t normal) { return vec - 2.0f * Dot(vec, normal) * normal; }
+            return projectOnto * (dot / projectOnto.LengthSquared());
+        }
+
+        static constexpr Vector2t ProjectNormalized(Vector2t vec, Vector2t projectOnto) requires FloatingPointNumber<T>
+        { return projectOnto * Dot(vec, projectOnto); }
+
+        static constexpr Vector2t Reflect(Vector2t vec, Vector2t normal) requires FloatingPointNumber<T>
+        { return vec - T(2) * Dot(vec, normal) * normal; }
 
         static constexpr bool IsEqualApproximetly(Vector2t a, Vector2t b) requires FloatingPointNumber<T> { return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y); }
 

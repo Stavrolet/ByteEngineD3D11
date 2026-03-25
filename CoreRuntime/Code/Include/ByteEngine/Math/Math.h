@@ -217,7 +217,7 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] constexpr void SinCos(float& sin, float& cos, RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-        float quotient = 1.0f / PI * 2.0f * rad;
+        float quotient = 1.0f / (PI * 2.0f) * rad;
         if (rad >= 0.0f)
         {
             quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
@@ -258,7 +258,7 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] constexpr void SinCos(double& sin, double& cos, RadianD rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-        double quotient = 1.0 / PI_D * 2.0 * rad;
+        double quotient = 1.0 / (PI_D * 2.0) * rad;
         if (rad >= 0.0)
         {
             quotient = static_cast<double>(static_cast<int64>(quotient + 0.5));

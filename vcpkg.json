@@ -10,6 +10,7 @@
     {
       "name": "directxtk",
       "platform": "windows"
-    }
+    },
+    "gtest"
   ]
 }
