@@ -103,9 +103,6 @@ namespace ByteEngine::Math
                 return current + vd / length * maxDelta;
         }
 
-        static constexpr Vector4t Project(Vector4t vec, Vector4t projectOnto) { return projectOnto * (Dot(vec, projectOnto) / projectOnto.LengthSquared()); }
-        static constexpr Vector4t ProjectNormalized(Vector4t vec, Vector4t projectOnto) { return projectOnto * Dot(vec, projectOnto); }
-
         static constexpr bool IsEqualApproximetly(Vector4t a, Vector4t b) requires FloatingPointNumber<T>
         {
             return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y) && Math::IsEqualApproximetly(a.z, b.z);
