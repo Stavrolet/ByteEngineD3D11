@@ -49,7 +49,7 @@ namespace ByteEngine::Math
         FloatT Length() const { return Math::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y + z * z + w * w; }
 
-        void Normalize()
+        void Normalize() requires FloatingPointNumber<T>
         {
             FloatT length = LengthSquared();
 
@@ -57,16 +57,17 @@ namespace ByteEngine::Math
                 *this /= Math::Sqrt(length);
         }
 
-        Vector4t Normalized() const
+        Vector4t Normalized() const requires FloatingPointNumber<T>
         {
             Vector4t copy = *this;
             copy.Normalize();
             return copy;
         }
 
-        constexpr bool IsNormalized() const { return Math::IsEqualApproximetly(1, LengthSquared(), Math::UnitSizeEpsilon); }
+        constexpr bool IsNormalized() const requires FloatingPointNumber<T>
+        { return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon)); }
 
-        void LimitLength(FloatT maxLength = 1)
+        void LimitLength(FloatT maxLength = 1) requires FloatingPointNumber<T>
         {
             FloatT currentLength = LengthSquared();
 
@@ -83,16 +84,22 @@ namespace ByteEngine::Math
         static Vector4t Direction(Vector4t from, Vector4t to)
         {
             Vector4t dir = to - from;
-            dir.Normalize();
+
+            if constexpr (FloatingPointNumber<T>)
+                dir.Normalize();
+
             return dir;
         }
 
         static constexpr FloatT Dot(Vector4t a, Vector4t b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 
-        static constexpr Vector4t Lerp(Vector4t from, Vector4t to, FloatT t) { return from + (to - from) * t; }
-        static constexpr Vector4t LerpClamped(Vector4t from, Vector4t to, FloatT t) { return from + (to - from) * Math::Clamp(t); }
+        static constexpr Vector4t Lerp(Vector4t from, Vector4t to, FloatT t) requires FloatingPointNumber<T>
+        { return from + (to - from) * t; }
 
-        static Vector4t MoveTowards(Vector4t current, Vector4t target, FloatT maxDelta)
+        static constexpr Vector4t LerpClamped(Vector4t from, Vector4t to, FloatT t) requires FloatingPointNumber<T>
+        { return from + (to - from) * Math::Clamp(t); }
+
+        static Vector4t MoveTowards(Vector4t current, Vector4t target, FloatT maxDelta) requires FloatingPointNumber<T>
         {
             Vector4t vd = target - current;
             FloatT length = vd.Length();
