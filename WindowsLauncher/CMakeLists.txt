@@ -1,9 +1,10 @@
 ﻿# CMakeLists.txt for Launcher executable
 
-file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Code/Source/*.cpp")
-file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Code/Source/*.h")
-
-add_executable(Launcher ${SOURCE_FILES} ${HEADER_FILES})
+add_executable(Launcher
+    "Code/Source/Main.cpp"
+    "Code/Source/Win32Window.cpp"
+    "Code/Source/Win32Window.h"
+)
 
 target_link_libraries(Launcher PRIVATE project_options CoreRuntime)
 
