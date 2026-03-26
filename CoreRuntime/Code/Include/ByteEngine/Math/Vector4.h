@@ -53,8 +53,10 @@ namespace ByteEngine::Math
         {
             FloatT length = LengthSquared();
 
-            if (length != 0)
+            if (length > Math::Epsilon)
                 *this /= Math::Sqrt(length);
+            else
+                *this = Zero();
         }
 
         Vector4t Normalized() const requires FloatingPointNumber<T>
