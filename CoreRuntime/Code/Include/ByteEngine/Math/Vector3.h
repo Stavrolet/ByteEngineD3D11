@@ -74,16 +74,13 @@ namespace ByteEngine::Math
             FloatT currentLength = LengthSquared();
 
             if (currentLength > maxLength * maxLength)
-            {
-                currentLength = Math::Sqrt(currentLength);
-                *this *= maxLength / currentLength;
-            }
+                *this *= maxLength / Math::Sqrt(currentLength);
         }
 
         static RadianT AngleBetween(Vector3t from, Vector3t to, Vector3t rotationAxis) requires FloatingPointNumber<T>
         {
             Vector3t cross = Cross(from, to);
-            FloatT unsignedAngle = Math::Atan2(cross.Length(), Dot(from, to));
+            RadianT unsignedAngle = Math::Atan2(cross.Length(), Dot(from, to));
             FloatT sign = Math::Sign(Dot(cross, rotationAxis));
             return unsignedAngle * sign;
         }
@@ -124,6 +121,7 @@ namespace ByteEngine::Math
         {
             return from + (to - from) * t;
         }
+
         static constexpr Vector3t LerpClamped(Vector3t from, Vector3t to, FloatT t) requires FloatingPointNumber<T>
         {
             return from + (to - from) * Math::Clamp(t);
@@ -131,18 +129,18 @@ namespace ByteEngine::Math
 
         static Vector3t MoveTowards(Vector3t current, Vector3t target, FloatT maxDelta) requires FloatingPointNumber<T>
         {
-            Vector3t vd = target - current;
-            FloatT length = vd.Length();
+            Vector3t direction = target - current;
+            FloatT distance = vd.Length();
 
-            if (length <= maxDelta || length < Math::Epsilon)
+            if (distance <= maxDelta || distance < Math::Epsilon)
                 return target;
             else
-                return current + vd / length * maxDelta;
+                return current + direction / distance * maxDelta;
         }
 
         static constexpr Vector3t Project(Vector3t vec, Vector3t projectOnto) requires FloatingPointNumber<T>
         {
-            FloatT dot = Dot(vec, projectOnto);
+            T dot = Dot(vec, projectOnto);
 
             if (dot < Math::Epsilon)
                 return Zero();

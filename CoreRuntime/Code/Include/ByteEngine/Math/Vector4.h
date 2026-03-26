@@ -67,17 +67,16 @@ namespace ByteEngine::Math
         }
 
         constexpr bool IsNormalized() const requires FloatingPointNumber<T>
-        { return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon)); }
+        {
+            return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon));
+        }
 
         void LimitLength(FloatT maxLength = 1) requires FloatingPointNumber<T>
         {
             FloatT currentLength = LengthSquared();
 
             if (currentLength > maxLength * maxLength)
-            {
-                currentLength = Math::Sqrt(currentLength);
-                *this *= maxLength / currentLength;
-            }
+                *this *= maxLength / Math::Sqrt(currentLength);
         }
 
         static FloatT Distcance(Vector4t a, Vector4t b) { return Math::Sqrt(DistcanceSquared(a, b)); }
@@ -96,20 +95,24 @@ namespace ByteEngine::Math
         static constexpr FloatT Dot(Vector4t a, Vector4t b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 
         static constexpr Vector4t Lerp(Vector4t from, Vector4t to, FloatT t) requires FloatingPointNumber<T>
-        { return from + (to - from) * t; }
+        {
+            return from + (to - from) * t;
+        }
 
         static constexpr Vector4t LerpClamped(Vector4t from, Vector4t to, FloatT t) requires FloatingPointNumber<T>
-        { return from + (to - from) * Math::Clamp(t); }
+        {
+            return from + (to - from) * Math::Clamp(t);
+        }
 
         static Vector4t MoveTowards(Vector4t current, Vector4t target, FloatT maxDelta) requires FloatingPointNumber<T>
         {
-            Vector4t vd = target - current;
-            FloatT length = vd.Length();
+            Vector4t direction = target - current;
+            FloatT distance = vd.Length();
 
-            if (length <= maxDelta || length < Math::Epsilon)
+            if (distance <= maxDelta || distance < Math::Epsilon)
                 return target;
             else
-                return current + vd / length * maxDelta;
+                return current + direction / distance * maxDelta;
         }
 
         static constexpr bool IsEqualApproximetly(Vector4t a, Vector4t b) requires FloatingPointNumber<T>

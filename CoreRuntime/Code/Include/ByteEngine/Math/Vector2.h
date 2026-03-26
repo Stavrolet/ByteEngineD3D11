@@ -54,18 +54,12 @@ namespace ByteEngine::Math
 
         void Normalize() requires FloatingPointNumber<T>
         {
-            T length = LengthSquared();
+            FloatT lengthSq = LengthSquared();
 
-            if (length > Math::Epsilon)
-            {
-                length = Math::Sqrt(length);
-                x /= length;
-                y /= length;
-            }
+            if (lengthSq > Math::Epsilon)
+                *this /= Math::Sqrt(lengthSq);
             else
-            {
                 *this = Zero();
-            }
         }
 
         Vector2t Normalized() const requires FloatingPointNumber<T>
@@ -75,8 +69,10 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        constexpr bool IsNormalized() const requires FloatingPointNumber<T> 
-        { return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon)); }
+        constexpr bool IsNormalized() const requires FloatingPointNumber<T>
+        {
+            return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon));
+        }
 
         constexpr void RotateBy(RadianT angle) requires FloatingPointNumber<T>
         {
@@ -113,7 +109,9 @@ namespace ByteEngine::Math
         }
 
         static RadianT UnsigedAngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
-        { return Math::Abs(AngleBetween(from, to)); }
+        {
+            return Math::Abs(AngleBetween(from, to));
+        }
 
         static T Distcance(Vector2t a, Vector2t b) { return Math::Sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)); }
         static constexpr T DistcanceSquared(Vector2t a, Vector2t b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y); }
@@ -129,10 +127,14 @@ namespace ByteEngine::Math
         }
 
         static constexpr T Cross(Vector2t a, Vector2t b) requires FloatingPointNumber<T>
-        { return a.x * b.y - a.y * b.x; }
+        {
+            return a.x * b.y - a.y * b.x;
+        }
 
         static constexpr T Dot(Vector2t a, Vector2t b) requires FloatingPointNumber<T>
-        { return a.x * b.x + a.y * b.y; }
+        {
+            return a.x * b.x + a.y * b.y;
+        }
 
         static constexpr Vector2t FromAngle(RadianT angle) requires FloatingPointNumber<T>
         {
@@ -142,7 +144,9 @@ namespace ByteEngine::Math
         }
 
         static constexpr Vector2t FromAngle(RadianT angle, T length) requires FloatingPointNumber<T>
-        { return FromAngle(angle) * length; }
+        {
+            return FromAngle(angle) * length;
+        }
 
         static constexpr Vector2t Lerp(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
         {
@@ -151,21 +155,23 @@ namespace ByteEngine::Math
         }
 
         static constexpr Vector2t LerpClamped(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
-        { return from + (to - from) * Math::Clamp(t); }
+        {
+            return from + (to - from) * Math::Clamp(t);
+        }
 
         static Vector2t Slerp(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
         {
             assert(t >= 0 && t <= 1);
 
-            T startLength = from.LengthSquared();
-            T endLength = to.LengthSquared();
+            FloatT startLength = from.LengthSquared();
+            FloatT endLength = to.LengthSquared();
 
             if (startLength == 0 || endLength == 0)
                 return Lerp(from, to, t);
 
             startLength = Math::Sqrt(startLength);
-            T resultLength = Math::Lerp(startLength, Math::Sqrt(endLength), t);
-            T angle = AngleBetween(from, to);
+            FloatT resultLength = Math::Lerp(startLength, Math::Sqrt(endLength), t);
+            RadianT angle = AngleBetween(from, to);
 
             from.RotateBy(angle * t);
             return from * (resultLength / startLength);
@@ -173,13 +179,13 @@ namespace ByteEngine::Math
 
         static Vector2t MoveTowards(Vector2t current, Vector2t target, FloatT maxDelta) requires FloatingPointNumber<T>
         {
-            Vector2t vd = target - current;
-            T length = vd.Length();
+            Vector2t direction = target - current;
+            FloatT distance = direction.Length();
 
-            if (length <= maxDelta || length < Math::Epsilon)
+            if (distance <= maxDelta || distance < Math::Epsilon)
                 return target;
             else
-                return current + vd / length * maxDelta;
+                return current + direction / distance * maxDelta;
         }
 
         static constexpr Vector2t Project(Vector2t vec, Vector2t projectOnto) requires FloatingPointNumber<T>
