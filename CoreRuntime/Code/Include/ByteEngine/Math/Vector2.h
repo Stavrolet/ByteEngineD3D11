@@ -193,13 +193,13 @@ namespace ByteEngine::Math
 
         static constexpr Vector2t ProjectNormalized(Vector2t vec, Vector2t projectOnto) requires FloatingPointNumber<T>
         {
-            assert(projectOnto.IsNormalized());
+            assert(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
             return projectOnto * Dot(vec, projectOnto);
         }
 
         static constexpr Vector2t Reflect(Vector2t vec, Vector2t normal) requires FloatingPointNumber<T>
         {
-            assert(normal.IsNormalized());
+            assert(normal.IsNormalized() || IsEqualApproximetly(normal, Zero()));
             return vec - T(2) * Dot(vec, normal) * normal;
         }
 
