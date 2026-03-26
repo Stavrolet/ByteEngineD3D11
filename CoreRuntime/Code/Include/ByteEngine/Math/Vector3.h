@@ -64,7 +64,7 @@ namespace ByteEngine::Math
 
         constexpr bool IsNormalized() const requires FloatingPointNumber<T>
         {
-            return Math::IsEqualApproximetly(1, LengthSquared(), Math::UnitSizeEpsilon);
+            return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon));
         }
 
         void LimitLength(FloatT maxLength = 1) requires FloatingPointNumber<T>
@@ -78,7 +78,7 @@ namespace ByteEngine::Math
             }
         }
 
-        static RadianF AngleBetween(Vector3t from, Vector3t to, Vector3t rotationAxis) requires FloatingPointNumber<T>
+        static RadianT AngleBetween(Vector3t from, Vector3t to, Vector3t rotationAxis) requires FloatingPointNumber<T>
         {
             Vector3t cross = Cross(from, to);
             FloatT unsignedAngle = Math::Atan2(cross.Length(), Dot(from, to));
@@ -86,7 +86,7 @@ namespace ByteEngine::Math
             return unsignedAngle * sign;
         }
 
-        static RadianF UnsigedAngleBetween(Vector3t from, Vector3t to) requires FloatingPointNumber<T>
+        static RadianT UnsigedAngleBetween(Vector3t from, Vector3t to) requires FloatingPointNumber<T>
         {
             return Math::Atan2(Cross(from, to).Length(), Dot(from, to));
         }
