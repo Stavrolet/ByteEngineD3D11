@@ -51,8 +51,10 @@ namespace ByteEngine::Math
         {
             FloatT length = LengthSquared();
 
-            if (length != 0)
+            if (length > 1e-10)
                 *this /= Math::Sqrt(length);
+            else
+                *this = Zero();
         }
 
         Vector3t Normalized() const requires FloatingPointNumber<T>
@@ -140,7 +142,12 @@ namespace ByteEngine::Math
 
         static constexpr Vector3t Project(Vector3t vec, Vector3t projectOnto) requires FloatingPointNumber<T>
         {
-            return projectOnto * (Dot(vec, projectOnto) / projectOnto.LengthSquared());
+            FloatT dot = Dot(vec, projectOnto);
+
+            if (dot < Math::Epsilon)
+                return Zero();
+
+            return projectOnto * (dot / projectOnto.LengthSquared());
         }
 
         static constexpr Vector3t ProjectNormalized(Vector3t vec, Vector3t projectOnto) requires FloatingPointNumber<T>
