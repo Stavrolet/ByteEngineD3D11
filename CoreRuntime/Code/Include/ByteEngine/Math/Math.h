@@ -284,18 +284,12 @@ namespace ByteEngine::Math::Math
 
     template<FloatingPointNumber T>
     [[nodiscard]] constexpr T Round(T value) noexcept { return std::round(value); }
-    [[nodiscard]] constexpr int32 RoundToInt32(float value) noexcept { return static_cast<int32>(Round(value)); }
-    [[nodiscard]] constexpr int64 RoundToInt64(double value) noexcept { return static_cast<int64>(Round(value)); }
 
     template<FloatingPointNumber T>
     [[nodiscard]] constexpr T Ceil(T value) noexcept { return std::ceil(value); }
-    [[nodiscard]] constexpr int32 CeilToInt32(float value) noexcept { return static_cast<int32>(Ceil(value)); }
-    [[nodiscard]] constexpr int64 CeilToInt64(double value) noexcept { return static_cast<int64>(Ceil(value)); }
 
     template<FloatingPointNumber T>
     [[nodiscard]] constexpr T Floor(T value) noexcept { return std::floor(value); }
-    [[nodiscard]] constexpr int32 FloorToInt32(float value) noexcept { return static_cast<int32>(Floor(value)); }
-    [[nodiscard]] constexpr int64 FloorToInt64(double value) noexcept { return static_cast<int64>(Floor(value)); }
 
     template<AnyNumber T>
     [[nodiscard]] constexpr T Sign(T value) noexcept { return static_cast<T>((value > 0) - (value < 0)); }
