@@ -15,7 +15,7 @@ namespace ByteEngine::Math
     template<AnyNumber T>
     struct Vector2t
     {
-        using RadianT = std::conditional_t<sizeof(T) == 8, RadianD, RadianF>;
+        using RadianT = std::conditional_t<sizeof(T) == sizeof(double), RadianD, RadianF>;
         using FloatT = std::conditional_t<sizeof(T) == 8, double, float>;
 
         union
@@ -49,7 +49,7 @@ namespace ByteEngine::Math
             : x(x), y(y)
         { }
 
-        FloatT Length() const { return Math::Sqrt(x * x + y * y); }
+        FloatT Length() const { return Math::Sqrt(static_cast<FloatT>(x * x + y * y)); }
         constexpr FloatT LengthSquared() const { return x * x + y * y; }
 
         void Normalize() requires FloatingPointNumber<T>
@@ -110,10 +110,10 @@ namespace ByteEngine::Math
 
         static RadianT UnsigedAngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
         {
-            return Math::Abs(AngleBetween(from, to));
+            return Math::Abs(AngleBetween(from, to).value);
         }
 
-        static T Distcance(Vector2t a, Vector2t b) { return Math::Sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)); }
+        static T Distcance(Vector2t a, Vector2t b) { return Math::Sqrt(static_cast<FloatT>((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y))); }
         static constexpr T DistcanceSquared(Vector2t a, Vector2t b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y); }
 
         static Vector2t Direction(Vector2t from, Vector2t to)
