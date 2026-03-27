@@ -3,8 +3,9 @@
 #include <cassert>
 #include <cmath>
 #include <concepts>
-#include <iterator>
 #include <limits>
+#include <ranges>
+#include <vector>
 
 #undef min
 #undef max
@@ -388,41 +389,22 @@ namespace ByteEngine::Math::Math
         return newStart + (value - oldStart) * (newEnd - newStart) / (oldEnd - oldStart);
     }
 
-    template<std::forward_iterator It>
-        requires (std::is_convertible_v<std::iter_value_t<It>, float> && (sizeof(std::iter_value_t<It>) <= sizeof(float)))
-    [[nodiscard]] constexpr float Average(It begin, It end)
+    template<AnyNumber T = float, std::ranges::input_range R>
+        requires AnyNumber<std::ranges::range_value_t<R>>
+    [[nodiscard]] constexpr T Average(const R& range)
     {
-        float sum = 0.0f;
-        int32 amount = 0;
+        std::ranges::range_value_t<R> sum = 0;
+        uint64 count = 0;
 
-        while (++begin != end)
+        for (auto el : range)
         {
-            sum += static_cast<float>(*begin);
-            amount++;
+            sum += el;
+            count++;
         }
 
-        if (amount == 0)
-            return 0.0f;
+        if (count == 0)
+            return 0;
 
-        return sum / amount;
-    }
-
-    template<std::forward_iterator It>
-        requires std::is_convertible_v<std::iter_value_t<It>, double> && (sizeof(std::iter_value_t<It>) == sizeof(double))
-    [[nodiscard]] constexpr double Average(It begin, It end)
-    {
-        double sum = 0.0;
-        int32 amount = 0;
-
-        while (++begin != end)
-        {
-            sum += static_cast<double>(*begin);
-            amount++;
-        }
-
-        if (amount == 0)
-            return 0.0;
-
-        return sum / amount;
+        return static_cast<T>(sum) / count;
     }
 }
