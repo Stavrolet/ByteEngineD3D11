@@ -130,7 +130,7 @@ namespace ByteEngine::Math
         static Vector3t MoveTowards(Vector3t current, Vector3t target, FloatT maxDelta) requires FloatingPointNumber<T>
         {
             Vector3t direction = target - current;
-            FloatT distance = vd.Length();
+            FloatT distance = direction.Length();
 
             if (distance <= maxDelta || distance < Math::Epsilon)
                 return target;
