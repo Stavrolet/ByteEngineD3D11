@@ -394,7 +394,7 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] constexpr T Average(const R& range)
     {
         std::ranges::range_value_t<R> sum = 0;
-        uint64 count = 0;
+        size_t count = 0;
 
         for (auto el : range)
         {
@@ -407,4 +407,7 @@ namespace ByteEngine::Math::Math
 
         return static_cast<T>(sum) / count;
     }
+
+    template<AnyNumber T = float, AnyNumber U>
+    [[nodiscard]] constexpr T Average(std::initializer_list<U> list) { return Average<T, std::initializer_list<U>>(list); }
 }
