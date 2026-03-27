@@ -354,7 +354,7 @@ namespace ByteEngine::Math::Math
 
     template<AnyNumber T, AnyNumber U, AnyNumber V>
         requires Internal::AnyFloating<T, U, V>
-    [[nodiscard]] constexpr decltype(T(1)* U(1)* V(1)) InverseLerp(T from, U to, V t) noexcept { return (t - from) / (to - from); }
+    [[nodiscard]] constexpr auto InverseLerp(T from, U to, V t) noexcept { return (t - from) / (to - from); }
 
     BYTEENGINE_API [[nodiscard]] RadianF LerpAngle(RadianF from, RadianF to, float t) noexcept;
     BYTEENGINE_API [[nodiscard]] RadianD LerpAngle(RadianD from, RadianD to, double t) noexcept;
