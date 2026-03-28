@@ -120,6 +120,26 @@ namespace ByteEngine::Math
             return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y) && Math::IsEqualApproximetly(a.z, b.z);
         }
 
+        static constexpr Vector4t Min(Vector4t a, Vector4t b)
+        {
+            return Vector4t(Math::Min(a.x, b.x), Math::Min(a.y, b.y), Math::Min(a.z, b.z), Math::Min(a.w, b.w));
+        }
+
+        static constexpr Vector4t Min(Vector4t a, Vector4t b, Vector4t c)
+        {
+            return Vector4t(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y), Math::Min(a.z, b.z, c.z), Math::Min(a.w, b.w, c.w));
+        }
+
+        static constexpr Vector4t Max(Vector4t a, Vector4t b)
+        {
+            return Vector4t(Math::Max(a.x, b.x), Math::Max(a.y, b.y), Math::Max(a.z, b.z), Math::Max(a.w, b.w));
+        }
+
+        static constexpr Vector4t Max(Vector4t a, Vector4t b, Vector4t c)
+        {
+            return Vector4t(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y), Math::Max(a.z, b.z, c.z), Math::Max(a.w, b.w, c.w));
+        }
+
         static constexpr Vector4t Zero() { return Vector4t(0); }
         static constexpr Vector4t One() { return Vector4t(1); }
 

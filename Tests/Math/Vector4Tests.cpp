@@ -74,6 +74,39 @@ TYPED_TEST(Vector4tFloatTypesTest, Interpolation)
     EXPECT_EQ(moved, Vec4(2, 0, 0, 0));
 }
 
+TYPED_TEST(Vector4tTest, MinMax)
+{
+    using Vec4 = typename TestFixture::Vec4;
+
+    Vec4 a(1, 10, 4, -7);
+    Vec4 b(7, 4, 5, 100);
+    Vec4 c(20, 20, -1, 0);
+
+    Vec4 min = Vec4::Min(a, b);
+    EXPECT_EQ(min.x, 1);
+    EXPECT_EQ(min.y, 4);
+    EXPECT_EQ(min.z, 4);
+    EXPECT_EQ(min.w, -7);
+
+    min = Vec4::Min(a, b, c);
+    EXPECT_EQ(min.x, 1);
+    EXPECT_EQ(min.y, 4);
+    EXPECT_EQ(min.z, -1);
+    EXPECT_EQ(min.w, -7);
+
+    Vec4 max = Vec4::Max(a, b);
+    EXPECT_EQ(max.x, 7);
+    EXPECT_EQ(max.y, 10);
+    EXPECT_EQ(max.z, 5);
+    EXPECT_EQ(max.w, 100);
+
+    max = Vec4::Max(a, b, c);
+    EXPECT_EQ(max.x, 20);
+    EXPECT_EQ(max.y, 20);
+    EXPECT_EQ(max.z, 5);
+    EXPECT_EQ(max.w, 100);
+}
+
 TYPED_TEST(Vector4tTest, Operators)
 {
     using Vec4 = typename TestFixture::Vec4;

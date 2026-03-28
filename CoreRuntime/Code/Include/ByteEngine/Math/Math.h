@@ -415,4 +415,22 @@ namespace ByteEngine::Math::Math
 
     template<AnyNumber T = float, AnyNumber U>
     [[nodiscard]] constexpr T Average(std::initializer_list<U> list) { return Average<T, std::initializer_list<U>>(list); }
+
+    template<AnyNumber T, AnyNumber U>
+    [[nodiscard]] constexpr std::common_type_t<T, U> Min(T a, U b) { return a < b ? a : b; }
+
+    template<AnyNumber T, AnyNumber U, AnyNumber V>
+    [[nodiscard]] constexpr std::common_type_t<T, U, V> Min(T a, U b, V c) { return Min(a, Min(b, c)); }
+
+    template<std::ranges::range R>
+    [[nodiscard]] constexpr std::ranges::range_value_t<R> Min(const R& range) { return std::ranges::min(range); }
+
+    template<AnyNumber T, AnyNumber U>
+    [[nodiscard]] constexpr std::common_type_t<T, U> Max(T a, U b) { return a > b ? a : b; }
+
+    template<AnyNumber T, AnyNumber U, AnyNumber V>
+    [[nodiscard]] constexpr std::common_type_t<T, U, V> Max(T a, U b, V c) { return Max(a, Max(b, c)); }
+
+    template<std::ranges::range R>
+    [[nodiscard]] constexpr std::ranges::range_value_t<R> Max(const R& range) { return std::ranges::max(range); }
 }

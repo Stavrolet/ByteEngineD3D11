@@ -163,6 +163,26 @@ namespace ByteEngine::Math
             return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y) && Math::IsEqualApproximetly(a.z, b.z);
         }
 
+        static constexpr Vector3t Min(Vector3t a, Vector3t b)
+        {
+            return Vector3t(Math::Min(a.x, b.x), Math::Min(a.y, b.y), Math::Min(a.z, b.z));
+        }
+
+        static constexpr Vector3t Min(Vector3t a, Vector3t b, Vector3t c)
+        {
+            return Vector3t(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y), Math::Min(c.z, c.z, c.z));
+        }
+
+        static constexpr Vector3t Max(Vector3t a, Vector3t b)
+        {
+            return Vector3t(Math::Max(a.x, b.x), Math::Max(a.y, b.y), Math::Max(a.z, b.z));
+        }
+
+        static constexpr Vector3t Max(Vector3t a, Vector3t b, Vector3t c)
+        {
+            return Vector3t(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y), Math::Max(a.z, b.z, c.z));
+        }
+
         static constexpr Vector3t Zero() { return Vector3t(0); }
         static constexpr Vector3t One() { return Vector3t(1); }
         static constexpr Vector3t Up() { return Vector3t(0, 1, 0); }

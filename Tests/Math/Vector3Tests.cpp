@@ -123,6 +123,35 @@ TYPED_TEST(Vector3tFloatTypesTest, InterpolationAndReflection)
     EXPECT_NEAR(reflection.z, 0.0, 1e-5);
 }
 
+TYPED_TEST(Vector3tTest, MinMax)
+{
+    using Vec3 = typename TestFixture::Vec3;
+
+    Vec3 a(1, 10, 4);
+    Vec3 b(7, 4, 5);
+    Vec3 c(20, 20, -1);
+
+    Vec3 min = Vec3::Min(a, b);
+    EXPECT_EQ(min.x, 1);
+    EXPECT_EQ(min.y, 4);
+    EXPECT_EQ(min.z, 4);
+
+    min = Vec3::Min(a, b, c);
+    EXPECT_EQ(min.x, 1);
+    EXPECT_EQ(min.y, 4);
+    EXPECT_EQ(min.z, -1);
+
+    Vec3 max = Vec3::Max(a, b);
+    EXPECT_EQ(max.x, 7);
+    EXPECT_EQ(max.y, 10);
+    EXPECT_EQ(max.z, 5);
+
+    max = Vec3::Max(a, b, c);
+    EXPECT_EQ(max.x, 20);
+    EXPECT_EQ(max.y, 20);
+    EXPECT_EQ(max.z, 5);
+}
+
 TYPED_TEST(Vector3tTest, Operators)
 {
     using Vec3 = typename TestFixture::Vec3;

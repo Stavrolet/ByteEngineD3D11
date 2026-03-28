@@ -211,6 +211,12 @@ namespace ByteEngine::Math
 
         static constexpr bool IsEqualApproximetly(Vector2t a, Vector2t b) requires FloatingPointNumber<T> { return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y); }
 
+        static constexpr Vector2t Min(Vector2t a, Vector2t b) { return Vector2t(Math::Min(a.x, b.x), Math::Min(a.y, b.y)); }
+        static constexpr Vector2t Min(Vector2t a, Vector2t b, Vector2t c) { return Vector2t(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y)); }
+
+        static constexpr Vector2t Max(Vector2t a, Vector2t b) { return Vector2t(Math::Max(a.x, b.x), Math::Max(a.y, b.y)); }
+        static constexpr Vector2t Max(Vector2t a, Vector2t b, Vector2t c) { return Vector2t(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y)); }
+
         static constexpr Vector2t Zero() { return Vector2t(0); }
         static constexpr Vector2t One() { return Vector2t(1); }
         static constexpr Vector2t Up() { return Vector2t(0, 1); }

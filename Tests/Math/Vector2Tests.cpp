@@ -120,6 +120,31 @@ TYPED_TEST(Vector2tFloatTypesTest, InterpolationAndReflection)
     EXPECT_EQ(Vec2::Reflect(vec, normal), Vec2(1, 1));
 }
 
+TYPED_TEST(Vector2tTest, MinMax)
+{
+    using Vec2 = typename TestFixture::Vec2;
+
+    Vec2 a(1, 10);
+    Vec2 b(7, 4);
+    Vec2 c(20, 20);
+
+    Vec2 min = Vec2::Min(a, b);
+    EXPECT_EQ(min.x, 1);
+    EXPECT_EQ(min.y, 4);
+
+    min = Vec2::Min(a, b, c);
+    EXPECT_EQ(min.x, 1);
+    EXPECT_EQ(min.y, 4);
+
+    Vec2 max = Vec2::Max(a, b);
+    EXPECT_EQ(max.x, 7);
+    EXPECT_EQ(max.y, 10);
+
+    max = Vec2::Max(a, b, c);
+    EXPECT_EQ(max.x, 20);
+    EXPECT_EQ(max.y, 20);
+}
+
 TYPED_TEST(Vector2tTest, Operators)
 {
     using Vec2 = typename TestFixture::Vec2;
