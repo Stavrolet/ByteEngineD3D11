@@ -47,6 +47,11 @@ namespace ByteEngine::Math
 
     using DegreeF = DegreeT<float>;
     using DegreeD = DegreeT<double>;
+
+    constexpr RadianF operator""_rf(long double value) { return RadianF(value); }
+    constexpr RadianD operator""_rd(long double value) { return RadianD(value); }
+    constexpr DegreeF operator""_df(long double value) { return DegreeF(value); }
+    constexpr DegreeD operator""_dd(long double value) { return DegreeD(value); }
 }
 
 namespace ByteEngine::Math::Math
