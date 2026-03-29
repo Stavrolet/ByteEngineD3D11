@@ -79,6 +79,8 @@ namespace ByteEngine::Math
 
         static RadianT AngleBetween(Vector3t from, Vector3t to, Vector3t rotationAxis) requires FloatingPointNumber<T>
         {
+            assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
+
             Vector3t cross = Cross(from, to);
             RadianT unsignedAngle = Math::Atan2(cross.Length(), Dot(from, to));
             FloatT sign = Math::Sign(Dot(cross, rotationAxis));
@@ -119,6 +121,7 @@ namespace ByteEngine::Math
 
         static constexpr Vector3t Lerp(Vector3t from, Vector3t to, FloatT t) requires FloatingPointNumber<T>
         {
+            assert(t >= 0 && t <= 1);
             return from + (to - from) * t;
         }
 
@@ -150,6 +153,7 @@ namespace ByteEngine::Math
 
         static constexpr Vector3t ProjectNormalized(Vector3t vec, Vector3t projectOnto) requires FloatingPointNumber<T>
         {
+            assert(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
             return projectOnto * Dot(vec, projectOnto);
         }
 

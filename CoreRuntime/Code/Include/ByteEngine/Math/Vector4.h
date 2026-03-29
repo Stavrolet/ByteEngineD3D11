@@ -96,6 +96,7 @@ namespace ByteEngine::Math
 
         static constexpr Vector4t Lerp(Vector4t from, Vector4t to, FloatT t) requires FloatingPointNumber<T>
         {
+            assert(t >= 0 && t <= 1);
             return from + (to - from) * t;
         }
 
