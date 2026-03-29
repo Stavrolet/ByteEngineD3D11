@@ -6,7 +6,6 @@
 #include <limits>
 #include <ranges>
 #include <vector>
-#include <DirectXMath.h>
 
 #undef min
 #undef max

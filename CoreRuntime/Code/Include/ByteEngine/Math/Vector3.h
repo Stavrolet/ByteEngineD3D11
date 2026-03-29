@@ -77,6 +77,35 @@ namespace ByteEngine::Math
                 *this *= maxLength / Math::Sqrt(currentLength);
         }
 
+        void RotateBy(RadianT angle, Vector3t rotationAxis = Up()) requires FloatingPointNumber<T>
+        {
+            assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
+
+            FloatT sin, cos;
+
+            if constexpr (std::is_same_v<FloatT, float>)
+            {
+                Math::SinCos(sin, cos, -angle);
+            }
+            else
+            {
+                sin = Math::Sin(RadianD(-angle));
+                cos = Math::Cos(RadianD(-angle));
+            }
+
+            if (rotationAxis.LengthSquared() < Math::Epsilon)
+                return;
+
+            *this = (*this * cos) + (Cross(rotationAxis, *this) * sin) + (rotationAxis * Dot(rotationAxis, *this) * (1 - cos));
+        }
+
+        Vector3t RotatedBy(RadianT angle, Vector3t rotationAxis = Up()) const requires FloatingPointNumber<T>
+        {
+            Vector3t copy = *this;
+            copy.RotateBy(angle, rotationAxis);
+            return copy;
+        }
+
         // AngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::signed_angle_to
         static RadianT AngleBetween(Vector3t from, Vector3t to, Vector3t rotationAxis) requires FloatingPointNumber<T>

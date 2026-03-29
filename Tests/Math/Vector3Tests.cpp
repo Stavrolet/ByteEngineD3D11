@@ -50,6 +50,20 @@ TYPED_TEST(Vector3tTest, LengthAndNormalize)
     }
 }
 
+TYPED_TEST(Vector3tFloatTypesTest, Rotation)
+{
+    using Vec3 = typename TestFixture::Vec3;
+    using RadianT = typename Vec3::RadianT;
+    Vec3 v(1.0, 0.0, 0.0);
+    Vec3 axis(0.0, 1.0, 0.0);
+
+    v.RotateBy(RadianT(Math::PI_D / 2.0f), axis);
+
+    EXPECT_NEAR(v.x, 0.0, 1e-5);
+    EXPECT_NEAR(v.y, 0.0, 1e-5);
+    EXPECT_NEAR(v.z, 1.0, 1e-5);
+}
+
 TYPED_TEST(Vector3tFloatTypesTest, AngleMethods)
 {
     using Vec3 = typename TestFixture::Vec3;
@@ -245,6 +259,39 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, VectorNormalization)
     Vec3 nan(std::numeric_limits<decltype(zero.x)>::quiet_NaN());
     nan.Normalize();
     EXPECT_TRUE(nan.x == 0 && nan.y == 0 && nan.z == 0);
+}
+
+TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotationWithZeroAxis)
+{
+    using Vec3 = typename TestFixture::Vec3;
+    using RadianT = typename Vec3::RadianT;
+    Vec3 v(1.0, 0.0, 0.0);
+    Vec3 zeroAxis(0.0, 0.0, 0.0);
+
+    v.RotateBy(RadianT(Math::PI_D / 2.0f), zeroAxis);
+
+    EXPECT_NEAR(v.x, 1.0, 1e-5);
+    EXPECT_NEAR(v.y, 0.0, 1e-5);
+    EXPECT_NEAR(v.z, 0.0, 1e-5);
+}
+
+TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotateByPrecision)
+{
+    using Vec3 = typename TestFixture::Vec3;
+    using RadianT = typename Vec3::RadianT;
+    Vec3 v(1.0, 0.0, 0.0);
+    Vec3 axis(0.0, 1.0, 0.0);
+
+    Vec3 rotated1 = v.RotatedBy(RadianT(Math::PI_D * 2.0f * 10000), axis);
+
+    EXPECT_NEAR(rotated1.x, 1.0f, 1.4e-2f);
+    EXPECT_NEAR(rotated1.y, 0.0f, 1.4e-2f);
+    EXPECT_NEAR(rotated1.z, 0.0f, 1.4e-2f);
+
+    Vec3 rotated2 = v.RotatedBy(0.0000001f, axis);
+    EXPECT_NEAR(rotated2.x, 1.0f, 1e-5f);
+    EXPECT_NEAR(rotated2.y, 0.0f, 1e-5f);
+    EXPECT_NEAR(rotated2.z, 0.0f, 1e-5f);
 }
 
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, DivisionByZero)
