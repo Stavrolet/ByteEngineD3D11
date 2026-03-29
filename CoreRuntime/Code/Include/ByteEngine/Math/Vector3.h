@@ -64,7 +64,7 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        constexpr bool IsNormalized() const requires FloatingPointNumber<T>
+        bool IsNormalized() const requires FloatingPointNumber<T>
         {
             return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon));
         }
@@ -158,7 +158,7 @@ namespace ByteEngine::Math
             return vec - 2 * Dot(vec, normal) * normal;
         }
 
-        static constexpr bool IsEqualApproximetly(Vector3t a, Vector3t b) requires FloatingPointNumber<T>
+        static bool IsEqualApproximetly(Vector3t a, Vector3t b) requires FloatingPointNumber<T>
         {
             return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y) && Math::IsEqualApproximetly(a.z, b.z);
         }

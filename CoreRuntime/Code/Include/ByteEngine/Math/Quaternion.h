@@ -37,9 +37,9 @@ namespace ByteEngine::Math
 
         void Normalize();
         [[nodiscard]] Quaternion Normalized() const;
-        [[nodiscard]] constexpr bool IsNormalized() const { return Math::IsEqualApproximetly(LengthSquared(), 1.0f, Math::UnitSizeEpsilon); }
+        [[nodiscard]] bool IsNormalized() const { return Math::IsEqualApproximetly(LengthSquared(), 1.0f, Math::UnitSizeEpsilon); }
 
-        constexpr void Inverse() 
+        void Inverse()
         {
             assert(IsNormalized());
             x = -x;
@@ -47,7 +47,7 @@ namespace ByteEngine::Math
             z = -z;
         }
 
-        [[nodiscard]] constexpr Quaternion Inversed() const
+        [[nodiscard]] Quaternion Inversed() const
         {
             Quaternion copy = *this;
             copy.Inverse();

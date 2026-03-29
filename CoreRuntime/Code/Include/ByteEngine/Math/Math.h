@@ -94,7 +94,7 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] constexpr float Sin(RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-        float quotient = 1.0f / PI * 2.0f * rad;
+        float quotient = 1.0f / (PI * 2.0f) * rad;
         if (rad >= 0.0f)
         {
             quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
@@ -135,7 +135,7 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] constexpr float Cos(RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-        float quotient = 1.0f / PI * 2.0f * rad;
+        float quotient = 1.0f / (PI * 2.0f) * rad;
         if (rad >= 0.0f)
         {
             quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
@@ -261,10 +261,10 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] RadianT<std::common_type_t<T, U>> Atan2(T x, U y) { return std::atan2(x, y); }
 
     template<FloatingPointNumber T>
-    [[nodiscard]] constexpr T Sqrt(T value) { return std::sqrt(value); }
+    [[nodiscard]] inline T Sqrt(T value) { return std::sqrt(value); }
 
     template<AnyNumber T>
-    [[nodiscard]] constexpr T Abs(T value) noexcept { return std::abs(value); }
+    [[nodiscard]] inline T Abs(T value) noexcept { return std::abs(value); }
 
     template<AnyNumber T, AnyNumber U, AnyNumber V>
     [[nodiscard]] constexpr std::common_type_t<T, U, V> Clamp(T value, U min, V max) noexcept
@@ -289,19 +289,19 @@ namespace ByteEngine::Math::Math
     }
 
     template<FloatingPointNumber T>
-    [[nodiscard]] constexpr T Round(T value) noexcept { return std::round(value); }
+    [[nodiscard]] inline T Round(T value) noexcept { return std::round(value); }
 
     template<FloatingPointNumber T>
-    [[nodiscard]] constexpr T Ceil(T value) noexcept { return std::ceil(value); }
+    [[nodiscard]] inline T Ceil(T value) noexcept { return std::ceil(value); }
 
     template<FloatingPointNumber T>
-    [[nodiscard]] constexpr T Floor(T value) noexcept { return std::floor(value); }
+    [[nodiscard]] inline T Floor(T value) noexcept { return std::floor(value); }
 
     template<AnyNumber T>
     [[nodiscard]] constexpr T Sign(T value) noexcept { return static_cast<T>((value > 0) - (value < 0)); }
 
     template<FloatingPointNumber T>
-    [[nodiscard]] constexpr T Fract(T value) noexcept { return value - Floor(value); }
+    [[nodiscard]] inline T Fract(T value) noexcept { return value - Floor(value); }
 
     template<FloatingPointNumber T>
     [[nodiscard]] inline T Exp(T value) noexcept { return std::exp(value); }
@@ -324,24 +324,34 @@ namespace ByteEngine::Math::Math
     template<FloatingPointNumber T, FloatingPointNumber U>
     [[nodiscard]] inline auto Fmod(T x, U y) noexcept { return std::fmod(x, y); }
 
-    [[nodiscard]] constexpr bool IsEqualApproximetly(float right, float left, float tolerance = Epsilon) noexcept { return Abs(left - right) < tolerance; }
-    [[nodiscard]] constexpr bool IsEqualApproximetly(double right, double left, double tolerance = EpsilonD) noexcept { return Abs(left - right) < tolerance; }
+    [[nodiscard]] inline bool IsEqualApproximetly(float right, float left, float tolerance = Epsilon) noexcept { return Abs(left - right) < tolerance; }
+    [[nodiscard]] inline bool IsEqualApproximetly(double right, double left, double tolerance = EpsilonD) noexcept { return Abs(left - right) < tolerance; }
 
-    template<AnyNumber T, AnyNumber U, AnyNumber V>
-        requires Internal::AnyFloating<T, U, V>
+    template<FloatingPointNumber T, FloatingPointNumber U, FloatingPointNumber V>
+    [[nodiscard]] inline auto LoopValue(T t, U start, V end)
+    {
+        using Common = std::common_type_t<T, U, V>;
+
+        Common range = end - start;
+        Common offset = t - start;
+
+        return Fmod(Fmod(offset, range) + range, range) + start;
+    }
+
+    template<IntegerNumber T, IntegerNumber U, IntegerNumber V>
     [[nodiscard]] constexpr auto LoopValue(T t, U start, V end)
     {
         using Common = std::common_type_t<T, U, V>;
 
-        Common length = end - start;
-        Common offsetValue = t - start;
+        Common range = end - start;
+        Common offset = t - start;
 
-        return start + (offsetValue - (Floor(offsetValue / length) * length) + (offsetValue < 0.0f ? length : 0.0f));
+        return (offset % range + range) % range + start;
     }
 
     template<AnyNumber T, AnyNumber U>
         requires Internal::AnyFloating<T, U>
-    [[nodiscard]] constexpr auto PingPong(T t, U length) noexcept
+    [[nodiscard]] inline auto PingPong(T t, U length) noexcept
     {
         using Common = std::common_type_t<T, U>;
         return (length != 0.0f) ? Abs(Fract((t - length) / (length * 2.0f)) * length * 2.0f - length) : 0.0f;
@@ -370,7 +380,7 @@ namespace ByteEngine::Math::Math
 
     template<AnyNumber T, AnyNumber U, AnyNumber V>
         requires Internal::AnyFloating<T, U, V>
-    [[nodiscard]] constexpr auto MoveTowards(T current, U target, V maxDelta) noexcept
+    [[nodiscard]] inline auto MoveTowards(T current, U target, V maxDelta) noexcept
     {
         if (Abs(target - current) <= maxDelta)
             return target;
@@ -380,7 +390,21 @@ namespace ByteEngine::Math::Math
 
     template<AnyNumber T, AnyNumber U, AnyNumber V>
         requires Internal::AnyFloating<T, U, V>
-    [[nodiscard]] constexpr auto SmoothStep(T from, U to, V delta) noexcept { return Abs(to - from) <= delta ? to : from + Sign(to - from) * delta; }
+    [[nodiscard]] inline auto SmoothStep(T edge0, U edge1, V x) noexcept
+    {
+        using Common = std::common_type_t<T, U, V>;
+
+        if (IsEqualApproximetly(static_cast<Common>(edge0), static_cast<Common>(edge1)))
+            return Common(0);
+
+        if (x <= edge0)
+            return Common(0);
+        else if (x >= edge1)
+            return Common(1);
+
+        Common t = Clamp((x - edge0) / (edge1 - edge0));
+        return t * t * (3.0f - 2.0f * t);
+    }
 
     template<AnyNumber T>
     [[nodiscard]] constexpr bool IsFinite(T value) noexcept { return std::isfinite(value); }

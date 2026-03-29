@@ -69,7 +69,7 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        constexpr bool IsNormalized() const requires FloatingPointNumber<T>
+        bool IsNormalized() const requires FloatingPointNumber<T>
         {
             return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon));
         }
@@ -197,19 +197,19 @@ namespace ByteEngine::Math
             return projectOnto * (dot / projectOnto.LengthSquared());
         }
 
-        static constexpr Vector2t ProjectNormalized(Vector2t vec, Vector2t projectOnto) requires FloatingPointNumber<T>
+        static Vector2t ProjectNormalized(Vector2t vec, Vector2t projectOnto) requires FloatingPointNumber<T>
         {
             assert(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
             return projectOnto * Dot(vec, projectOnto);
         }
 
-        static constexpr Vector2t Reflect(Vector2t vec, Vector2t normal) requires FloatingPointNumber<T>
+        static Vector2t Reflect(Vector2t vec, Vector2t normal) requires FloatingPointNumber<T>
         {
             assert(normal.IsNormalized() || IsEqualApproximetly(normal, Zero()));
             return vec - T(2) * Dot(vec, normal) * normal;
         }
 
-        static constexpr bool IsEqualApproximetly(Vector2t a, Vector2t b) requires FloatingPointNumber<T> { return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y); }
+        static bool IsEqualApproximetly(Vector2t a, Vector2t b) requires FloatingPointNumber<T> { return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y); }
 
         static constexpr Vector2t Min(Vector2t a, Vector2t b) { return Vector2t(Math::Min(a.x, b.x), Math::Min(a.y, b.y)); }
         static constexpr Vector2t Min(Vector2t a, Vector2t b, Vector2t c) { return Vector2t(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y)); }
