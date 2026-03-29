@@ -122,7 +122,7 @@ namespace ByteEngine::Math
 
         static RadianT UnsigedAngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
         {
-            return Math::Abs(AngleBetween(from, to).value);
+            return RadianT(Math::Abs(AngleBetween(from, to).value));
         }
 
         static T Distcance(Vector2t a, Vector2t b) { return Math::Sqrt(static_cast<FloatT>((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y))); }

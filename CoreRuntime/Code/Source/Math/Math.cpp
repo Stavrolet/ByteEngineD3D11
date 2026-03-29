@@ -2,8 +2,8 @@
 
 namespace ByteEngine::Math::Math
 {
-    BYTEENGINE_API double Sin(RadianD rad) { return std::sin(rad); }
-    BYTEENGINE_API double Cos(RadianD rad) { return std::cos(rad); }
+    BYTEENGINE_API double Sin(RadianD rad) { return std::sin(rad.value); }
+    BYTEENGINE_API double Cos(RadianD rad) { return std::cos(rad.value); }
 
     // Asin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     BYTEENGINE_API RadianF Asin(float value) noexcept
@@ -23,10 +23,10 @@ namespace ByteEngine::Math::Math
         result *= root;  // acos(|x|)
 
         // acos(x) = pi - acos(-x) when x < 0, asin(x) = pi/2 - acos(x)
-        return (nonnegative ? PI / 2.0f - result : result - PI / 2.0f);
+        return RadianF(nonnegative ? PI / 2.0f - result : result - PI / 2.0f);
     }
 
-    BYTEENGINE_API RadianD Asin(double value) { return std::asin(value); }
+    BYTEENGINE_API RadianD Asin(double value) { return RadianD(std::asin(value)); }
 
     // Acos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     BYTEENGINE_API RadianF Acos(float value) noexcept
@@ -46,21 +46,21 @@ namespace ByteEngine::Math::Math
         result *= root;
 
         // acos(x) = pi - acos(-x) when x < 0
-        return (nonnegative ? result : PI - result);
+        return RadianF(nonnegative ? result : PI - result);
     }
 
-    BYTEENGINE_API RadianD Acos(double value) { return std::acos(value); }
+    BYTEENGINE_API RadianD Acos(double value) { return RadianD(std::acos(value)); }
 
     BYTEENGINE_API RadianF AngleDifference(RadianF from, RadianF to) noexcept
     {
-        float difference = Fmod(to - from, 2.0f * PI);
-        return Fmod(2.0f * difference, 2.0f * PI) - difference;
+        float difference = Fmod(to.value - from.value, 2.0f * PI);
+        return RadianF(Fmod(2.0f * difference, 2.0f * PI) - difference);
     }
 
     BYTEENGINE_API RadianD AngleDifference(RadianD from, RadianD to) noexcept
     {
-        double difference = Fmod(to - from, 2.0 * PI_D);
-        return Fmod(2.0 * difference, 2.0 * PI_D) - difference;
+        double difference = Fmod(to.value - from.value, 2.0 * PI_D);
+        return RadianD(Fmod(2.0 * difference, 2.0 * PI_D) - difference);
     }
 
     BYTEENGINE_API RadianF LerpAngle(RadianF from, RadianF to, float t) noexcept { return from + AngleDifference(from, to) * t; }

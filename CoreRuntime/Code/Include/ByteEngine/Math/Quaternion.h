@@ -92,8 +92,8 @@ namespace ByteEngine::Math
 
         [[nodiscard]] static constexpr Quaternion FromEuler(Vector3 eulerAngles) { return FromEulerInRadians(eulerAngles * (Math::PI / 180.0f)); }
 
-        [[nodiscard]] static constexpr Quaternion FromEulerInRadians(RadianF pitch, RadianF yaw, RadianF roll) { return FromEulerInRadians(Vector3(pitch, yaw, roll)); }
-        [[nodiscard]] static constexpr Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(Vector3(pitch, yaw, roll) * (Math::PI / 180.0f)); }
+        [[nodiscard]] static constexpr Quaternion FromEulerInRadians(RadianF pitch, RadianF yaw, RadianF roll) { return FromEulerInRadians(Vector3(pitch.value, yaw.value, roll.value)); }
+        [[nodiscard]] static constexpr Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(Vector3(pitch.value, yaw.value, roll.value) * (Math::PI / 180.0f)); }
 
         [[nodiscard]] static Quaternion FromLookDirection(Vector3 direction, Vector3 worldUp = Vector3::Up());
         [[nodiscard]] static Quaternion FromToRotation(Vector3 from, Vector3 target);

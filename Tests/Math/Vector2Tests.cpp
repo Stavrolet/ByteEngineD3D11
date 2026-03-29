@@ -72,8 +72,8 @@ TYPED_TEST(Vector2tFloatTypesTest, AngleMethods)
     Vec2 a(1.0, 0.0);
     Vec2 b(0.0, 1.0);
 
-    EXPECT_NEAR(Vec2::AngleBetween(a, b), 1.57079 /* 90 degrees */, 1e-4);
-    EXPECT_NEAR(Vec2::UnsigedAngleBetween(a, b), 1.57079, 1e-4);
+    EXPECT_NEAR(Vec2::AngleBetween(a, b).value, Math::PI / 2.0f, 1e-4);
+    EXPECT_NEAR(Vec2::UnsigedAngleBetween(a, b).value, Math::PI / 2.0f, 1e-4);
 }
 
 TYPED_TEST(Vector2tTest, AlgebraMethods)
@@ -326,7 +326,7 @@ TYPED_TEST(Vector2tFloatTypesRobustnessTest, AngleBetweenZeroVectors)
     Vec2 normal(1, 0);
 
     auto angle = Vec2::AngleBetween(zero, normal);
-    EXPECT_EQ(angle, 0);
+    EXPECT_EQ(angle.value, 0);
 }
 
 TYPED_TEST(Vector2tFloatTypesRobustnessTest, ProjectAndReflectWithZeroNormal)
@@ -364,15 +364,15 @@ TYPED_TEST(Vector2tFloatTypesRobustnessTest, RotateByPrecision)
     using Vec2 = typename TestFixture::Vec2;
     Vec2 v(1, 0);
 
-    Vec2 rot = v.RotatedBy(1e-9);
+    Vec2 rot = v.RotatedBy(Vec2::RadianT(1e-9));
     EXPECT_NEAR(rot.x, 1.0, 1e-8);
     EXPECT_NEAR(rot.y, 0.0, 1e-8);
 
     if constexpr (std::is_same_v<decltype(v.x), float>)
-        rot = v.RotatedBy(10000 * (2 * Math::PI));
+        rot = v.RotatedBy(Vec2::RadianT(10000.0f * (2 * Math::PI)));
     else if constexpr (std::is_same_v<decltype(v.x), double>)
-        rot = v.RotatedBy(10000 * (2 * Math::PI_D));
-
+        rot = v.RotatedBy(Vec2::RadianT(10000.0 * (2 * Math::PI_D)));
+    
     EXPECT_NEAR(rot.x, 1.0, 1.3e-2);
     EXPECT_NEAR(rot.y, 0.0, 1.3e-2);
 }

@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <compare>
 #include <concepts>
 #include <limits>
 #include <ranges>
@@ -23,11 +24,75 @@ namespace ByteEngine::Math
     {
         T value;
 
-        constexpr RadianT(T value = 0.0)
+        explicit constexpr RadianT(T value = 0)
             : value(value)
         { }
+         
+        constexpr RadianT operator+() const { return RadianT(+value); }
+        constexpr RadianT operator-() const { return RadianT(-value); }
 
-        constexpr operator T() const { return value; }
+        constexpr RadianT operator+(RadianT other) const { return RadianT(value + other.value); }
+        constexpr RadianT operator+(T other) const { return RadianT(value + other); }
+        constexpr RadianT operator-(RadianT other) const { return RadianT(value - other.value); }
+        constexpr RadianT operator-(T other) const { return RadianT(value - other); }
+
+        constexpr RadianT operator*(RadianT other) const { return RadianT(value * other.value); }
+        constexpr RadianT operator*(T other) const { return RadianT(value * other); }
+        friend constexpr RadianT operator*(T other, RadianT rad) { return RadianT(rad.value * other); }
+
+        constexpr RadianT operator/(RadianT other) const { return RadianT(value / other.value); }
+        constexpr RadianT operator/(T other) const { return RadianT(value / other); }
+        friend consteval RadianT operator/(T other, RadianT rad) { return RadianT(other / rad.value); }
+
+        constexpr RadianT& operator+=(RadianT other) 
+        {
+            value += other.value;
+            return *this;
+        }
+
+        constexpr RadianT& operator+=(T other)
+        {
+            value += other;
+            return *this;
+        }
+
+        constexpr RadianT& operator-=(RadianT other)
+        {
+            value -= other.value;
+            return *this;
+        }
+
+        constexpr RadianT& operator-=(T other)
+        {
+            value -= other;
+            return *this;
+        }
+
+        constexpr RadianT& operator*=(RadianT other)
+        {
+            value *= other.value;
+            return *this;
+        }
+
+        constexpr RadianT& operator*=(T other)
+        {
+            value *= other;
+            return *this;
+        }
+
+        constexpr RadianT& operator/=(RadianT other)
+        {
+            value /= other.value;
+            return *this;
+        }
+
+        constexpr RadianT& operator/=(T other)
+        {
+            value /= other;
+            return *this;
+        }
+
+        constexpr auto operator<=>(const RadianT&) const = default;
     };
 
     template<FloatingPointNumber T>
@@ -35,11 +100,75 @@ namespace ByteEngine::Math
     {
         T value;
 
-        constexpr DegreeT(T value = 0.0)
+        constexpr DegreeT(T value = 0)
             : value(value)
         { }
 
-        constexpr operator T() const { return value; }
+        constexpr DegreeT operator+() const { return DegreeT(+value); }
+        constexpr DegreeT operator-() const { return DegreeT(-value); }
+
+        constexpr DegreeT operator+(DegreeT other) const { return DegreeT(value + other.value); }
+        constexpr DegreeT operator+(T other) const { return DegreeT(value + other); }
+        constexpr DegreeT operator-(DegreeT other) const { return DegreeT(value - other.value); }
+        constexpr DegreeT operator-(T other) const { return DegreeT(value - other); }
+
+        constexpr DegreeT operator*(DegreeT other) const { return DegreeT(value * other.value); }
+        constexpr DegreeT operator*(T other) const { return DegreeT(value * other); }
+        friend constexpr DegreeT operator*(T other, DegreeT deg) { return DegreeT(deg.value * other); }
+
+        constexpr DegreeT operator/(DegreeT other) const { return DegreeT(value / other.value); }
+        constexpr DegreeT operator/(T other) const { return DegreeT(value / other); }
+        friend consteval DegreeT operator/(T other, DegreeT deg) { return DegreeT(other / deg.value); }
+
+        constexpr DegreeT& operator+=(DegreeT other)
+        {
+            value += other.value;
+            return *this;
+        }
+
+        constexpr DegreeT& operator+=(T other)
+        {
+            value += other;
+            return *this;
+        }
+
+        constexpr DegreeT& operator-=(DegreeT other)
+        {
+            value -= other.value;
+            return *this;
+        }
+
+        constexpr DegreeT& operator-=(T other)
+        {
+            value -= other;
+            return *this;
+        }
+
+        constexpr DegreeT& operator*=(DegreeT other)
+        {
+            value *= other.value;
+            return *this;
+        }
+
+        constexpr DegreeT& operator*=(T other)
+        {
+            value *= other;
+            return *this;
+        }
+
+        constexpr DegreeT& operator/=(DegreeT other)
+        {
+            value /= other.value;
+            return *this;
+        }
+
+        constexpr DegreeT& operator/=(T other)
+        {
+            value /= other;
+            return *this;
+        }
+
+        constexpr auto operator<=>(const DegreeT&) const = default;
     };
 
     using RadianF = RadianT<float>;
@@ -72,21 +201,26 @@ namespace ByteEngine::Math::Math
 
     constexpr float Epsilon = 1e-5f;
     constexpr double EpsilonD = 1e-8f;
-    constexpr RadianF AngleEpsilon = 1e-4f;
+    constexpr RadianF AngleEpsilon = RadianF(1e-4f);
     constexpr float UnitSizeEpsilon = 1e-4f;
 
-    constexpr RadianF DegToRad(DegreeF deg) noexcept { return deg * (PI / 180.0f); }
-    constexpr RadianD DegToRad(DegreeD deg) noexcept { return deg * (PI_D / 180.0); }
+    constexpr RadianF DegToRad(DegreeF deg) noexcept { return deg.value * (PI / 180.0_rf); }
+    constexpr RadianD DegToRad(DegreeD deg) noexcept { return deg.value * (PI_D / 180.0_rd); }
 
-    constexpr DegreeF RadToDeg(RadianF rad) noexcept { return rad * (180.0f / PI); }
-    constexpr DegreeD RadToDeg(RadianD rad) noexcept { return rad * (180.0 / PI_D); }
+    constexpr DegreeF RadToDeg(RadianF rad) noexcept { return rad.value * (180.0_df / PI); }
+    constexpr DegreeD RadToDeg(RadianD rad) noexcept { return rad.value * (180.0_dd / PI_D); }
 
     // Sin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     [[nodiscard]] constexpr float Sin(RadianF rad) noexcept
     {
+        if (rad == 0.0_rf)
+        {
+            return 0.0f;
+        }
+
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-        float quotient = 1.0f / (PI * 2.0f) * rad;
-        if (rad >= 0.0f)
+        float quotient = 1.0f / (PI * 2.0f) * rad.value;
+        if (rad.value >= 0.0f)
         {
             quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
         }
@@ -94,7 +228,7 @@ namespace ByteEngine::Math::Math
         {
             quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
         }
-        float y = rad - PI * 2.0f * quotient;
+        float y = rad.value - PI * 2.0f * quotient;
 
         // Map y to [-pi/2,pi/2] with sin(y) = sin(Value).
         if (y > PI / 2.0f)
@@ -117,8 +251,8 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] constexpr float Cos(RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-        float quotient = 1.0f / (PI * 2.0f) * rad;
-        if (rad >= 0.0f)
+        float quotient = 1.0f / (PI * 2.0f) * rad.value;
+        if (rad.value >= 0.0f)
         {
             quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
         }
@@ -126,7 +260,7 @@ namespace ByteEngine::Math::Math
         {
             quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
         }
-        float y = rad - PI * 2.0f * quotient;
+        float y = rad.value - PI * 2.0f * quotient;
 
         // Map y to [-pi/2,pi/2] with cos(y) = sign*cos(x).
         float sign;
@@ -173,8 +307,8 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] constexpr void SinCos(float& sin, float& cos, RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-        float quotient = 1.0f / (PI * 2.0f) * rad;
-        if (rad >= 0.0f)
+        float quotient = 1.0f / (PI * 2.0f) * rad.value;
+        if (rad.value >= 0.0f)
         {
             quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
         }
@@ -182,7 +316,7 @@ namespace ByteEngine::Math::Math
         {
             quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
         }
-        float y = rad - PI * 2.0f * quotient;
+        float y = rad.value - PI * 2.0f * quotient;
 
         // Map y to [-pi/2,pi/2] with sin(y) = sin(Value).
         float sign;
@@ -212,7 +346,7 @@ namespace ByteEngine::Math::Math
     }
 
     template<FloatingPointNumber T, FloatingPointNumber U>
-    [[nodiscard]] RadianT<std::common_type_t<T, U>> Atan2(T x, U y) { return std::atan2(x, y); }
+    [[nodiscard]] RadianT<std::common_type_t<T, U>> Atan2(T x, U y) { return RadianT<std::common_type_t<T, U>>(std::atan2(x, y)); }
 
     template<FloatingPointNumber T>
     [[nodiscard]] inline T Sqrt(T value) { return std::sqrt(value); }

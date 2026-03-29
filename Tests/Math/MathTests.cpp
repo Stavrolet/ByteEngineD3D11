@@ -5,8 +5,8 @@ using namespace ByteEngine::Math;
 
 TEST(MathTest, ConstantsAndConversions)
 {
-    EXPECT_NEAR(Math::DegToRad(180.0_df), Math::PI, 1e-5f);
-    EXPECT_NEAR(Math::RadToDeg(RadianD(Math::PI_D)), 180.0, 1e-5);
+    EXPECT_NEAR(Math::DegToRad(180.0_df).value, Math::PI, 1e-5f);
+    EXPECT_NEAR(Math::RadToDeg(RadianD(Math::PI_D)).value, 180.0, 1e-5);
 }
 
 TEST(MathTest, Trigonometry)
@@ -21,8 +21,8 @@ TEST(MathTest, Trigonometry)
     EXPECT_NEAR(s, 1.0f, 1e-5f);
     EXPECT_NEAR(c, 0.0f, 1e-5f);
 
-    EXPECT_NEAR(Math::Asin(1.0f), Math::PI / 2.0f, 1e-4f);
-    EXPECT_NEAR(Math::Acos(0.0f), Math::PI / 2.0f, 1e-4f);
+    EXPECT_NEAR(Math::Asin(1.0f).value, Math::PI / 2.0f, 1e-4f);
+    EXPECT_NEAR(Math::Acos(0.0f).value, Math::PI / 2.0f, 1e-4f);
 }
 
 TEST(MathTest, BasicUtilities)
@@ -50,7 +50,7 @@ TEST(MathTest, ClampAndRemap)
 
 TEST(MathTest, AngleDifference)
 {
-    EXPECT_NEAR(Math::AngleDifference(18.8495559_rf, RadianF(Math::PI / 2)), Math::PI / 2, 1e-4f);
+    EXPECT_NEAR(Math::AngleDifference(18.8495559_rf, RadianF(Math::PI / 2)).value, Math::PI / 2, 1e-4f);
 }
 
 TEST(MathTest, Interpolation)
@@ -58,7 +58,7 @@ TEST(MathTest, Interpolation)
     EXPECT_NEAR(Math::Lerp(0.0f, 10.0f, 0.5f), 5.0f, 1e-5f);
     EXPECT_NEAR(Math::InverseLerp(0.0f, 10.0f, 5.0f), 0.5f, 1e-5f);
 
-    EXPECT_NEAR(Math::LerpAngle(0.0f, Math::PI / 2 + Math::PI * 2, 0.5f), 0.7853981f, 1e-4f);
+    EXPECT_NEAR(Math::LerpAngle(0.0_rf, Math::PI / 2.0_rf + Math::PI * 2.0_rf, 0.5f).value, 0.7853981f, 1e-4f);
 
     EXPECT_NEAR(Math::MoveTowards(0.0f, 10.0f, 2.0f), 2.0f, 1e-5f);
     EXPECT_NEAR(Math::MoveTowards(0.0f, 1.0f, 2.0f), 1.0f, 1e-5f);

@@ -39,7 +39,7 @@ namespace ByteEngine::Math
         float ySq = y * y;
         float zSq = z * z;
 
-        return Vector3(Math::Asin(2 * (w * x - y * z)), Math::Atan2(2 * (w * y + x * z), num + ySq - zSq), Math::Atan2(2 * (w * z + x * y), num - ySq + zSq));
+        return Vector3(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
     }
 
     Vector3 Quaternion::GetEuler() const
@@ -50,7 +50,7 @@ namespace ByteEngine::Math
         float ySq = y * y;
         float zSq = z * z;
 
-        return Vector3(Math::Asin(2 * (w * x - y * z)), Math::Atan2(2 * (w * y + x * z), num + ySq - zSq), Math::Atan2(2 * (w * z + x * y), num - ySq + zSq));
+        return Vector3(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
     }
 
     Vector3 Quaternion::GetEulerInDegrees() const { return GetEuler() * (180.0f / Math::PI); }
