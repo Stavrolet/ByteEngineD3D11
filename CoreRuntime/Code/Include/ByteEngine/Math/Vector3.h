@@ -77,6 +77,8 @@ namespace ByteEngine::Math
                 *this *= maxLength / Math::Sqrt(currentLength);
         }
 
+        // AngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+        // Source: Vector3::signed_angle_to
         static RadianT AngleBetween(Vector3t from, Vector3t to, Vector3t rotationAxis) requires FloatingPointNumber<T>
         {
             assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
@@ -87,6 +89,8 @@ namespace ByteEngine::Math
             return sign < 0 ? RadianT(-unsignedAngle) : RadianT(unsignedAngle);
         }
 
+        // UnsigedAngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+        // Source: Vector3::angle_to
         static RadianT UnsigedAngleBetween(Vector3t from, Vector3t to) requires FloatingPointNumber<T>
         {
             return Math::Atan2(Cross(from, to).Length(), Dot(from, to));
@@ -130,6 +134,8 @@ namespace ByteEngine::Math
             return from + (to - from) * Math::Clamp(t);
         }
 
+        // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+        // Source: Vector3::move_toward
         static Vector3t MoveTowards(Vector3t current, Vector3t target, FloatT maxDelta) requires FloatingPointNumber<T>
         {
             Vector3t direction = target - current;

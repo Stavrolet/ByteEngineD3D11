@@ -74,13 +74,15 @@ namespace ByteEngine::Math
             return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon));
         }
 
+        // RotateBy implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+        // Source: Vector2::rotated
         constexpr void RotateBy(RadianT angle) requires FloatingPointNumber<T>
         {
             FloatT sin, cos;
 
             if constexpr (std::is_same_v<FloatT, float>)
             {
-            Math::SinCos(sin, cos, angle);
+                Math::SinCos(sin, cos, angle);
             }
             else
             {
@@ -169,6 +171,8 @@ namespace ByteEngine::Math
             return from + (to - from) * Math::Clamp(t);
         }
 
+        // Slerp implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+        // Source: Vector2::slerp
         static Vector2t Slerp(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
         {
             assert(t >= 0 && t <= 1);
@@ -187,6 +191,8 @@ namespace ByteEngine::Math
             return from * (resultLength / startLength);
         }
 
+        // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+        // Source: Vector2::move_toward
         static Vector2t MoveTowards(Vector2t current, Vector2t target, FloatT maxDelta) requires FloatingPointNumber<T>
         {
             Vector2t direction = target - current;

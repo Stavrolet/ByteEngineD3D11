@@ -6,6 +6,7 @@
 #include <limits>
 #include <ranges>
 #include <vector>
+#include <DirectXMath.h>
 
 #undef min
 #undef max
@@ -81,16 +82,7 @@ namespace ByteEngine::Math::Math
     constexpr DegreeF RadToDeg(RadianF rad) noexcept { return rad * (180.0f / PI); }
     constexpr DegreeD RadToDeg(RadianD rad) noexcept { return rad * (180.0 / PI_D); }
 
-    // From DirectXMath.h
-    // 
-    //-------------------------------------------------------------------------------------
-    // DirectXMath.h -- SIMD C++ Math library
-    //
-    // Copyright (c) Microsoft Corporation.
-    // Licensed under the MIT License.
-    //
-    // http://go.microsoft.com/fwlink/?LinkID=615560
-    //-------------------------------------------------------------------------------------
+    // Sin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     [[nodiscard]] constexpr float Sin(RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
@@ -122,16 +114,7 @@ namespace ByteEngine::Math::Math
 
     BYTEENGINE_API [[nodiscard]] double Sin(RadianD rad);
 
-    // From DirectXMath.h
-    // 
-    //-------------------------------------------------------------------------------------
-    // DirectXMath.h -- SIMD C++ Math library
-    //
-    // Copyright (c) Microsoft Corporation.
-    // Licensed under the MIT License.
-    //
-    // http://go.microsoft.com/fwlink/?LinkID=615560
-    //-------------------------------------------------------------------------------------
+    // Cos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     [[nodiscard]] constexpr float Cos(RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
@@ -174,30 +157,12 @@ namespace ByteEngine::Math::Math
     template<FloatingPointNumber T>
     [[nodiscard]] T Tan(RadianT<T> rad) { return std::tan(rad); }
 
-    // From DirectXMath.h
-    // 
-    //-------------------------------------------------------------------------------------
-    // DirectXMath.h -- SIMD C++ Math library
-    //
-    // Copyright (c) Microsoft Corporation.
-    // Licensed under the MIT License.
-    //
-    // http://go.microsoft.com/fwlink/?LinkID=615560
-    //-------------------------------------------------------------------------------------
+    // Asin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     BYTEENGINE_API [[nodiscard]] RadianF Asin(float value) noexcept;
 
     BYTEENGINE_API [[nodiscard]] RadianD Asin(double value);
 
-    // From DirectXMath.h
-    // 
-    //-------------------------------------------------------------------------------------
-    // DirectXMath.h -- SIMD C++ Math library
-    //
-    // Copyright (c) Microsoft Corporation.
-    // Licensed under the MIT License.
-    //
-    // http://go.microsoft.com/fwlink/?LinkID=615560
-    //-------------------------------------------------------------------------------------
+    // Acos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     BYTEENGINE_API [[nodiscard]] RadianF Acos(float value) noexcept;
 
     BYTEENGINE_API [[nodiscard]] RadianD Acos(double value);
@@ -205,16 +170,7 @@ namespace ByteEngine::Math::Math
     template<FloatingPointNumber T>
     [[nodiscard]] RadianT<T> Atan(T value) { return std::atan(value); }
 
-    // From DirectXMath.h
-    // 
-    //-------------------------------------------------------------------------------------
-    // DirectXMath.h -- SIMD C++ Math library
-    //
-    // Copyright (c) Microsoft Corporation.
-    // Licensed under the MIT License.
-    //
-    // http://go.microsoft.com/fwlink/?LinkID=615560
-    //-------------------------------------------------------------------------------------
+    // SinCos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     [[nodiscard]] constexpr void SinCos(float& sin, float& cos, RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
