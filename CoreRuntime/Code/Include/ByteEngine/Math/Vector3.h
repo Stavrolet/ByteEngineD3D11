@@ -84,7 +84,7 @@ namespace ByteEngine::Math
             Vector3t cross = Cross(from, to);
             RadianT unsignedAngle = Math::Atan2(cross.Length(), Dot(from, to));
             FloatT sign = Math::Sign(Dot(cross, rotationAxis));
-            return unsignedAngle * sign;
+            return sign < 0 ? RadianT(-unsignedAngle) : RadianT(unsignedAngle);
         }
 
         static RadianT UnsigedAngleBetween(Vector3t from, Vector3t to) requires FloatingPointNumber<T>

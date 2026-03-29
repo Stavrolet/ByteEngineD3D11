@@ -292,6 +292,9 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, AngleBetweenZeroVectors)
 
     auto angle = Vec3::AngleBetween(zero, normal, axis);
     EXPECT_EQ(angle, 0);
+
+    angle = Vec3::AngleBetween(axis, normal, zero);
+    EXPECT_NEAR(angle, Math::PI / 2, 1e-4f);
 }
 
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, ProjectAndReflectWithZeroNormal)
