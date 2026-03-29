@@ -215,11 +215,10 @@ namespace ByteEngine::Math::Math
     //
     // http://go.microsoft.com/fwlink/?LinkID=615560
     //-------------------------------------------------------------------------------------
-    template<FloatingPointNumber T>
-    [[nodiscard]] constexpr void SinCos(T& sin, T& cos, RadianT<T> rad) noexcept
+    [[nodiscard]] constexpr void SinCos(float& sin, float& cos, RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-        T quotient = 1.0f / (PI * 2.0f) * rad;
+        float quotient = 1.0f / (PI * 2.0f) * rad;
         if (rad >= 0.0f)
         {
             quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
@@ -228,10 +227,10 @@ namespace ByteEngine::Math::Math
         {
             quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
         }
-        T y = rad - PI * 2.0f * quotient;
+        float y = rad - PI * 2.0f * quotient;
 
         // Map y to [-pi/2,pi/2] with sin(y) = sin(Value).
-        T sign;
+        float sign;
         if (y > PI / 2.0f)
         {
             y = PI - y;
@@ -247,13 +246,13 @@ namespace ByteEngine::Math::Math
             sign = +1.0f;
         }
 
-        T y2 = y * y;
+        float y2 = y * y;
 
         // 11-degree minimax approximation
         sin = (((((-2.3889859e-08f * y2 + 2.7525562e-06f) * y2 - 0.00019840874f) * y2 + 0.0083333310f) * y2 - 0.16666667f) * y2 + 1.0f) * y;
 
         // 10-degree minimax approximation
-        T p = ((((-2.6051615e-07f * y2 + 2.4760495e-05f) * y2 - 0.0013888378f) * y2 + 0.041666638f) * y2 - 0.5f) * y2 + 1.0f;
+        float p = ((((-2.6051615e-07f * y2 + 2.4760495e-05f) * y2 - 0.0013888378f) * y2 + 0.041666638f) * y2 - 0.5f) * y2 + 1.0f;
         cos = sign * p;
     }
 
