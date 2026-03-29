@@ -77,7 +77,17 @@ namespace ByteEngine::Math
         constexpr void RotateBy(RadianT angle) requires FloatingPointNumber<T>
         {
             FloatT sin, cos;
+
+            if constexpr (std::is_same_v<FloatT, float>)
+            {
             Math::SinCos(sin, cos, angle);
+            }
+            else
+            {
+                sin = Math::Sin(angle);
+                cos = Math::Cos(angle);
+            }
+
             T oldX = x;
             x = oldX * cos - y * sin;
             y = oldX * sin + y * cos;
