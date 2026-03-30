@@ -58,6 +58,8 @@ namespace ByteEngine::Math
         [[nodiscard]] Vector3 GetEuler() const;
         [[nodiscard]] Vector3 GetEulerInDegrees() const;
 
+        // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+        // Source: Quaternion::get_axis
         [[nodiscard]] Vector3 GetAxis() const;
         [[nodiscard]] RadianF GetAngle() const;
         void GetAxisAngle(Vector3& axis, RadianF& angle) const;

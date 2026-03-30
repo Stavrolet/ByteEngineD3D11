@@ -55,6 +55,8 @@ namespace ByteEngine::Math
 
     Vector3 Quaternion::GetEulerInDegrees() const { return GetEuler() * (180.0f / Math::PI); }
 
+    // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+    // Source: Quaternion::get_axis
     Vector3 Quaternion::GetAxis() const
     {
         if (Math::Abs(w) > 1 - Math::Epsilon)
@@ -64,6 +66,8 @@ namespace ByteEngine::Math
         return Vector3(x * invRoot, y * invRoot, z * invRoot);
     }
 
+    // GetAngle implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+    // Source: Quaternion::get_angle
     RadianF Quaternion::GetAngle() const { return 2 * Math::Acos(w); }
 
     void Quaternion::GetAxisAngle(Vector3& axis, RadianF& angle) const
@@ -74,6 +78,8 @@ namespace ByteEngine::Math
 
     RadianF Quaternion::AngleBetween(Quaternion a, Quaternion b) { return 2 * Math::Acos(Math::Abs(Dot(a, b))); }
 
+    // FromAngleAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+    // Source: Quaternion::Quaternion(const Vector3 &p_axis, real_t p_angle)
     Quaternion Quaternion::FromAngleAxis(RadianF angle, Vector3 axis)
     {
         if (!axis.IsNormalized())
@@ -144,6 +150,8 @@ namespace ByteEngine::Math
         return Quaternion(axis.x * invRoot, axis.y * invRoot, axis.z * invRoot, root * 0.5f);
     }
 
+    // SlerpUnclamped implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+    // Source: Quaternion::slerp
     Quaternion Quaternion::SlerpUnclamped(Quaternion from, Quaternion to, float t)
     {
         assert(from.IsNormalized());
