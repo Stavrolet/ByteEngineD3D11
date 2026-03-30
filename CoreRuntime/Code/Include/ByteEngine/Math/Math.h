@@ -27,7 +27,13 @@ namespace ByteEngine::Math
         explicit constexpr RadianT(T value = 0)
             : value(value)
         { }
-         
+        
+        constexpr RadianT& operator=(T other)
+        {
+            value = other;
+            return *this;
+        }
+
         constexpr RadianT operator+() const { return RadianT(+value); }
         constexpr RadianT operator-() const { return RadianT(-value); }
 
@@ -100,9 +106,15 @@ namespace ByteEngine::Math
     {
         T value;
 
-        constexpr DegreeT(T value = 0)
+        explicit constexpr DegreeT(T value = 0)
             : value(value)
         { }
+
+        constexpr DegreeT& operator=(T other)
+        {
+            value = other;
+            return *this;
+        }
 
         constexpr DegreeT operator+() const { return DegreeT(+value); }
         constexpr DegreeT operator-() const { return DegreeT(-value); }
