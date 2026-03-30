@@ -20,7 +20,7 @@ namespace ByteEngine::Math
             float data[4];
         };
 
-        constexpr Quaternion(float xyzw = 0.0f)
+        explicit constexpr Quaternion(float xyzw = 0.0f)
             : x(xyzw), y(xyzw), z(xyzw), w(xyzw)
         { }
 
