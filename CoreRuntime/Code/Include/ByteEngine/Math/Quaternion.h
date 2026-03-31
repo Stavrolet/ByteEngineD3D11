@@ -20,8 +20,8 @@ namespace ByteEngine::Math
             float data[4];
         };
 
-        explicit constexpr Quaternion(float xyzw = 0.0f)
-            : x(xyzw), y(xyzw), z(xyzw), w(xyzw)
+        explicit constexpr Quaternion(float xyz = 0.0f, float w = 1.0f)
+            : x(xyz), y(xyz), z(xyz), w(w)
         { }
 
         constexpr Quaternion(float x, float y, float z, float w)
@@ -32,11 +32,11 @@ namespace ByteEngine::Math
             : x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
         { }
 
-        [[nodiscard]] float Length() const;
+        BYTEENGINE_API [[nodiscard]] float Length() const;
         [[nodiscard]] constexpr float LengthSquared() const { return x * x + y * y + z * z + w * w; }
 
-        void Normalize();
-        [[nodiscard]] Quaternion Normalized() const;
+        BYTEENGINE_API void Normalize();
+        BYTEENGINE_API [[nodiscard]] Quaternion Normalized() const;
         [[nodiscard]] bool IsNormalized() const { return Math::IsEqualApproximetly(LengthSquared(), 1.0f, Math::UnitSizeEpsilon); }
 
         void Inverse()
@@ -54,22 +54,22 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        [[nodiscard]] Vector3 GetEuler();
-        [[nodiscard]] Vector3 GetEuler() const;
-        [[nodiscard]] Vector3 GetEulerInDegrees() const;
+        BYTEENGINE_API [[nodiscard]] Vector3 GetEuler();
+        BYTEENGINE_API [[nodiscard]] Vector3 GetEuler() const;
+        BYTEENGINE_API [[nodiscard]] Vector3 GetEulerInDegrees() const;
 
         // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Quaternion::get_axis
-        [[nodiscard]] Vector3 GetAxis() const;
-        [[nodiscard]] RadianF GetAngle() const;
-        void GetAxisAngle(Vector3& axis, RadianF& angle) const;
+        BYTEENGINE_API [[nodiscard]] Vector3 GetAxis() const;
+        BYTEENGINE_API [[nodiscard]] RadianF GetAngle() const;
+        BYTEENGINE_API void GetAxisAngle(Vector3& axis, RadianF& angle) const;
 
         [[nodiscard]] constexpr static float Dot(Quaternion a, Quaternion b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 
-        [[nodiscard]] static RadianF AngleBetween(Quaternion a, Quaternion b);
+        BYTEENGINE_API [[nodiscard]] static RadianF AngleBetween(Quaternion a, Quaternion b);
 
-        [[nodiscard]] static Quaternion FromAngleAxis(RadianF angle, Vector3 axis);
-        [[nodiscard]] static Quaternion FromAngleAxis(DegreeF angle, Vector3 axis);
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(RadianF angle, Vector3 axis);
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(DegreeF angle, Vector3 axis);
 
         [[nodiscard]] static constexpr Quaternion FromEulerInRadians(Vector3 eulerAngles)
         {
@@ -97,11 +97,11 @@ namespace ByteEngine::Math
         [[nodiscard]] static constexpr Quaternion FromEulerInRadians(RadianF pitch, RadianF yaw, RadianF roll) { return FromEulerInRadians(Vector3(pitch.value, yaw.value, roll.value)); }
         [[nodiscard]] static constexpr Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(Vector3(pitch.value, yaw.value, roll.value) * (Math::PI / 180.0f)); }
 
-        [[nodiscard]] static Quaternion FromLookDirection(Vector3 direction, Vector3 worldUp = Vector3::Up());
-        [[nodiscard]] static Quaternion FromToRotation(Vector3 from, Vector3 target);
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromLookDirection(Vector3 direction, Vector3 worldUp = Vector3::Up());
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromToRotation(Vector3 from, Vector3 target);
 
-        [[nodiscard]] static Quaternion SlerpUnclamped(Quaternion from, Quaternion to, float t);
-        [[nodiscard]] static Quaternion Slerp(Quaternion from, Quaternion to, float t);
+        BYTEENGINE_API [[nodiscard]] static Quaternion SlerpUnclamped(Quaternion from, Quaternion to, float t);
+        BYTEENGINE_API [[nodiscard]] static Quaternion Slerp(Quaternion from, Quaternion to, float t);
 
         [[nodiscard]] constexpr Quaternion operator+() const { return Quaternion(+x, +y, +z, +w); }
         [[nodiscard]] constexpr Quaternion operator-() const { return Quaternion(-x, -y, -z, -w); }
