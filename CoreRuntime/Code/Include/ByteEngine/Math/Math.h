@@ -99,6 +99,8 @@ namespace ByteEngine::Math
         }
 
         constexpr auto operator<=>(const RadianT&) const = default;
+
+        explicit constexpr operator T() const { return value; }
     };
 
     template<FloatingPointNumber T>
@@ -181,6 +183,8 @@ namespace ByteEngine::Math
         }
 
         constexpr auto operator<=>(const DegreeT&) const = default;
+
+        explicit constexpr operator T() const { return value; }
     };
 
     using RadianF = RadianT<float>;
