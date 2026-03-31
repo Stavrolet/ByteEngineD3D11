@@ -30,7 +30,7 @@ namespace ByteEngine::Math
         return copy;
     }
 
-    BYTEENGINE_API Vector3 Quaternion::GetEuler()
+    BYTEENGINE_API Vector3f Quaternion::GetEuler()
     {
         if (!IsNormalized())
             Normalize();
@@ -39,10 +39,10 @@ namespace ByteEngine::Math
         float ySq = y * y;
         float zSq = z * z;
 
-        return Vector3(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
+        return Vector3f(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
     }
 
-    BYTEENGINE_API Vector3 Quaternion::GetEuler() const
+    BYTEENGINE_API Vector3f Quaternion::GetEuler() const
     {
         assert(IsNormalized());
 
@@ -50,27 +50,27 @@ namespace ByteEngine::Math
         float ySq = y * y;
         float zSq = z * z;
 
-        return Vector3(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
+        return Vector3f(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
     }
 
-    BYTEENGINE_API Vector3 Quaternion::GetEulerInDegrees() const { return GetEuler() * (180.0f / Math::PI); }
+    BYTEENGINE_API Vector3f Quaternion::GetEulerInDegrees() const { return GetEuler() * (180.0f / Math::PI); }
 
     // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::get_axis
-    BYTEENGINE_API Vector3 Quaternion::GetAxis() const
+    BYTEENGINE_API Vector3f Quaternion::GetAxis() const
     {
         if (Math::Abs(w) > 1 - Math::Epsilon)
-            return Vector3(x, y, z);
+            return Vector3f(x, y, z);
 
         float invRoot = 1.0f / Math::Sqrt(1 - w * w);
-        return Vector3(x * invRoot, y * invRoot, z * invRoot);
+        return Vector3f(x * invRoot, y * invRoot, z * invRoot);
     }
 
     // GetAngle implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::get_angle
     BYTEENGINE_API RadianF Quaternion::GetAngle() const { return 2 * Math::Acos(w); }
 
-    BYTEENGINE_API void Quaternion::GetAxisAngle(Vector3& axis, RadianF& angle) const
+    BYTEENGINE_API void Quaternion::GetAxisAngle(Vector3f& axis, RadianF& angle) const
     {
         angle = GetAngle();
         axis = GetAxis();
@@ -79,8 +79,8 @@ namespace ByteEngine::Math
     BYTEENGINE_API RadianF Quaternion::AngleBetween(Quaternion a, Quaternion b) { return 2 * Math::Acos(Math::Abs(Dot(a, b))); }
 
     // FromAngleAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
-    // Source: Quaternion::Quaternion(const Vector3 &p_axis, real_t p_angle)
-    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(RadianF angle, Vector3 axis)
+    // Source: Quaternion::Quaternion(const Vector3f &p_axis, real_t p_angle)
+    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(RadianF angle, Vector3f axis)
     {
         if (!axis.IsNormalized())
             axis.Normalize();
@@ -101,9 +101,9 @@ namespace ByteEngine::Math
         }
     }
 
-    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(DegreeF angle, Vector3 axis) { return FromAngleAxis(Math::DegToRad(angle), axis); }
+    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(DegreeF angle, Vector3f axis) { return FromAngleAxis(Math::DegToRad(angle), axis); }
 
-    BYTEENGINE_API Quaternion Quaternion::FromLookDirection(Vector3 direction, Vector3 worldUp)
+    BYTEENGINE_API Quaternion Quaternion::FromLookDirection(Vector3f direction, Vector3f worldUp)
     {
         if (Math::IsEqualApproximetly(direction.LengthSquared(), 0.0f))
             return Quaternion(0.0f);
@@ -112,10 +112,10 @@ namespace ByteEngine::Math
         XMVECTOR worldUp2 = XMLoadFloat3(reinterpret_cast<XMFLOAT3*>(&worldUp));
 
         if (!direction.IsNormalized())
-            forward = XMVector3Normalize(forward);
+            forward = XMVector3fNormalize(forward);
 
-        XMVECTOR right = XMVector3Cross(worldUp2, forward);
-        XMVECTOR up = XMVector3Cross(forward, right);
+        XMVECTOR right = XMVector3fCross(worldUp2, forward);
+        XMVECTOR up = XMVector3fCross(forward, right);
 
         XMMATRIX m = XMMatrixIdentity();
         m.r[0] = right;
@@ -128,19 +128,19 @@ namespace ByteEngine::Math
         return result;
     }
 
-    BYTEENGINE_API Quaternion Quaternion::FromToRotation(Vector3 from, Vector3 to)
+    BYTEENGINE_API Quaternion Quaternion::FromToRotation(Vector3f from, Vector3f to)
     {
         from.Normalize();
         to.Normalize();
 
-        float dot = Math::Clamp(Vector3::Dot(from, to), -1.0f, 1.0f);
+        float dot = Math::Clamp(Vector3f::Dot(from, to), -1.0f, 1.0f);
         
         if (dot >= 1.0f || Math::IsEqualApproximetly(dot, 0.0f))
             return Quaternion();
         else if (dot <= -1.0f)
-            return FromAngleAxis(static_cast<RadianF>(Math::PI), Vector3(0.0f, 1.0f, 0.0f));
+            return FromAngleAxis(static_cast<RadianF>(Math::PI), Vector3f(0.0f, 1.0f, 0.0f));
 
-        Vector3 axis = Vector3::Cross(from, to);
+        Vector3f axis = Vector3f::Cross(from, to);
         float root = Math::Sqrt((1.0f + dot) * 2.0f);
         float invRoot = 1.0f / root;
 

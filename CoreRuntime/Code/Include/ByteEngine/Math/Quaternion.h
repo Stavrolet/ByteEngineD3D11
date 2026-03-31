@@ -54,24 +54,24 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        BYTEENGINE_API [[nodiscard]] Vector3 GetEuler();
-        BYTEENGINE_API [[nodiscard]] Vector3 GetEuler() const;
-        BYTEENGINE_API [[nodiscard]] Vector3 GetEulerInDegrees() const;
+        BYTEENGINE_API [[nodiscard]] Vector3f GetEuler();
+        BYTEENGINE_API [[nodiscard]] Vector3f GetEuler() const;
+        BYTEENGINE_API [[nodiscard]] Vector3f GetEulerInDegrees() const;
 
         // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Quaternion::get_axis
-        BYTEENGINE_API [[nodiscard]] Vector3 GetAxis() const;
+        BYTEENGINE_API [[nodiscard]] Vector3f GetAxis() const;
         BYTEENGINE_API [[nodiscard]] RadianF GetAngle() const;
-        BYTEENGINE_API void GetAxisAngle(Vector3& axis, RadianF& angle) const;
+        BYTEENGINE_API void GetAxisAngle(Vector3f& axis, RadianF& angle) const;
 
         [[nodiscard]] constexpr static float Dot(Quaternion a, Quaternion b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 
         BYTEENGINE_API [[nodiscard]] static RadianF AngleBetween(Quaternion a, Quaternion b);
 
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(RadianF angle, Vector3 axis);
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(DegreeF angle, Vector3 axis);
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(RadianF angle, Vector3f axis);
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(DegreeF angle, Vector3f axis);
 
-        [[nodiscard]] static constexpr Quaternion FromEulerInRadians(Vector3 eulerAngles)
+        [[nodiscard]] static constexpr Quaternion FromEulerInRadians(Vector3f eulerAngles)
         {
             float halfPitch = eulerAngles.x * 0.5f;
             float halfYaw = eulerAngles.y * 0.5f;
@@ -92,13 +92,13 @@ namespace ByteEngine::Math
             );
         }
 
-        [[nodiscard]] static constexpr Quaternion FromEuler(Vector3 eulerAngles) { return FromEulerInRadians(eulerAngles * (Math::PI / 180.0f)); }
+        [[nodiscard]] static constexpr Quaternion FromEuler(Vector3f eulerAngles) { return FromEulerInRadians(eulerAngles * (Math::PI / 180.0f)); }
 
-        [[nodiscard]] static constexpr Quaternion FromEulerInRadians(RadianF pitch, RadianF yaw, RadianF roll) { return FromEulerInRadians(Vector3(pitch.value, yaw.value, roll.value)); }
-        [[nodiscard]] static constexpr Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(Vector3(pitch.value, yaw.value, roll.value) * (Math::PI / 180.0f)); }
+        [[nodiscard]] static constexpr Quaternion FromEulerInRadians(RadianF pitch, RadianF yaw, RadianF roll) { return FromEulerInRadians(Vector3f(pitch.value, yaw.value, roll.value)); }
+        [[nodiscard]] static constexpr Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(Vector3f(pitch.value, yaw.value, roll.value) * (Math::PI / 180.0f)); }
 
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromLookDirection(Vector3 direction, Vector3 worldUp = Vector3::Up());
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromToRotation(Vector3 from, Vector3 target);
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromLookDirection(Vector3f direction, Vector3f worldUp = Vector3f::Up());
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromToRotation(Vector3f from, Vector3f target);
 
         BYTEENGINE_API [[nodiscard]] static Quaternion SlerpUnclamped(Quaternion from, Quaternion to, float t);
         BYTEENGINE_API [[nodiscard]] static Quaternion Slerp(Quaternion from, Quaternion to, float t);
@@ -152,7 +152,7 @@ namespace ByteEngine::Math
             return data[index];
         }
 
-        [[nodiscard]] constexpr explicit operator Vector3() const { return Vector3(x, y, z); }
+        [[nodiscard]] constexpr explicit operator Vector3f() const { return Vector3f(x, y, z); }
         [[nodiscard]] constexpr explicit operator Vector2() const { return Vector2(x, y); }
     };
 }
