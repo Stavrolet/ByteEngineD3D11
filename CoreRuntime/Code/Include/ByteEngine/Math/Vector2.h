@@ -15,8 +15,7 @@ namespace ByteEngine::Math
     template<AnyNumber T>
     struct Vector2t
     {
-        using RadianT = std::conditional_t<sizeof(T) == sizeof(double), RadianD, RadianF>;
-        using FloatT = std::conditional_t<sizeof(T) == 8, double, float>;
+        using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
 
         union
         {
@@ -49,7 +48,7 @@ namespace ByteEngine::Math
             : x(x), y(y)
         { }
 
-        FloatT Length() const { return Math::Sqrt(static_cast<FloatT>(x * x + y * y)); }
+        FloatT Length() const { return Math::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y; }
 
         void Normalize() requires FloatingPointNumber<T>
@@ -71,12 +70,12 @@ namespace ByteEngine::Math
 
         bool IsNormalized() const requires FloatingPointNumber<T>
         {
-            return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon));
+            return Math::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Math::UnitSizeEpsilon));
         }
 
         // RotateBy implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::rotated
-        constexpr void RotateBy(RadianT angle) requires FloatingPointNumber<T>
+        constexpr void RotateBy(RadianT<T> angle) requires FloatingPointNumber<T>
         {
             FloatT sin, cos;
 
@@ -95,16 +94,16 @@ namespace ByteEngine::Math
             y = oldX * sin + y * cos;
         }
 
-        constexpr Vector2t RotatedBy(RadianT angle) const requires FloatingPointNumber<T>
+        constexpr Vector2t RotatedBy(RadianT<T> angle) const requires FloatingPointNumber<T>
         {
             Vector2t copy = *this;
             copy.RotateBy(angle);
             return copy;
         }
 
-        void LimitLength(T maxLength = 1) requires FloatingPointNumber<T>
+        void LimitLength(FloatT maxLength = 1) requires FloatingPointNumber<T>
         {
-            T currentLength = LengthSquared();
+            FloatT currentLength = LengthSquared();
 
             if (currentLength > maxLength * maxLength)
             {
@@ -113,19 +112,19 @@ namespace ByteEngine::Math
             }
         }
 
-        static RadianT AngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
+        static RadianT<T> AngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
         {
             FloatT cross = Cross(from, to);
             FloatT dot = Dot(from, to);
             return Math::Atan2(cross, dot);
         }
 
-        static RadianT UnsigedAngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
+        static RadianT<T> UnsigedAngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
         {
-            return RadianT(Math::Abs(AngleBetween(from, to).value));
+            return RadianT<T>(Math::Abs(AngleBetween(from, to).value));
         }
 
-        static T Distcance(Vector2t a, Vector2t b) { return Math::Sqrt(static_cast<FloatT>((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y))); }
+        static T Distcance(Vector2t a, Vector2t b) { return Math::Sqrt(static_cast<FloatT>(DistcanceSquared(a, b))); }
         static constexpr T DistcanceSquared(Vector2t a, Vector2t b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y); }
 
         static Vector2t Direction(Vector2t from, Vector2t to)
@@ -138,24 +137,34 @@ namespace ByteEngine::Math
             return dir;
         }
 
-        static constexpr T Cross(Vector2t a, Vector2t b) requires FloatingPointNumber<T>
+        static constexpr FloatT Cross(Vector2t a, Vector2t b) requires FloatingPointNumber<T>
         {
             return a.x * b.y - a.y * b.x;
         }
 
-        static constexpr T Dot(Vector2t a, Vector2t b) requires FloatingPointNumber<T>
+        static constexpr FloatT Dot(Vector2t a, Vector2t b) requires FloatingPointNumber<T>
         {
             return a.x * b.x + a.y * b.y;
         }
 
-        static constexpr Vector2t FromAngle(RadianT angle) requires FloatingPointNumber<T>
+        static constexpr Vector2t FromAngle(RadianT<T> angle) requires FloatingPointNumber<T>
         {
             Vector2t<FloatT> vec;
-            Math::SinCos(vec.x, vec.y, angle);
+
+            if constexpr (std::is_same_v<FloatT, float>)
+            {
+                Math::SinCos(vec.x, vec.y, angle);
+            }
+            else
+            {
+                vec.x = Math::Cos(angle);
+                vec.y = Math::Sin(angle);
+            }
+
             return vec;
         }
 
-        static constexpr Vector2t FromAngle(RadianT angle, T length) requires FloatingPointNumber<T>
+        static constexpr Vector2t FromAngle(RadianT<T> angle, FloatT length) requires FloatingPointNumber<T>
         {
             return FromAngle(angle) * length;
         }
@@ -185,7 +194,7 @@ namespace ByteEngine::Math
 
             startLength = Math::Sqrt(startLength);
             FloatT resultLength = Math::Lerp(startLength, Math::Sqrt(endLength), t);
-            RadianT angle = AngleBetween(from, to);
+            RadianT<T> angle = AngleBetween(from, to);
 
             from.RotateBy(angle * t);
             return from * (resultLength / startLength);

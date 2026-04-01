@@ -14,8 +14,7 @@ namespace ByteEngine::Math
     template<AnyNumber T>
     struct Vector4t
     {
-        using RadianT = std::conditional_t<sizeof(T) == 8, RadianD, RadianF>;
-        using FloatT = std::conditional_t<sizeof(T) == 8, double, float>;
+        using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
 
         union
         {

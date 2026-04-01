@@ -14,8 +14,7 @@ namespace ByteEngine::Math
     template<AnyNumber T>
     struct Vector3t
     {
-        using RadianT = std::conditional_t<sizeof(T) == 8, RadianD, RadianF>;
-        using FloatT = std::conditional_t<sizeof(T) == 8, double, float>;
+        using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
 
         union
         {
@@ -66,7 +65,7 @@ namespace ByteEngine::Math
 
         bool IsNormalized() const requires FloatingPointNumber<T>
         {
-            return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon));
+            return Math::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Math::UnitSizeEpsilon));
         }
 
         void LimitLength(FloatT maxLength = 1) requires FloatingPointNumber<T>
@@ -77,7 +76,7 @@ namespace ByteEngine::Math
                 *this *= maxLength / Math::Sqrt(currentLength);
         }
 
-        void RotateBy(RadianT angle, Vector3t rotationAxis = Up()) requires FloatingPointNumber<T>
+        void RotateBy(RadianT<T> angle, Vector3t rotationAxis = Up()) requires FloatingPointNumber<T>
         {
             assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
 
@@ -89,8 +88,8 @@ namespace ByteEngine::Math
             }
             else
             {
-                sin = Math::Sin(RadianD(-angle));
-                cos = Math::Cos(RadianD(-angle));
+                sin = Math::Sin(-angle);
+                cos = Math::Cos(-angle);
             }
 
             if (rotationAxis.LengthSquared() < Math::Epsilon)
@@ -99,7 +98,7 @@ namespace ByteEngine::Math
             *this = (*this * cos) + (Cross(rotationAxis, *this) * sin) + (rotationAxis * Dot(rotationAxis, *this) * (1 - cos));
         }
 
-        Vector3t RotatedBy(RadianT angle, Vector3t rotationAxis = Up()) const requires FloatingPointNumber<T>
+        Vector3t RotatedBy(RadianT<T> angle, Vector3t rotationAxis = Up()) const requires FloatingPointNumber<T>
         {
             Vector3t copy = *this;
             copy.RotateBy(angle, rotationAxis);
@@ -108,19 +107,19 @@ namespace ByteEngine::Math
 
         // AngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::signed_angle_to
-        static RadianT AngleBetween(Vector3t from, Vector3t to, Vector3t rotationAxis) requires FloatingPointNumber<T>
+        static RadianT<T> AngleBetween(Vector3t from, Vector3t to, Vector3t rotationAxis) requires FloatingPointNumber<T>
         {
             assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
 
             Vector3t cross = Cross(from, to);
-            RadianT unsignedAngle = Math::Atan2(cross.Length(), Dot(from, to));
+            RadianT<T> unsignedAngle = Math::Atan2(cross.Length(), Dot(from, to));
             FloatT sign = Math::Sign(Dot(cross, rotationAxis));
             return sign < 0 ? RadianT(-unsignedAngle) : RadianT(unsignedAngle);
         }
 
         // UnsigedAngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::angle_to
-        static RadianT UnsigedAngleBetween(Vector3t from, Vector3t to) requires FloatingPointNumber<T>
+        static RadianT<T> UnsigedAngleBetween(Vector3t from, Vector3t to) requires FloatingPointNumber<T>
         {
             return Math::Atan2(Cross(from, to).Length(), Dot(from, to));
         }
