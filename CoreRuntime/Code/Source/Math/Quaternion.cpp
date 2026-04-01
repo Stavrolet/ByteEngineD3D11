@@ -70,12 +70,6 @@ namespace ByteEngine::Math
     // Source: Quaternion::get_angle
     BYTEENGINE_API RadianF Quaternion::GetAngle() const { return 2 * Math::Acos(w); }
 
-    BYTEENGINE_API void Quaternion::GetAxisAngle(Vector3f& axis, RadianF& angle) const
-    {
-        angle = GetAngle();
-        axis = GetAxis();
-    }
-
     BYTEENGINE_API RadianF Quaternion::AngleBetween(Quaternion a, Quaternion b) { return 2 * Math::Acos(Math::Abs(Dot(a, b))); }
 
     // FromAngleAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md

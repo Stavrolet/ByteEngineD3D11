@@ -62,7 +62,6 @@ namespace ByteEngine::Math
         // Source: Quaternion::get_axis
         BYTEENGINE_API [[nodiscard]] Vector3f GetAxis() const;
         BYTEENGINE_API [[nodiscard]] RadianF GetAngle() const;
-        BYTEENGINE_API void GetAxisAngle(Vector3f& axis, RadianF& angle) const;
 
         [[nodiscard]] constexpr static float Dot(Quaternion a, Quaternion b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 
@@ -71,18 +70,18 @@ namespace ByteEngine::Math
         BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(RadianF angle, Vector3f axis);
         BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(DegreeF angle, Vector3f axis);
 
-        [[nodiscard]] static constexpr Quaternion FromEulerInRadians(Vector3f eulerAngles)
+        [[nodiscard]] static constexpr Quaternion FromEulerInRadians(RadianF pitch, RadianF yaw, RadianF roll)
         {
-            float halfPitch = eulerAngles.x * 0.5f;
-            float halfYaw = eulerAngles.y * 0.5f;
-            float halfRoll = eulerAngles.z * 0.5f;
+            RadianF halfPitch = pitch * 0.5f;
+            RadianF halfYaw = yaw * 0.5f;
+            RadianF halfRoll = roll * 0.5f;
 
-            float pitchCos = Math::Cos(static_cast<RadianF>(halfPitch));
-            float pitchSin = Math::Sin(static_cast<RadianF>(halfPitch));
-            float yawCos = Math::Cos(static_cast<RadianF>(halfYaw));
-            float yawSin = Math::Sin(static_cast<RadianF>(halfYaw));
-            float rollCos = Math::Cos(static_cast<RadianF>(halfRoll));
-            float rollSin = Math::Sin(static_cast<RadianF>(halfRoll));
+            float pitchCos = Math::Cos(halfPitch);
+            float pitchSin = Math::Sin(halfPitch);
+            float yawCos = Math::Cos(halfYaw);
+            float yawSin = Math::Sin(halfYaw);
+            float rollCos = Math::Cos(halfRoll);
+            float rollSin = Math::Sin(halfRoll);
 
             return Quaternion(
                 rollCos * pitchSin * yawCos + rollSin * pitchCos * yawSin,
@@ -92,10 +91,7 @@ namespace ByteEngine::Math
             );
         }
 
-        [[nodiscard]] static constexpr Quaternion FromEuler(Vector3f eulerAngles) { return FromEulerInRadians(eulerAngles * (Math::PI / 180.0f)); }
-
-        [[nodiscard]] static constexpr Quaternion FromEulerInRadians(RadianF pitch, RadianF yaw, RadianF roll) { return FromEulerInRadians(Vector3f(pitch.value, yaw.value, roll.value)); }
-        [[nodiscard]] static constexpr Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(Vector3f(pitch.value, yaw.value, roll.value) * (Math::PI / 180.0f)); }
+        [[nodiscard]] static constexpr Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(Math::DegToRad(pitch), Math::DegToRad(yaw), Math::DegToRad(roll)); }
 
         BYTEENGINE_API [[nodiscard]] static Quaternion FromLookDirection(Vector3f direction, Vector3f worldUp = Vector3f::Up());
         BYTEENGINE_API [[nodiscard]] static Quaternion FromToRotation(Vector3f from, Vector3f target);

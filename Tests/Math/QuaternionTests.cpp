@@ -80,8 +80,7 @@ TEST_F(QuaternionTest, Inversed)
 
 TEST_F(QuaternionTest, FromEulerInRadians)
 {
-    Vector3 euler(0.0f, 0.0f, 0.0f);
-    Quaternion q = Quaternion::FromEulerInRadians(euler);
+    Quaternion q = Quaternion::FromEulerInRadians(0.0_rf, 0.0_rf, 0.0_rf);
     EXPECT_NEAR(q.x, 0.0f, EPSILON);
     EXPECT_NEAR(q.y, 0.0f, EPSILON);
     EXPECT_NEAR(q.z, 0.0f, EPSILON);
@@ -91,7 +90,7 @@ TEST_F(QuaternionTest, FromEulerInRadians)
 TEST_F(QuaternionTest, FromEuler)
 {
     Vector3 euler(0.0f, 0.0f, 0.0f);
-    Quaternion q = Quaternion::FromEuler(euler);
+    Quaternion q = Quaternion::FromEuler(0.0_df, 0.0_df, 0.0_df);
     EXPECT_NEAR(q.x, 0.0f, EPSILON);
     EXPECT_NEAR(q.y, 0.0f, EPSILON);
     EXPECT_NEAR(q.z, 0.0f, EPSILON);
@@ -118,7 +117,7 @@ TEST_F(QuaternionTest, FromEulerDegreeComponents)
 
 TEST_F(QuaternionTest, GetEuler)
 {
-    Quaternion q = Quaternion::FromEuler(Vector3(0.0f, 0.0f, 0.0f));
+    Quaternion q = Quaternion::FromEuler(0.0_df, 0.0_df, 0.0_df);
     Vector3 euler = q.GetEuler();
     EXPECT_NEAR(euler.x, 0.0f, EPSILON);
     EXPECT_NEAR(euler.y, 0.0f, EPSILON);
@@ -127,7 +126,7 @@ TEST_F(QuaternionTest, GetEuler)
 
 TEST_F(QuaternionTest, GetEulerInDegrees)
 {
-    Quaternion q = Quaternion::FromEuler(Vector3(0.0f, 0.0f, 0.0f));
+    Quaternion q = Quaternion::FromEuler(0.0_df, 0.0_df, 0.0_df);
     Vector3 euler = q.GetEulerInDegrees();
     EXPECT_NEAR(euler.x, 0.0f, EPSILON);
     EXPECT_NEAR(euler.y, 0.0f, EPSILON);
@@ -170,20 +169,6 @@ TEST_F(QuaternionTest, GetAngle)
     Quaternion q = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
     RadianF angle = q.GetAngle();
     EXPECT_NEAR(angle.value, Math::PI / 2.0f, EPSILON);
-}
-
-TEST_F(QuaternionTest, GetAxisAngle)
-{
-    Vector3 expectedAxis(0.0f, 1.0f, 0.0f);
-    RadianF expectedAngle(Math::PI / 2.0f);
-    Quaternion q = Quaternion::FromAngleAxis(expectedAngle, expectedAxis);
-
-    Vector3 axis;
-    RadianF angle;
-    q.GetAxisAngle(axis, angle);
-
-    EXPECT_NEAR(std::abs(axis.y), 1.0f, EPSILON);
-    EXPECT_NEAR(angle.value, expectedAngle.value, EPSILON);
 }
 
 TEST_F(QuaternionTest, Dot)
