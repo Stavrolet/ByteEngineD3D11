@@ -5,7 +5,7 @@ using namespace ByteEngine::Math;
 
 TEST(MathTest, ConstantsAndConversions)
 {
-    EXPECT_NEAR(static_cast<RadianF>(180.0_df).value, Math::PI, 1e-5f);
+    EXPECT_NEAR(static_cast<RadianF>(180_df).value, Math::PI, 1e-5f);
     EXPECT_NEAR(RadianD(Math::PI_D).ToDegree().value, 180.0, 1e-5);
 }
 
@@ -58,7 +58,7 @@ TEST(MathTest, Interpolation)
     EXPECT_NEAR(Math::Lerp(0.0f, 10.0f, 0.5f), 5.0f, 1e-5f);
     EXPECT_NEAR(Math::InverseLerp(0.0f, 10.0f, 5.0f), 0.5f, 1e-5f);
 
-    EXPECT_NEAR(Math::LerpAngle(0.0_rf, Math::PI / 2.0_rf + Math::PI * 2.0_rf, 0.5f).value, 0.7853981f, 1e-4f);
+    EXPECT_NEAR(Math::LerpAngle(0.0_rf, Math::PI / 2.0_rf + Math::PI * 2_rf, 0.5f).value, 0.7853981f, 1e-4f);
 
     EXPECT_NEAR(Math::MoveTowards(0.0f, 10.0f, 2.0f), 2.0f, 1e-5f);
     EXPECT_NEAR(Math::MoveTowards(0.0f, 1.0f, 2.0f), 1.0f, 1e-5f);
