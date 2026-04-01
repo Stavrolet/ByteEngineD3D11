@@ -6,6 +6,7 @@ namespace ByteEngine::Math::Math
     BYTEENGINE_API double Cos(RadianD rad) { return std::cos(rad.value); }
 
     // Asin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
+    // Source: DirectX::XMScalarASin
     BYTEENGINE_API RadianF Asin(float value) noexcept
     {
         // Clamp input to [-1,1].
@@ -29,6 +30,7 @@ namespace ByteEngine::Math::Math
     BYTEENGINE_API RadianD Asin(double value) { return RadianD(std::asin(value)); }
 
     // Acos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
+    // Source: DirectX::XMScalarACos
     BYTEENGINE_API RadianF Acos(float value) noexcept
     {
         // Clamp input to [-1,1].

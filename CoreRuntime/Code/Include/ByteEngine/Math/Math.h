@@ -236,6 +236,7 @@ namespace ByteEngine::Math::Math
     constexpr float UnitSizeEpsilon = 1e-4f;
 
     // Sin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
+    // Source: DirectX::XMScalarSin
     [[nodiscard]] constexpr float Sin(RadianF rad) noexcept
     {
         if (rad == 0.0_rf)
@@ -273,6 +274,7 @@ namespace ByteEngine::Math::Math
     BYTEENGINE_API [[nodiscard]] double Sin(RadianD rad);
 
     // Cos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
+    // Source: DirectX::XMScalarCos
     [[nodiscard]] constexpr float Cos(RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
@@ -316,11 +318,13 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] T Tan(RadianT<T> rad) { return std::tan(rad); }
 
     // Asin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
+    // Source: DirectX::XMScalarASin
     BYTEENGINE_API [[nodiscard]] RadianF Asin(float value) noexcept;
 
     BYTEENGINE_API [[nodiscard]] RadianD Asin(double value);
 
     // Acos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
+    // Source: DirectX::XMScalarACos
     BYTEENGINE_API [[nodiscard]] RadianF Acos(float value) noexcept;
 
     BYTEENGINE_API [[nodiscard]] RadianD Acos(double value);
@@ -329,6 +333,7 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] RadianT<T> Atan(T value) { return std::atan(value); }
 
     // SinCos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
+    // Source: DirectX::XMScalarSinCos
     [[nodiscard]] constexpr void SinCos(float& sin, float& cos, RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
