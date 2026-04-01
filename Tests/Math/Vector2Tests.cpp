@@ -53,10 +53,10 @@ TYPED_TEST(Vector2tTest, LengthAndNormalize)
 TYPED_TEST(Vector2tFloatTypesTest, Rotation)
 {
     using Vec2 = typename TestFixture::Vec2;
-    using RadianT = typename Vec2::RadianT;
+    using RadianT = RadianT<typename Vec2::FloatT>;
 
     Vec2 v(1.0, 0.0);
-    v.RotateBy(static_cast<RadianT>(Math::PI_D / 2.0));
+    v.RotateBy(RadianT(Math::PI_D / 2.0));
     EXPECT_NEAR(v.x, 0.0, 1e-5);
     EXPECT_NEAR(v.y, 1.0, 1e-5);
 
@@ -364,14 +364,14 @@ TYPED_TEST(Vector2tFloatTypesRobustnessTest, RotateByPrecision)
     using Vec2 = typename TestFixture::Vec2;
     Vec2 v(1, 0);
 
-    Vec2 rot = v.RotatedBy(Vec2::RadianT(1e-9));
+    Vec2 rot = v.RotatedBy(RadianT<typename Vec2::FloatT>(1e-9));
     EXPECT_NEAR(rot.x, 1.0, 1e-8);
     EXPECT_NEAR(rot.y, 0.0, 1e-8);
 
     if constexpr (std::is_same_v<decltype(v.x), float>)
-        rot = v.RotatedBy(Vec2::RadianT(10000.0f * (2 * Math::PI)));
+        rot = v.RotatedBy(RadianT<typename Vec2::FloatT>(10000.0f * (2 * Math::PI)));
     else if constexpr (std::is_same_v<decltype(v.x), double>)
-        rot = v.RotatedBy(Vec2::RadianT(10000.0 * (2 * Math::PI_D)));
+        rot = v.RotatedBy(RadianT<typename Vec2::FloatT>(10000.0 * (2 * Math::PI_D)));
     
     EXPECT_NEAR(rot.x, 1.0, 1.3e-2);
     EXPECT_NEAR(rot.y, 0.0, 1.3e-2);

@@ -112,10 +112,10 @@ namespace ByteEngine::Math
         XMVECTOR worldUp2 = XMLoadFloat3(reinterpret_cast<XMFLOAT3*>(&worldUp));
 
         if (!direction.IsNormalized())
-            forward = XMVector3fNormalize(forward);
+            forward = XMVector3Normalize(forward);
 
-        XMVECTOR right = XMVector3fCross(worldUp2, forward);
-        XMVECTOR up = XMVector3fCross(forward, right);
+        XMVECTOR right = XMVector3Cross(worldUp2, forward);
+        XMVECTOR up = XMVector3Cross(forward, right);
 
         XMMATRIX m = XMMatrixIdentity();
         m.r[0] = right;

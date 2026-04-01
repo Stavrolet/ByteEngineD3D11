@@ -53,7 +53,7 @@ TYPED_TEST(Vector3tTest, LengthAndNormalize)
 TYPED_TEST(Vector3tFloatTypesTest, Rotation)
 {
     using Vec3 = typename TestFixture::Vec3;
-    using RadianT = typename Vec3::RadianT;
+    using RadianT = RadianT<typename Vec3::FloatT>;
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 axis(0.0, 1.0, 0.0);
 
@@ -264,7 +264,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, VectorNormalization)
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotationWithZeroAxis)
 {
     using Vec3 = typename TestFixture::Vec3;
-    using RadianT = typename Vec3::RadianT;
+    using RadianT = RadianT<typename Vec3::FloatT>;
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 zeroAxis(0.0, 0.0, 0.0);
 
@@ -278,7 +278,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotationWithZeroAxis)
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotateByPrecision)
 {
     using Vec3 = typename TestFixture::Vec3;
-    using RadianT = typename Vec3::RadianT;
+    using RadianT = RadianT<typename Vec3::FloatT>;
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 axis(0.0, 1.0, 0.0);
 

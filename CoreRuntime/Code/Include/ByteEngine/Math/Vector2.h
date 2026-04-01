@@ -75,7 +75,7 @@ namespace ByteEngine::Math
 
         // RotateBy implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::rotated
-        constexpr void RotateBy(RadianT<T> angle) requires FloatingPointNumber<T>
+        constexpr void RotateBy(RadianT<FloatT> angle) requires FloatingPointNumber<T>
         {
             FloatT sin, cos;
 
@@ -94,7 +94,7 @@ namespace ByteEngine::Math
             y = oldX * sin + y * cos;
         }
 
-        constexpr Vector2t RotatedBy(RadianT<T> angle) const requires FloatingPointNumber<T>
+        constexpr Vector2t RotatedBy(RadianT<FloatT> angle) const requires FloatingPointNumber<T>
         {
             Vector2t copy = *this;
             copy.RotateBy(angle);
@@ -112,14 +112,14 @@ namespace ByteEngine::Math
             }
         }
 
-        static RadianT<T> AngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
+        static RadianT<FloatT> AngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
         {
             FloatT cross = Cross(from, to);
             FloatT dot = Dot(from, to);
             return Math::Atan2(cross, dot);
         }
 
-        static RadianT<T> UnsigedAngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
+        static RadianT<FloatT> UnsigedAngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
         {
             return RadianT<T>(Math::Abs(AngleBetween(from, to).value));
         }
@@ -147,7 +147,7 @@ namespace ByteEngine::Math
             return a.x * b.x + a.y * b.y;
         }
 
-        static constexpr Vector2t FromAngle(RadianT<T> angle) requires FloatingPointNumber<T>
+        static constexpr Vector2t FromAngle(RadianT<FloatT> angle) requires FloatingPointNumber<T>
         {
             Vector2t<FloatT> vec;
 
@@ -164,7 +164,7 @@ namespace ByteEngine::Math
             return vec;
         }
 
-        static constexpr Vector2t FromAngle(RadianT<T> angle, FloatT length) requires FloatingPointNumber<T>
+        static constexpr Vector2t FromAngle(RadianT<FloatT> angle, FloatT length) requires FloatingPointNumber<T>
         {
             return FromAngle(angle) * length;
         }
