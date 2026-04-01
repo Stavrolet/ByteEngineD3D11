@@ -5,8 +5,8 @@ using namespace ByteEngine::Math;
 
 TEST(MathTest, ConstantsAndConversions)
 {
-    EXPECT_NEAR(Math::DegToRad(180.0_df).value, Math::PI, 1e-5f);
-    EXPECT_NEAR(Math::RadToDeg(RadianD(Math::PI_D)).value, 180.0, 1e-5);
+    EXPECT_NEAR(static_cast<RadianF>(180.0_df).value, Math::PI, 1e-5f);
+    EXPECT_NEAR(RadianD(Math::PI_D).ToDegree().value, 180.0, 1e-5);
 }
 
 TEST(MathTest, Trigonometry)

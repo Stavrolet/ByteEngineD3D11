@@ -95,7 +95,7 @@ namespace ByteEngine::Math
         }
     }
 
-    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(DegreeF angle, Vector3f axis) { return FromAngleAxis(Math::DegToRad(angle), axis); }
+    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(DegreeF angle, Vector3f axis) { return FromAngleAxis(angle.ToRadian(    ), axis); }
 
     BYTEENGINE_API Quaternion Quaternion::FromLookDirection(Vector3f direction, Vector3f worldUp)
     {

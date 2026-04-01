@@ -20,6 +20,9 @@ namespace ByteEngine::Math
     // not type aliases for type safety
 
     template<FloatingPointNumber T>
+    struct DegreeT;
+
+    template<FloatingPointNumber T>
     struct RadianT
     {
         T value;
@@ -27,7 +30,9 @@ namespace ByteEngine::Math
         explicit constexpr RadianT(T value = 0)
             : value(value)
         { }
-        
+
+        constexpr DegreeT<T> ToDegree() const;
+
         constexpr RadianT& operator=(T other)
         {
             value = other;
@@ -50,7 +55,7 @@ namespace ByteEngine::Math
         constexpr RadianT operator/(T other) const { return RadianT(value / other); }
         friend consteval RadianT operator/(T other, RadianT rad) { return RadianT(other / rad.value); }
 
-        constexpr RadianT& operator+=(RadianT other) 
+        constexpr RadianT& operator+=(RadianT other)
         {
             value += other.value;
             return *this;
@@ -101,6 +106,10 @@ namespace ByteEngine::Math
         constexpr auto operator<=>(const RadianT&) const = default;
 
         explicit constexpr operator T() const { return value; }
+        explicit constexpr operator DegreeT<T>() const { return ToDegree(); }
+
+        template<FloatingPointNumber U>
+        constexpr operator RadianT<U>() const { return RadianT<U>(static_cast<U>(value)); }
     };
 
     template<FloatingPointNumber T>
@@ -111,6 +120,8 @@ namespace ByteEngine::Math
         explicit constexpr DegreeT(T value = 0)
             : value(value)
         { }
+
+        constexpr RadianT<T> ToRadian() const;
 
         constexpr DegreeT& operator=(T other)
         {
@@ -185,6 +196,10 @@ namespace ByteEngine::Math
         constexpr auto operator<=>(const DegreeT&) const = default;
 
         explicit constexpr operator T() const { return value; }
+        explicit constexpr operator RadianT<T>() const { return ToRadian(); }
+
+        template<FloatingPointNumber U>
+        constexpr operator DegreeT<U>() const { return DegreeT<U>(static_cast<U>(value)); }
     };
 
     using RadianF = RadianT<float>;
@@ -219,12 +234,6 @@ namespace ByteEngine::Math::Math
     constexpr double EpsilonD = 1e-8f;
     constexpr RadianF AngleEpsilon = RadianF(1e-4f);
     constexpr float UnitSizeEpsilon = 1e-4f;
-
-    constexpr RadianF DegToRad(DegreeF deg) noexcept { return deg.value * (PI / 180.0_rf); }
-    constexpr RadianD DegToRad(DegreeD deg) noexcept { return deg.value * (PI_D / 180.0_rd); }
-
-    constexpr DegreeF RadToDeg(RadianF rad) noexcept { return rad.value * (180.0_df / PI); }
-    constexpr DegreeD RadToDeg(RadianD rad) noexcept { return rad.value * (180.0_dd / PI_D); }
 
     // Sin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     [[nodiscard]] constexpr float Sin(RadianF rad) noexcept
@@ -561,4 +570,25 @@ namespace ByteEngine::Math::Math
 
     template<std::ranges::range R>
     [[nodiscard]] constexpr std::ranges::range_value_t<R> Max(const R& range) { return std::ranges::max(range); }
+}
+
+namespace ByteEngine::Math
+{
+    template<FloatingPointNumber T>
+    constexpr DegreeT<T> RadianT<T>::ToDegree() const
+    {
+        if constexpr (std::is_same_v<T, float>)
+            return DegreeT<T>(value * (180.0f / Math::PI));
+        else
+            return DegreeT<T>(value * (180.0 / Math::PI_D));
+    }
+
+    template<FloatingPointNumber T>
+    constexpr RadianT<T> DegreeT<T>::ToRadian() const
+    {
+        if constexpr (std::is_same_v<T, float>)
+            return RadianT<T>(value * (Math::PI / 180.0f));
+        else
+            return RadianT<T>(value * (Math::PI_D / 180.0));
+    }
 }

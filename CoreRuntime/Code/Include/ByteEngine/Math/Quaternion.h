@@ -91,7 +91,7 @@ namespace ByteEngine::Math
             );
         }
 
-        [[nodiscard]] static constexpr Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(Math::DegToRad(pitch), Math::DegToRad(yaw), Math::DegToRad(roll)); }
+        [[nodiscard]] static constexpr Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian()); }
 
         BYTEENGINE_API [[nodiscard]] static Quaternion FromLookDirection(Vector3f direction, Vector3f worldUp = Vector3f::Up());
         BYTEENGINE_API [[nodiscard]] static Quaternion FromToRotation(Vector3f from, Vector3f target);
