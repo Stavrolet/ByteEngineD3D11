@@ -2,6 +2,7 @@
 
 #include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Math/Vector3.h"
+#include "ByteEngine/Math/Vector4.h"
 
 namespace ByteEngine::Math
 {
@@ -149,6 +150,7 @@ namespace ByteEngine::Math
         }
 
         [[nodiscard]] constexpr explicit operator Vector3f() const { return Vector3f(x, y, z); }
-        [[nodiscard]] constexpr explicit operator Vector2() const { return Vector2(x, y); }
+        [[nodiscard]] constexpr explicit operator Vector2f() const { return Vector2f(x, y); }
+        [[nodiscard]] constexpr explicit operator Vector4f() const { return Vector4f(x, y, z, w); }
     };
 }
