@@ -34,7 +34,7 @@ TYPED_TEST(Vector2tTest, LengthAndNormalize)
     EXPECT_NEAR(v.Length(), 5.0, 1e-5);
     EXPECT_NEAR(v.LengthSquared(), 25.0, 1e-5);
 
-    if constexpr (FloatingPointNumber<decltype(v.x)>)
+    if constexpr (std::floating_point<decltype(v.x)>)
     {
         Vec2 normalized = v.Normalized();
         EXPECT_NEAR(normalized.Length(), 1.0, 1e-5);
@@ -82,14 +82,14 @@ TYPED_TEST(Vector2tTest, AlgebraMethods)
     Vec2 a(2.0, 3.0);
     Vec2 b(1.0, 5.0);
 
-    if constexpr (FloatingPointNumber<decltype(a.x)>)
+    if constexpr (std::floating_point<decltype(a.x)>)
         EXPECT_NEAR(Vec2::Distcance(a, b), std::sqrt(5.0), 1e-5);
     else
         EXPECT_EQ(Vec2::Distcance(a, b), 2);
 
     EXPECT_NEAR(Vec2::DistcanceSquared(a, b), 5.0, 1e-5);
 
-    if constexpr (FloatingPointNumber<decltype(a.x)>)
+    if constexpr (std::floating_point<decltype(a.x)>)
     {
         EXPECT_EQ(Vec2::Cross(a, b), 7.0);
         EXPECT_EQ(Vec2::Dot(a, b), 17.0);
@@ -100,7 +100,7 @@ TYPED_TEST(Vector2tTest, AlgebraMethods)
     }
 
     Vec2 dir = Vec2::Direction(Vec2(0, 0), Vec2(1, 1));
-    if constexpr (FloatingPointNumber<decltype(dir.x)>)
+    if constexpr (std::floating_point<decltype(dir.x)>)
         EXPECT_NEAR(dir.x, 0.707106, 1e-4);
     else
         EXPECT_EQ(dir.x, 1);

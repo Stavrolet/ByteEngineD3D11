@@ -6,11 +6,8 @@
 namespace ByteEngine::Math
 {
     template<typename T>
-    concept FloatingPointNumber = std::floating_point<T> && !std::same_as<T, long double>;
+    concept Integral = std::integral<T> && !std::is_same_v<T, bool>;
 
     template<typename T>
-    concept IntegerNumber = std::integral<T> && !std::is_same_v<T, bool>;
-
-    template<typename T>
-    concept AnyNumber = IntegerNumber<T> || FloatingPointNumber<T>;
+    concept Arithmetic = Integral<T> || std::floating_point<T>;
 }

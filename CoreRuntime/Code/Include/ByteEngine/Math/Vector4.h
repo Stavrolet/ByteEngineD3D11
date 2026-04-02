@@ -5,13 +5,13 @@
 
 namespace ByteEngine::Math
 {
-    template<AnyNumber T>
+    template<Arithmetic T>
     struct Vector2t;
 
-    template<AnyNumber T>
+    template<Arithmetic T>
     struct Vector3t;
 
-    template<AnyNumber T>
+    template<Arithmetic T>
     struct Vector4t
     {
         using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
@@ -48,7 +48,7 @@ namespace ByteEngine::Math
         FloatT Length() const { return Math::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y + z * z + w * w; }
 
-        void Normalize() requires FloatingPointNumber<T>
+        void Normalize() requires std::floating_point<T>
         {
             FloatT length = LengthSquared();
 
@@ -58,19 +58,19 @@ namespace ByteEngine::Math
                 *this = Zero();
         }
 
-        Vector4t Normalized() const requires FloatingPointNumber<T>
+        Vector4t Normalized() const requires std::floating_point<T>
         {
             Vector4t copy = *this;
             copy.Normalize();
             return copy;
         }
 
-        bool IsNormalized() const requires FloatingPointNumber<T>
+        bool IsNormalized() const requires std::floating_point<T>
         {
             return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon));
         }
 
-        void LimitLength(FloatT maxLength = 1) requires FloatingPointNumber<T>
+        void LimitLength(FloatT maxLength = 1) requires std::floating_point<T>
         {
             FloatT currentLength = LengthSquared();
 
@@ -85,7 +85,7 @@ namespace ByteEngine::Math
         {
             Vector4t dir = to - from;
 
-            if constexpr (FloatingPointNumber<T>)
+            if constexpr (std::floating_point<T>)
                 dir.Normalize();
 
             return dir;
@@ -93,18 +93,18 @@ namespace ByteEngine::Math
 
         static constexpr FloatT Dot(Vector4t a, Vector4t b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 
-        static constexpr Vector4t Lerp(Vector4t from, Vector4t to, FloatT t) requires FloatingPointNumber<T>
+        static constexpr Vector4t Lerp(Vector4t from, Vector4t to, FloatT t) requires std::floating_point<T>
         {
             assert(t >= 0 && t <= 1);
             return from + (to - from) * t;
         }
 
-        static constexpr Vector4t LerpClamped(Vector4t from, Vector4t to, FloatT t) requires FloatingPointNumber<T>
+        static constexpr Vector4t LerpClamped(Vector4t from, Vector4t to, FloatT t) requires std::floating_point<T>
         {
             return from + (to - from) * Math::Clamp(t);
         }
 
-        static Vector4t MoveTowards(Vector4t current, Vector4t target, FloatT maxDelta) requires FloatingPointNumber<T>
+        static Vector4t MoveTowards(Vector4t current, Vector4t target, FloatT maxDelta) requires std::floating_point<T>
         {
             Vector4t direction = target - current;
             FloatT distance = direction.Length();
@@ -115,7 +115,7 @@ namespace ByteEngine::Math
                 return current + direction / distance * maxDelta;
         }
 
-        static bool IsEqualApproximetly(Vector4t a, Vector4t b) requires FloatingPointNumber<T>
+        static bool IsEqualApproximetly(Vector4t a, Vector4t b) requires std::floating_point<T>
         {
             return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y) && Math::IsEqualApproximetly(a.z, b.z);
         }
@@ -245,19 +245,19 @@ namespace ByteEngine::Math
             return data[index];
         }
 
-        template<AnyNumber U>
+        template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
         operator Vector4t<U>() const { return Vector4t<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z)); }
 
         operator Vector2t<T>() const;
 
-        template<AnyNumber U>
+        template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
         operator Vector2t<U>() const;
 
         operator Vector3t<T>() const;
 
-        template<AnyNumber U>
+        template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
         operator Vector3t<U>() const;
     };

@@ -18,7 +18,7 @@ add_library(CoreRuntime SHARED
 	"Code/Include/ByteEngine/Core/Input/KeyCode.h"
 	"Code/Include/ByteEngine/Core/Renderer/RenderContext.h"
 	"Code/Include/ByteEngine/Detail/Core/EventSystem/Subscriptions.h"
-	"Code/Include/ByteEngine/Math/Concepts.h"
+	
 	"Code/Include/ByteEngine/Math/Math.h"
 	"Code/Include/ByteEngine/Math/Quaternion.h"
 	"Code/Include/ByteEngine/Math/Vector2.h"

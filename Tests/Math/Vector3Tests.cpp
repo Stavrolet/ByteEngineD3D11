@@ -34,7 +34,7 @@ TYPED_TEST(Vector3tTest, LengthAndNormalize)
     EXPECT_NEAR(v.Length(), 7.071, 6.782e-05);
     EXPECT_NEAR(v.LengthSquared(), 50, 1e-5);
 
-    if constexpr (FloatingPointNumber<decltype(v.x)>)
+    if constexpr (std::floating_point<decltype(v.x)>)
     {
         Vec3 normalized = v.Normalized();
         EXPECT_NEAR(normalized.Length(), 1.0, 1e-5);
@@ -84,7 +84,7 @@ TYPED_TEST(Vector3tTest, AlgebraMethods)
     EXPECT_NEAR(Vec3::Distcance(a, b), std::sqrt(6.0), 1e-5);
     EXPECT_NEAR(Vec3::DistcanceSquared(a, b), 6.0, 1e-5);
 
-    if constexpr (FloatingPointNumber<decltype(a.x)>)
+    if constexpr (std::floating_point<decltype(a.x)>)
     {
         Vec3 cross = Vec3::Cross(a, b);
         EXPECT_NEAR(cross.x, 1.0, 1e-5);
@@ -101,7 +101,7 @@ TYPED_TEST(Vector3tTest, AlgebraMethods)
 
     Vec3 dir = Vec3::Direction(Vec3(0, 0, 0), Vec3(1, 1, 1));
 
-    if constexpr (FloatingPointNumber<decltype(dir.x)>)
+    if constexpr (std::floating_point<decltype(dir.x)>)
     {
         EXPECT_NEAR(dir.x, 0.57735, 1e-4);
         EXPECT_NEAR(dir.y, 0.57735, 1e-4);

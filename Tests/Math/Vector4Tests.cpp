@@ -28,7 +28,7 @@ TYPED_TEST(Vector4tTest, LengthAndNormalize)
     EXPECT_NEAR(v.Length(), 2.0, 1e-5);
     EXPECT_NEAR(v.LengthSquared(), 4.0, 1e-5);
 
-    if constexpr (FloatingPointNumber<decltype(v.x)>)
+    if constexpr (std::floating_point<decltype(v.x)>)
     {
         Vec4 normalized = v.Normalized();
         EXPECT_NEAR(normalized.Length(), 1.0, 1e-5);
@@ -55,7 +55,7 @@ TYPED_TEST(Vector4tTest, AlgebraMethods)
     EXPECT_NEAR(Vec4::Dot(a, b), 2.0 + 6.0 + 4.0 + 10.0, 1e-5);
 
     Vec4 dir = Vec4::Direction(Vec4(0), Vec4(1, 1, 1, 1));
-    if constexpr (FloatingPointNumber<decltype(dir.x)>)
+    if constexpr (std::floating_point<decltype(dir.x)>)
         EXPECT_NEAR(dir.x, 0.5, 1e-4);
 }
 

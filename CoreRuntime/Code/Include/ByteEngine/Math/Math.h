@@ -19,10 +19,10 @@ namespace ByteEngine::Math
 {
     // not type aliases for type safety
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     struct DegreeT;
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     struct RadianT
     {
         T value;
@@ -108,11 +108,11 @@ namespace ByteEngine::Math
         explicit constexpr operator T() const { return value; }
         explicit constexpr operator DegreeT<T>() const { return ToDegree(); }
 
-        template<FloatingPointNumber U>
+        template<std::floating_point U>
         constexpr operator RadianT<U>() const { return RadianT<U>(static_cast<U>(value)); }
     };
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     struct DegreeT
     {
         T value;
@@ -198,7 +198,7 @@ namespace ByteEngine::Math
         explicit constexpr operator T() const { return value; }
         explicit constexpr operator RadianT<T>() const { return ToRadian(); }
 
-        template<FloatingPointNumber U>
+        template<std::floating_point U>
         constexpr operator DegreeT<U>() const { return DegreeT<U>(static_cast<U>(value)); }
     };
 
@@ -224,7 +224,7 @@ namespace ByteEngine::Math::Math
     namespace Internal
     {
         template<typename... Args>
-        concept AnyFloating = (FloatingPointNumber<Args> || ...);
+        concept AnyFloating = (std::floating_point<Args> || ...);
     }
 
     constexpr float Infinity = std::numeric_limits<float>::infinity();
@@ -319,7 +319,7 @@ namespace ByteEngine::Math::Math
 
     BYTEENGINE_API [[nodiscard]] double Cos(RadianD rad);
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     [[nodiscard]] T Tan(RadianT<T> rad) { return std::tan(rad); }
 
     // Asin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
@@ -334,7 +334,7 @@ namespace ByteEngine::Math::Math
 
     BYTEENGINE_API [[nodiscard]] RadianD Acos(double value);
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     [[nodiscard]] RadianT<T> Atan(T value) { return std::atan(value); }
 
     // SinCos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
@@ -380,16 +380,16 @@ namespace ByteEngine::Math::Math
         cos = sign * p;
     }
 
-    template<FloatingPointNumber T, FloatingPointNumber U>
+    template<std::floating_point T, std::floating_point U>
     [[nodiscard]] RadianT<std::common_type_t<T, U>> Atan2(T x, U y) { return RadianT<std::common_type_t<T, U>>(std::atan2(x, y)); }
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     [[nodiscard]] inline T Sqrt(T value) { return std::sqrt(value); }
 
-    template<AnyNumber T>
+    template<Arithmetic T>
     [[nodiscard]] inline T Abs(T value) noexcept { return std::abs(value); }
 
-    template<AnyNumber T, AnyNumber U, AnyNumber V>
+    template<Arithmetic T, Arithmetic U, Arithmetic V>
     [[nodiscard]] constexpr std::common_type_t<T, U, V> Clamp(T value, U min, V max) noexcept
     {
         if (value <= min)
@@ -400,7 +400,7 @@ namespace ByteEngine::Math::Math
         return value;
     }
 
-    template<AnyNumber T>
+    template<Arithmetic T>
     [[nodiscard]] constexpr T Clamp(T value, T min = 0, T max = 1) noexcept
     {
         if (value <= min)
@@ -411,46 +411,46 @@ namespace ByteEngine::Math::Math
         return value;
     }
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     [[nodiscard]] inline T Round(T value) noexcept { return std::round(value); }
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     [[nodiscard]] inline T Ceil(T value) noexcept { return std::ceil(value); }
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     [[nodiscard]] inline T Floor(T value) noexcept { return std::floor(value); }
 
-    template<AnyNumber T>
+    template<Arithmetic T>
     [[nodiscard]] constexpr T Sign(T value) noexcept { return static_cast<T>((value > 0) - (value < 0)); }
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     [[nodiscard]] inline T Fract(T value) noexcept { return value - Floor(value); }
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     [[nodiscard]] inline T Exp(T value) noexcept { return std::exp(value); }
 
-    template<AnyNumber T, AnyNumber U>
+    template<Arithmetic T, Arithmetic U>
     [[nodiscard]] inline auto Pow(T value, U power) noexcept { return std::pow(static_cast<std::common_type_t<T, U>>(value), static_cast<std::common_type_t<T, U>>(power)); }
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     [[nodiscard]] inline T Log(T value) noexcept { return std::log(value); }
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     [[nodiscard]] inline T Log10(T value) noexcept { return std::log10(value); }
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     [[nodiscard]] inline T Log2(T value) noexcept { return std::log2(value); }
 
-    template<FloatingPointNumber T, FloatingPointNumber U>
+    template<std::floating_point T, std::floating_point U>
     [[nodiscard]] inline auto LogN(T value, U base) noexcept { return Log(value) / Log(base); }
 
-    template<FloatingPointNumber T, FloatingPointNumber U>
+    template<std::floating_point T, std::floating_point U>
     [[nodiscard]] inline auto Fmod(T x, U y) noexcept { return std::fmod(x, y); }
 
     [[nodiscard]] inline bool IsEqualApproximetly(float right, float left, float tolerance = Epsilon) noexcept { return Abs(left - right) < tolerance; }
     [[nodiscard]] inline bool IsEqualApproximetly(double right, double left, double tolerance = EpsilonD) noexcept { return Abs(left - right) < tolerance; }
 
-    template<FloatingPointNumber T, FloatingPointNumber U, FloatingPointNumber V>
+    template<std::floating_point T, std::floating_point U, std::floating_point V>
     [[nodiscard]] inline auto LoopValue(T t, U start, V end)
     {
         using Common = std::common_type_t<T, U, V>;
@@ -461,7 +461,7 @@ namespace ByteEngine::Math::Math
         return Fmod(Fmod(offset, range) + range, range) + start;
     }
 
-    template<IntegerNumber T, IntegerNumber U, IntegerNumber V>
+    template<Integral T, Integral U, Integral V>
     [[nodiscard]] constexpr auto LoopValue(T t, U start, V end)
     {
         using Common = std::common_type_t<T, U, V>;
@@ -472,7 +472,7 @@ namespace ByteEngine::Math::Math
         return (offset % range + range) % range + start;
     }
 
-    template<AnyNumber T, AnyNumber U>
+    template<Arithmetic T, Arithmetic U>
         requires Internal::AnyFloating<T, U>
     [[nodiscard]] inline auto PingPong(T t, U length) noexcept
     {
@@ -483,15 +483,15 @@ namespace ByteEngine::Math::Math
     BYTEENGINE_API [[nodiscard]] RadianF AngleDifference(RadianF from, RadianF to) noexcept;
     BYTEENGINE_API [[nodiscard]] RadianD AngleDifference(RadianD from, RadianD to) noexcept;
 
-    template<AnyNumber T, AnyNumber U, AnyNumber V>
+    template<Arithmetic T, Arithmetic U, Arithmetic V>
         requires Internal::AnyFloating<T, U, V>
     [[nodiscard]] constexpr auto Lerp(T from, U to, V t) noexcept { return from + (to - from) * t; }
 
-    template<AnyNumber T, AnyNumber U, AnyNumber V>
+    template<Arithmetic T, Arithmetic U, Arithmetic V>
         requires Internal::AnyFloating<T, U, V>
     [[nodiscard]] constexpr auto LerpClamped(T from, U to, V t) noexcept { return from + (to - from) * Clamp(t); }
 
-    template<AnyNumber T, AnyNumber U, AnyNumber V>
+    template<Arithmetic T, Arithmetic U, Arithmetic V>
         requires Internal::AnyFloating<T, U, V>
     [[nodiscard]] constexpr auto InverseLerp(T from, U to, V t) noexcept { return (t - from) / (to - from); }
 
@@ -501,7 +501,7 @@ namespace ByteEngine::Math::Math
     BYTEENGINE_API [[nodiscard]] RadianF LerpAngleClamped(RadianF from, RadianF to, float t) noexcept;
     BYTEENGINE_API [[nodiscard]] RadianD LerpAngleClamped(RadianD from, RadianD to, double t) noexcept;
 
-    template<AnyNumber T, AnyNumber U, AnyNumber V>
+    template<Arithmetic T, Arithmetic U, Arithmetic V>
         requires Internal::AnyFloating<T, U, V>
     [[nodiscard]] inline auto MoveTowards(T current, U target, V maxDelta) noexcept
     {
@@ -511,7 +511,7 @@ namespace ByteEngine::Math::Math
         return current + Sign(target - current) * maxDelta;
     }
 
-    template<AnyNumber T, AnyNumber U, AnyNumber V>
+    template<Arithmetic T, Arithmetic U, Arithmetic V>
         requires Internal::AnyFloating<T, U, V>
     [[nodiscard]] inline auto SmoothStep(T edge0, U edge1, V x) noexcept
     {
@@ -529,20 +529,20 @@ namespace ByteEngine::Math::Math
         return t * t * (3.0f - 2.0f * t);
     }
 
-    template<AnyNumber T>
+    template<Arithmetic T>
     [[nodiscard]] constexpr bool IsFinite(T value) noexcept { return std::isfinite(value); }
 
-    template<AnyNumber T>
+    template<Arithmetic T>
     [[nodiscard]] constexpr bool IsNaN(T value) noexcept { return std::isnan(value); }
 
-    template<AnyNumber T, AnyNumber U, AnyNumber V, AnyNumber W, AnyNumber X>
+    template<Arithmetic T, Arithmetic U, Arithmetic V, Arithmetic W, Arithmetic X>
     [[nodiscard]] constexpr auto Remap(T value, U oldStart, V oldEnd, W newStart, X newEnd) noexcept
     {
         return newStart + (value - oldStart) * (newEnd - newStart) / (oldEnd - oldStart);
     }
 
-    template<AnyNumber T = float, std::ranges::input_range R>
-        requires AnyNumber<std::ranges::range_value_t<R>>
+    template<Arithmetic T = float, std::ranges::input_range R>
+        requires Arithmetic<std::ranges::range_value_t<R>>
     [[nodiscard]] constexpr T Average(const R& range)
     {
         std::ranges::range_value_t<R> sum = 0;
@@ -560,22 +560,22 @@ namespace ByteEngine::Math::Math
         return static_cast<T>(sum) / count;
     }
 
-    template<AnyNumber T = float, AnyNumber U>
+    template<Arithmetic T = float, Arithmetic U>
     [[nodiscard]] constexpr T Average(std::initializer_list<U> list) { return Average<T, std::initializer_list<U>>(list); }
 
-    template<AnyNumber T, AnyNumber U>
+    template<Arithmetic T, Arithmetic U>
     [[nodiscard]] constexpr std::common_type_t<T, U> Min(T a, U b) { return a < b ? a : b; }
 
-    template<AnyNumber T, AnyNumber U, AnyNumber V>
+    template<Arithmetic T, Arithmetic U, Arithmetic V>
     [[nodiscard]] constexpr std::common_type_t<T, U, V> Min(T a, U b, V c) { return Min(a, Min(b, c)); }
 
     template<std::ranges::range R>
     [[nodiscard]] constexpr std::ranges::range_value_t<R> Min(const R& range) { return std::ranges::min(range); }
 
-    template<AnyNumber T, AnyNumber U>
+    template<Arithmetic T, Arithmetic U>
     [[nodiscard]] constexpr std::common_type_t<T, U> Max(T a, U b) { return a > b ? a : b; }
 
-    template<AnyNumber T, AnyNumber U, AnyNumber V>
+    template<Arithmetic T, Arithmetic U, Arithmetic V>
     [[nodiscard]] constexpr std::common_type_t<T, U, V> Max(T a, U b, V c) { return Max(a, Max(b, c)); }
 
     template<std::ranges::range R>
@@ -584,7 +584,7 @@ namespace ByteEngine::Math::Math
 
 namespace ByteEngine::Math
 {
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     constexpr DegreeT<T> RadianT<T>::ToDegree() const
     {
         if constexpr (std::is_same_v<T, float>)
@@ -593,7 +593,7 @@ namespace ByteEngine::Math
             return DegreeT<T>(value * (180.0 / Math::PI_D));
     }
 
-    template<FloatingPointNumber T>
+    template<std::floating_point T>
     constexpr RadianT<T> DegreeT<T>::ToRadian() const
     {
         if constexpr (std::is_same_v<T, float>)

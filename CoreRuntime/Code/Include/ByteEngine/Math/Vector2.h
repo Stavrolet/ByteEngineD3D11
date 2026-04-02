@@ -6,13 +6,13 @@
 
 namespace ByteEngine::Math
 {
-    template<AnyNumber T>
+    template<Arithmetic T>
     struct Vector3t;
 
-    template<AnyNumber T>
+    template<Arithmetic T>
     struct Vector4t;
 
-    template<AnyNumber T>
+    template<Arithmetic T>
     struct Vector2t
     {
         using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
@@ -51,7 +51,7 @@ namespace ByteEngine::Math
         FloatT Length() const { return Math::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y; }
 
-        void Normalize() requires FloatingPointNumber<T>
+        void Normalize() requires std::floating_point<T>
         {
             FloatT lengthSq = LengthSquared();
 
@@ -61,21 +61,21 @@ namespace ByteEngine::Math
                 *this = Zero();
         }
 
-        Vector2t Normalized() const requires FloatingPointNumber<T>
+        Vector2t Normalized() const requires std::floating_point<T>
         {
             Vector2t copy = *this;
             copy.Normalize();
             return copy;
         }
 
-        bool IsNormalized() const requires FloatingPointNumber<T>
+        bool IsNormalized() const requires std::floating_point<T>
         {
             return Math::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Math::UnitSizeEpsilon));
         }
 
         // RotateBy implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::rotated
-        constexpr void RotateBy(RadianT<FloatT> angle) requires FloatingPointNumber<T>
+        constexpr void RotateBy(RadianT<FloatT> angle) requires std::floating_point<T>
         {
             FloatT sin, cos;
 
@@ -94,14 +94,14 @@ namespace ByteEngine::Math
             y = oldX * sin + y * cos;
         }
 
-        constexpr Vector2t RotatedBy(RadianT<FloatT> angle) const requires FloatingPointNumber<T>
+        constexpr Vector2t RotatedBy(RadianT<FloatT> angle) const requires std::floating_point<T>
         {
             Vector2t copy = *this;
             copy.RotateBy(angle);
             return copy;
         }
 
-        void LimitLength(FloatT maxLength = 1) requires FloatingPointNumber<T>
+        void LimitLength(FloatT maxLength = 1) requires std::floating_point<T>
         {
             FloatT currentLength = LengthSquared();
 
@@ -112,14 +112,14 @@ namespace ByteEngine::Math
             }
         }
 
-        static RadianT<FloatT> AngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
+        static RadianT<FloatT> AngleBetween(Vector2t from, Vector2t to) requires std::floating_point<T>
         {
             FloatT cross = Cross(from, to);
             FloatT dot = Dot(from, to);
             return Math::Atan2(cross, dot);
         }
 
-        static RadianT<FloatT> UnsigedAngleBetween(Vector2t from, Vector2t to) requires FloatingPointNumber<T>
+        static RadianT<FloatT> UnsigedAngleBetween(Vector2t from, Vector2t to) requires std::floating_point<T>
         {
             return RadianT<T>(Math::Abs(AngleBetween(from, to).value));
         }
@@ -131,23 +131,23 @@ namespace ByteEngine::Math
         {
             Vector2t dir = to - from;
 
-            if constexpr (FloatingPointNumber<T>)
+            if constexpr (std::floating_point<T>)
                 dir.Normalize();
 
             return dir;
         }
 
-        static constexpr FloatT Cross(Vector2t a, Vector2t b) requires FloatingPointNumber<T>
+        static constexpr FloatT Cross(Vector2t a, Vector2t b) requires std::floating_point<T>
         {
             return a.x * b.y - a.y * b.x;
         }
 
-        static constexpr FloatT Dot(Vector2t a, Vector2t b) requires FloatingPointNumber<T>
+        static constexpr FloatT Dot(Vector2t a, Vector2t b) requires std::floating_point<T>
         {
             return a.x * b.x + a.y * b.y;
         }
 
-        static constexpr Vector2t FromAngle(RadianT<FloatT> angle) requires FloatingPointNumber<T>
+        static constexpr Vector2t FromAngle(RadianT<FloatT> angle) requires std::floating_point<T>
         {
             Vector2t<FloatT> vec;
 
@@ -164,25 +164,25 @@ namespace ByteEngine::Math
             return vec;
         }
 
-        static constexpr Vector2t FromAngle(RadianT<FloatT> angle, FloatT length) requires FloatingPointNumber<T>
+        static constexpr Vector2t FromAngle(RadianT<FloatT> angle, FloatT length) requires std::floating_point<T>
         {
             return FromAngle(angle) * length;
         }
 
-        static constexpr Vector2t Lerp(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
+        static constexpr Vector2t Lerp(Vector2t from, Vector2t to, FloatT t) requires std::floating_point<T>
         {
             assert(t >= 0 && t <= 1);
             return from + (to - from) * t;
         }
 
-        static constexpr Vector2t LerpClamped(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
+        static constexpr Vector2t LerpClamped(Vector2t from, Vector2t to, FloatT t) requires std::floating_point<T>
         {
             return from + (to - from) * Math::Clamp(t);
         }
 
         // Slerp implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::slerp
-        static Vector2t Slerp(Vector2t from, Vector2t to, FloatT t) requires FloatingPointNumber<T>
+        static Vector2t Slerp(Vector2t from, Vector2t to, FloatT t) requires std::floating_point<T>
         {
             assert(t >= 0 && t <= 1);
 
@@ -202,7 +202,7 @@ namespace ByteEngine::Math
 
         // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::move_toward
-        static Vector2t MoveTowards(Vector2t current, Vector2t target, FloatT maxDelta) requires FloatingPointNumber<T>
+        static Vector2t MoveTowards(Vector2t current, Vector2t target, FloatT maxDelta) requires std::floating_point<T>
         {
             Vector2t direction = target - current;
             FloatT distance = direction.Length();
@@ -213,7 +213,7 @@ namespace ByteEngine::Math
                 return current + direction / distance * maxDelta;
         }
 
-        static constexpr Vector2t Project(Vector2t vec, Vector2t projectOnto) requires FloatingPointNumber<T>
+        static constexpr Vector2t Project(Vector2t vec, Vector2t projectOnto) requires std::floating_point<T>
         {
             T dot = Dot(vec, projectOnto);
             if (dot < Math::Epsilon)
@@ -222,19 +222,19 @@ namespace ByteEngine::Math
             return projectOnto * (dot / projectOnto.LengthSquared());
         }
 
-        static Vector2t ProjectNormalized(Vector2t vec, Vector2t projectOnto) requires FloatingPointNumber<T>
+        static Vector2t ProjectNormalized(Vector2t vec, Vector2t projectOnto) requires std::floating_point<T>
         {
             assert(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
             return projectOnto * Dot(vec, projectOnto);
         }
 
-        static Vector2t Reflect(Vector2t vec, Vector2t normal) requires FloatingPointNumber<T>
+        static Vector2t Reflect(Vector2t vec, Vector2t normal) requires std::floating_point<T>
         {
             assert(normal.IsNormalized() || IsEqualApproximetly(normal, Zero()));
             return vec - T(2) * Dot(vec, normal) * normal;
         }
 
-        static bool IsEqualApproximetly(Vector2t a, Vector2t b) requires FloatingPointNumber<T> { return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y); }
+        static bool IsEqualApproximetly(Vector2t a, Vector2t b) requires std::floating_point<T> { return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y); }
 
         static constexpr Vector2t Min(Vector2t a, Vector2t b) { return Vector2t(Math::Min(a.x, b.x), Math::Min(a.y, b.y)); }
         static constexpr Vector2t Min(Vector2t a, Vector2t b, Vector2t c) { return Vector2t(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y)); }
@@ -335,19 +335,19 @@ namespace ByteEngine::Math
             return data[index];
         }
 
-        template<AnyNumber U>
+        template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
         operator Vector2t<U>() const { return Vector2t<U>(static_cast<U>(x), static_cast<U>(y)); }
 
         operator Vector3t<T>() const;
 
-        template<AnyNumber U>
+        template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
         operator Vector3t<U>() const;
 
         operator Vector4t<T>() const;
 
-        template<AnyNumber U>
+        template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
         operator Vector4t<U>() const;
     };
