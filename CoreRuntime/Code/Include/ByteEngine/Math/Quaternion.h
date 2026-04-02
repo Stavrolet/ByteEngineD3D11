@@ -106,13 +106,13 @@ namespace ByteEngine::Math
         constexpr Quaternion operator+(Quaternion q) const { return Quaternion(x + q.x, y + q.y, z + q.z, w + q.w); }
         constexpr Quaternion operator-(Quaternion q) const { return Quaternion(x - q.x, y - q.y, z - q.z, w - q.w); }
 
-        constexpr Quaternion operator+=(Quaternion q)
+        constexpr Quaternion& operator+=(Quaternion q)
         {
             *this = *this + q;
             return *this;
         }
 
-        constexpr Quaternion operator-=(Quaternion q)
+        constexpr Quaternion& operator-=(Quaternion q)
         {
             *this = *this - q;
             return *this;
@@ -128,7 +128,7 @@ namespace ByteEngine::Math
             );
         }
 
-        constexpr Quaternion operator*=(Quaternion q)
+        constexpr Quaternion& operator*=(Quaternion q)
         {
             *this = *this * q;
             return *this;
