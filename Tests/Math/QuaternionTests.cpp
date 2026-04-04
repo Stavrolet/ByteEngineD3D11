@@ -80,14 +80,14 @@ TEST_F(QuaternionTest, Inversed)
 
 TEST_F(QuaternionTest, FromEulerInRadians)
 {
-    Quaternion q = Quaternion::FromEulerInRadians(0.0_rf, 0.0_rf, 0.0_rf);
+    Quaternion q = Quaternion::FromEuler(0.0_rf, 0.0_rf, 0.0_rf);
     EXPECT_NEAR(q.x, 0.0f, EPSILON);
     EXPECT_NEAR(q.y, 0.0f, EPSILON);
     EXPECT_NEAR(q.z, 0.0f, EPSILON);
     EXPECT_NEAR(q.w, 1.0f, EPSILON);
 }
 
-TEST_F(QuaternionTest, FromEuler)
+TEST_F(QuaternionTest, FromEulerInDegrees)
 {
     Vector3 euler(0.0f, 0.0f, 0.0f);
     Quaternion q = Quaternion::FromEuler(0.0_df, 0.0_df, 0.0_df);
@@ -99,7 +99,7 @@ TEST_F(QuaternionTest, FromEuler)
 
 TEST_F(QuaternionTest, FromEulerRadianComponents)
 {
-    Quaternion q = Quaternion::FromEulerInRadians(RadianF(0.0f), RadianF(0.0f), RadianF(0.0f));
+    Quaternion q = Quaternion::FromEuler(RadianF(0.0f), RadianF(0.0f), RadianF(0.0f));
     EXPECT_NEAR(q.x, 0.0f, EPSILON);
     EXPECT_NEAR(q.y, 0.0f, EPSILON);
     EXPECT_NEAR(q.z, 0.0f, EPSILON);

@@ -97,7 +97,7 @@ namespace ByteEngine::Math
 
     BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(DegreeF angle, Vector3F axis) { return FromAngleAxis(angle.ToRadian(), axis); }
 
-    BYTEENGINE_API Quaternion Quaternion::FromEulerInRadians(RadianF pitch, RadianF yaw, RadianF roll)
+    BYTEENGINE_API Quaternion Quaternion::FromEuler(RadianF pitch, RadianF yaw, RadianF roll)
     {
         XMVECTOR q = XMQuaternionRotationRollPitchYaw(pitch.value, yaw.value, roll.value);
         Quaternion result;
@@ -105,7 +105,7 @@ namespace ByteEngine::Math
         return result;
     }
 
-    BYTEENGINE_API Quaternion Quaternion::FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian()); }
+    BYTEENGINE_API Quaternion Quaternion::FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEuler(pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian()); }
 
     BYTEENGINE_API Quaternion Quaternion::FromLookDirection(Vector3F direction, Vector3F worldUp)
     {

@@ -71,7 +71,7 @@ namespace ByteEngine::Math
         BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(RadianF angle, Vector3F axis);
         BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(DegreeF angle, Vector3F axis);
 
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromEulerInRadians(RadianF pitch, RadianF yaw, RadianF roll);
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromEuler(RadianF pitch, RadianF yaw, RadianF roll);
         BYTEENGINE_API [[nodiscard]] static Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll);
 
         BYTEENGINE_API [[nodiscard]] static Quaternion FromLookDirection(Vector3F direction, Vector3F worldUp = Vector3F::Up());
