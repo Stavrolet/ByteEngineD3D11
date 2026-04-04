@@ -50,3 +50,4 @@ Resources/*
 !Resources/*/
 !Resources/*.*
 *.hint
+MyLocalTests/
