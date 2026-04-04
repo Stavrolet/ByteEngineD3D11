@@ -313,7 +313,7 @@ namespace ByteEngine
         }
     }
 
-    void RenderingContext::OnWindowResized(Math::Vector2i size)
+    void RenderingContext::OnWindowResized(Math::Vector2I size)
     {
         deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
         ResizeSwapchain(size);
@@ -342,10 +342,10 @@ namespace ByteEngine
                 SetSwapChainFullscreenState(false);
         }
 
-        ResizeSwapchain(ByteEngine::Math::Vector2i::Zero());
+        ResizeSwapchain(ByteEngine::Math::Vector2I::Zero());
     }
 
-    void RenderingContext::ResizeSwapchain(ByteEngine::Math::Vector2i size)
+    void RenderingContext::ResizeSwapchain(ByteEngine::Math::Vector2I size)
     {
         renderTargetView.reset();
         depthStencilView.reset();

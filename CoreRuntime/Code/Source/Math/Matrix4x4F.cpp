@@ -71,7 +71,7 @@ namespace ByteEngine::Math
         return result;
     }
 
-    Vector3f Matrix4x4F::GetScale() const
+    Vector3F Matrix4x4F::GetScale() const
     {
         XMMATRIX matrix = XMLoadFloat4x4A(reinterpret_cast<const XMFLOAT4X4A*>(this->elements));
 
@@ -79,7 +79,7 @@ namespace ByteEngine::Math
         XMVECTOR y = XMVector3Length(matrix.r[1]);
         XMVECTOR z = XMVector3Length(matrix.r[2]);
 
-        Vector3f scale;
+        Vector3F scale;
 
         XMVectorGetXPtr(&scale.x, x);
         XMVectorGetXPtr(&scale.y, y);
@@ -88,35 +88,35 @@ namespace ByteEngine::Math
         return scale;
     }
 
-    Vector3f Matrix4x4F::MultiplyPoint(Vector3f point) const
+    Vector3F Matrix4x4F::MultiplyPoint(Vector3F point) const
     {
         XMVECTOR vec = XMLoadFloat3(reinterpret_cast<const XMFLOAT3*>(&point));
         XMMATRIX matrix = XMLoadFloat4x4A(reinterpret_cast<const XMFLOAT4X4A*>(this->elements));
         XMVECTOR transformedPoint = XMVector3TransformCoord(vec, matrix);
 
-        Vector3f result;
+        Vector3F result;
         XMStoreFloat3(reinterpret_cast<XMFLOAT3*>(&result), transformedPoint);
         return result;
     }
 
-    Vector3f Matrix4x4F::MultiplyPointFast(Vector3f point) const
+    Vector3F Matrix4x4F::MultiplyPointFast(Vector3F point) const
     {
         XMVECTOR vec = XMLoadFloat3(reinterpret_cast<const XMFLOAT3*>(&point));
         XMMATRIX matrix = XMLoadFloat4x4A(reinterpret_cast<const XMFLOAT4X4A*>(this->elements));
         XMVECTOR transformedPoint = XMVector3Transform(vec, matrix);
 
-        Vector3f result;
+        Vector3F result;
         XMStoreFloat3(reinterpret_cast<XMFLOAT3*>(&result), transformedPoint);
         return result;
     }
 
-    Vector3f Matrix4x4F::MultiplyVector(Vector3f vector) const
+    Vector3F Matrix4x4F::MultiplyVector(Vector3F vector) const
     {
         XMVECTOR vec = XMLoadFloat3(reinterpret_cast<const XMFLOAT3*>(&vector));
         XMMATRIX matrix = XMLoadFloat4x4A(reinterpret_cast<const XMFLOAT4X4A*>(this->elements));
         XMVECTOR transformedPoint = XMVector3TransformNormal(vec, matrix);
 
-        Vector3f result;
+        Vector3F result;
         XMStoreFloat3(reinterpret_cast<XMFLOAT3*>(&result), transformedPoint);
         return result;
     }
@@ -147,9 +147,9 @@ namespace ByteEngine::Math
         return result;
     }
 
-    Matrix4x4F Matrix4x4F::CreateLookAt(Vector3f eyePos, Vector3f targetPos, Vector3f worldUp)
+    Matrix4x4F Matrix4x4F::CreateLookAt(Vector3F eyePos, Vector3F targetPos, Vector3F worldUp)
     {
-        Vector3f direction = Vector3f::Direction(eyePos, targetPos);
+        Vector3F direction = Vector3F::Direction(eyePos, targetPos);
 
         XMVECTOR eyeVec = XMLoadFloat3(reinterpret_cast<const XMFLOAT3*>(&eyePos));
         XMVECTOR dirVec = XMLoadFloat3(reinterpret_cast<const XMFLOAT3*>(&direction));
@@ -161,7 +161,7 @@ namespace ByteEngine::Math
         return result;
     }
 
-    Matrix4x4F Matrix4x4F::CreateTRS(Vector3f translation, Quaternion rotation, Vector3f scale)
+    Matrix4x4F Matrix4x4F::CreateTRS(Vector3F translation, Quaternion rotation, Vector3F scale)
     {
         XMVECTOR translationVec = XMLoadFloat3(reinterpret_cast<const XMFLOAT3*>(&translation));
         XMVECTOR rotationVec = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&rotation));

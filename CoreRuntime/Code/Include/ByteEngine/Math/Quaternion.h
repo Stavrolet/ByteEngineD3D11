@@ -55,21 +55,21 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        BYTEENGINE_API [[nodiscard]] Vector3f GetEuler();
-        BYTEENGINE_API [[nodiscard]] Vector3f GetEuler() const;
-        BYTEENGINE_API [[nodiscard]] Vector3f GetEulerInDegrees() const;
+        BYTEENGINE_API [[nodiscard]] Vector3F GetEuler();
+        BYTEENGINE_API [[nodiscard]] Vector3F GetEuler() const;
+        BYTEENGINE_API [[nodiscard]] Vector3F GetEulerInDegrees() const;
 
         // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Quaternion::get_axis
-        BYTEENGINE_API [[nodiscard]] Vector3f GetAxis() const;
+        BYTEENGINE_API [[nodiscard]] Vector3F GetAxis() const;
         BYTEENGINE_API [[nodiscard]] RadianF GetAngle() const;
 
         [[nodiscard]] constexpr static float Dot(Quaternion a, Quaternion b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 
         BYTEENGINE_API [[nodiscard]] static RadianF AngleBetween(Quaternion a, Quaternion b);
 
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(RadianF angle, Vector3f axis);
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(DegreeF angle, Vector3f axis);
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(RadianF angle, Vector3F axis);
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(DegreeF angle, Vector3F axis);
 
         [[nodiscard]] static constexpr Quaternion FromEulerInRadians(RadianF pitch, RadianF yaw, RadianF roll)
         {
@@ -94,8 +94,8 @@ namespace ByteEngine::Math
 
         [[nodiscard]] static constexpr Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian()); }
 
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromLookDirection(Vector3f direction, Vector3f worldUp = Vector3f::Up());
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromToRotation(Vector3f from, Vector3f target);
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromLookDirection(Vector3F direction, Vector3F worldUp = Vector3F::Up());
+        BYTEENGINE_API [[nodiscard]] static Quaternion FromToRotation(Vector3F from, Vector3F target);
 
         BYTEENGINE_API [[nodiscard]] static Quaternion SlerpUnclamped(Quaternion from, Quaternion to, float t);
         BYTEENGINE_API [[nodiscard]] static Quaternion Slerp(Quaternion from, Quaternion to, float t);
@@ -149,8 +149,8 @@ namespace ByteEngine::Math
             return data[index];
         }
 
-        [[nodiscard]] constexpr explicit operator Vector3f() const { return Vector3f(x, y, z); }
-        [[nodiscard]] constexpr explicit operator Vector2f() const { return Vector2f(x, y); }
-        [[nodiscard]] constexpr explicit operator Vector4f() const { return Vector4f(x, y, z, w); }
+        [[nodiscard]] constexpr explicit operator Vector3F() const { return Vector3F(x, y, z); }
+        [[nodiscard]] constexpr explicit operator Vector2F() const { return Vector2F(x, y); }
+        [[nodiscard]] constexpr explicit operator Vector4F() const { return Vector4F(x, y, z, w); }
     };
 }

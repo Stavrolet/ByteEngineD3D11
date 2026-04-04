@@ -26,13 +26,13 @@ namespace ByteEngine::Math
 
             struct
             {
-                Vector4f row0;
-                Vector4f row1;
-                Vector4f row2;
-                Vector4f row3;
+                Vector4F row0;
+                Vector4F row1;
+                Vector4F row2;
+                Vector4F row3;
             };
 
-            Vector4f rows[4];
+            Vector4F rows[4];
 
             float elements[16];
         };
@@ -58,7 +58,7 @@ namespace ByteEngine::Math
             m30(m30), m31(m31), m32(m32), m33(m33)
         { }
 
-        constexpr Matrix4x4F(Vector4f row0, Vector4f row1, Vector4f row2, Vector4f row3)
+        constexpr Matrix4x4F(Vector4F row0, Vector4F row1, Vector4F row2, Vector4F row3)
             : row0(row0), row1(row1), row2(row2), row3(row3)
         { }
 
@@ -69,16 +69,16 @@ namespace ByteEngine::Math
             m30(elements[12]), m31(elements[13]), m32(elements[14]), m33(elements[15])
         { }
 
-        [[nodiscard]] constexpr Vector4f GetRow(int32 row) const
+        [[nodiscard]] constexpr Vector4F GetRow(int32 row) const
         {
             assert(row >= 0 && row < RowCount);
             return rows[row];
         }
 
-        [[nodiscard]] constexpr Vector4f GetColumn(int32 column) const
+        [[nodiscard]] constexpr Vector4F GetColumn(int32 column) const
         {
             assert(column >= 0 && column < ColumnCount);
-            return Vector4f(rows[0][column], rows[1][column], rows[2][column], rows[3][column]);
+            return Vector4F(rows[0][column], rows[1][column], rows[2][column], rows[3][column]);
         }
 
         BYTEENGINE_API [[nodiscard]] float Determinant() const;
@@ -106,27 +106,27 @@ namespace ByteEngine::Math
             };
         }
 
-        [[nodiscard]] constexpr Vector3f GetTranslation() const { return Vector3f { m30, m31, m32 }; }
+        [[nodiscard]] constexpr Vector3F GetTranslation() const { return Vector3F { m30, m31, m32 }; }
         BYTEENGINE_API [[nodiscard]] Quaternion GetRotation() const;
-        BYTEENGINE_API [[nodiscard]] Vector3f GetScale() const;
+        BYTEENGINE_API [[nodiscard]] Vector3F GetScale() const;
 
-        BYTEENGINE_API [[nodiscard]] Vector3f MultiplyPoint(Vector3f point) const;
-        BYTEENGINE_API [[nodiscard]] Vector3f MultiplyPointFast(Vector3f point) const;
-        BYTEENGINE_API [[nodiscard]] Vector3f MultiplyVector(Vector3f vector) const;
+        BYTEENGINE_API [[nodiscard]] Vector3F MultiplyPoint(Vector3F point) const;
+        BYTEENGINE_API [[nodiscard]] Vector3F MultiplyPointFast(Vector3F point) const;
+        BYTEENGINE_API [[nodiscard]] Vector3F MultiplyVector(Vector3F vector) const;
 
-        [[nodiscard]] static Matrix4x4F CreateTranslation(Vector3f translation)
+        [[nodiscard]] static Matrix4x4F CreateTranslation(Vector3F translation)
         {
             return Matrix4x4F {
                 IdentityRow0,
                 IdentityRow1,
                 IdentityRow2,
-                Vector4f(translation.x, translation.y, translation.z, 1.0f)
+                Vector4F(translation.x, translation.y, translation.z, 1.0f)
             };
         }
 
         BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreateRotation(Quaternion quat);
 
-        [[nodiscard]] static constexpr Matrix4x4F CreateScale(Vector3f scale)
+        [[nodiscard]] static constexpr Matrix4x4F CreateScale(Vector3F scale)
         {
             return Matrix4x4F {
                 scale.x, 0, 0, 0,
@@ -139,9 +139,9 @@ namespace ByteEngine::Math
         BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreatePerspectiveProjection(float fovY, float aspectRatio, float nearPlane, float farPlane);
         BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreateOrthographicProjection(float left, float right, float top, float bottom, float nearPlane, float farPlane);
 
-        BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreateLookAt(Vector3f eyePos, Vector3f targetPos, Vector3f worldUp = Vector3f::Up());
+        BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreateLookAt(Vector3F eyePos, Vector3F targetPos, Vector3F worldUp = Vector3F::Up());
 
-        BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreateTRS(Vector3f translation, Quaternion rotation, Vector3f scale);
+        BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreateTRS(Vector3F translation, Quaternion rotation, Vector3F scale);
 
         [[nodiscard]] constexpr Matrix4x4F operator+(const Matrix4x4F& other) const
         {
@@ -239,9 +239,9 @@ namespace ByteEngine::Math
 
         BYTEENGINE_API static const Matrix4x4F Identity;
 
-        inline static const Vector4f IdentityRow0 = Vector4f(1, 0, 0, 0);
-        inline static const Vector4f IdentityRow1 = Vector4f(0, 1, 0, 0);
-        inline static const Vector4f IdentityRow2 = Vector4f(0, 0, 1, 0);
-        inline static const Vector4f IdentityRow3 = Vector4f(0, 0, 0, 1);
+        inline static const Vector4F IdentityRow0 = Vector4F(1, 0, 0, 0);
+        inline static const Vector4F IdentityRow1 = Vector4F(0, 1, 0, 0);
+        inline static const Vector4F IdentityRow2 = Vector4F(0, 0, 1, 0);
+        inline static const Vector4F IdentityRow3 = Vector4F(0, 0, 0, 1);
     };
 }

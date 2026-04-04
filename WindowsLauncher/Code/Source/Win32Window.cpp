@@ -307,7 +307,7 @@ namespace ByteEngine::WindowsLauncher
             const RAWMOUSE& mouse = raw->data.mouse;
 
             if (BitFlags::HasOneFlag(mouse.usFlags, (uint16)MOUSE_MOVE_RELATIVE))
-                accumulatedMouseDelta += Vector2i(mouse.lLastX, mouse.lLastY);
+                accumulatedMouseDelta += Vector2I(mouse.lLastX, mouse.lLastY);
 
             if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_WHEEL))
             {

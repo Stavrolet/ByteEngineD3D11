@@ -6,13 +6,13 @@
 namespace ByteEngine::Math
 {
     template<Arithmetic T>
-    struct Vector2t;
+    struct Vector2T;
 
     template<Arithmetic T>
-    struct Vector3t;
+    struct Vector3T;
 
     template<Arithmetic T>
-    struct Vector4t
+    struct Vector4T
     {
         using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
 
@@ -37,11 +37,11 @@ namespace ByteEngine::Math
             T data[4];
         };
 
-        explicit constexpr Vector4t(T xyzw = 0)
+        explicit constexpr Vector4T(T xyzw = 0)
             : x(xyzw), y(xyzw), z(xyzw), w(xyzw)
         { }
 
-        constexpr Vector4t(T x, T y, T z, T w)
+        constexpr Vector4T(T x, T y, T z, T w)
             : x(x), y(y), z(z), w(w)
         { }
 
@@ -58,9 +58,9 @@ namespace ByteEngine::Math
                 *this = Zero();
         }
 
-        Vector4t Normalized() const requires std::floating_point<T>
+        Vector4T Normalized() const requires std::floating_point<T>
         {
-            Vector4t copy = *this;
+            Vector4T copy = *this;
             copy.Normalize();
             return copy;
         }
@@ -78,12 +78,12 @@ namespace ByteEngine::Math
                 *this *= maxLength / Math::Sqrt(currentLength);
         }
 
-        static FloatT Distcance(Vector4t a, Vector4t b) { return Math::Sqrt(DistcanceSquared(a, b)); }
-        static constexpr FloatT DistcanceSquared(Vector4t a, Vector4t b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z); }
+        static FloatT Distcance(Vector4T a, Vector4T b) { return Math::Sqrt(DistcanceSquared(a, b)); }
+        static constexpr FloatT DistcanceSquared(Vector4T a, Vector4T b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z); }
 
-        static Vector4t Direction(Vector4t from, Vector4t to)
+        static Vector4T Direction(Vector4T from, Vector4T to)
         {
-            Vector4t dir = to - from;
+            Vector4T dir = to - from;
 
             if constexpr (std::floating_point<T>)
                 dir.Normalize();
@@ -91,22 +91,22 @@ namespace ByteEngine::Math
             return dir;
         }
 
-        static constexpr FloatT Dot(Vector4t a, Vector4t b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
+        static constexpr FloatT Dot(Vector4T a, Vector4T b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 
-        static constexpr Vector4t Lerp(Vector4t from, Vector4t to, FloatT t) requires std::floating_point<T>
+        static constexpr Vector4T Lerp(Vector4T from, Vector4T to, FloatT t) requires std::floating_point<T>
         {
             assert(t >= 0 && t <= 1);
             return from + (to - from) * t;
         }
 
-        static constexpr Vector4t LerpClamped(Vector4t from, Vector4t to, FloatT t) requires std::floating_point<T>
+        static constexpr Vector4T LerpClamped(Vector4T from, Vector4T to, FloatT t) requires std::floating_point<T>
         {
             return from + (to - from) * Math::Clamp(t);
         }
 
-        static Vector4t MoveTowards(Vector4t current, Vector4t target, FloatT maxDelta) requires std::floating_point<T>
+        static Vector4T MoveTowards(Vector4T current, Vector4T target, FloatT maxDelta) requires std::floating_point<T>
         {
-            Vector4t direction = target - current;
+            Vector4T direction = target - current;
             FloatT distance = direction.Length();
 
             if (distance <= maxDelta || distance < Math::Epsilon)
@@ -115,43 +115,43 @@ namespace ByteEngine::Math
                 return current + direction / distance * maxDelta;
         }
 
-        static bool IsEqualApproximetly(Vector4t a, Vector4t b) requires std::floating_point<T>
+        static bool IsEqualApproximetly(Vector4T a, Vector4T b) requires std::floating_point<T>
         {
             return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y) && Math::IsEqualApproximetly(a.z, b.z);
         }
 
-        static constexpr Vector4t Min(Vector4t a, Vector4t b)
+        static constexpr Vector4T Min(Vector4T a, Vector4T b)
         {
-            return Vector4t(Math::Min(a.x, b.x), Math::Min(a.y, b.y), Math::Min(a.z, b.z), Math::Min(a.w, b.w));
+            return Vector4T(Math::Min(a.x, b.x), Math::Min(a.y, b.y), Math::Min(a.z, b.z), Math::Min(a.w, b.w));
         }
 
-        static constexpr Vector4t Min(Vector4t a, Vector4t b, Vector4t c)
+        static constexpr Vector4T Min(Vector4T a, Vector4T b, Vector4T c)
         {
-            return Vector4t(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y), Math::Min(a.z, b.z, c.z), Math::Min(a.w, b.w, c.w));
+            return Vector4T(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y), Math::Min(a.z, b.z, c.z), Math::Min(a.w, b.w, c.w));
         }
 
-        static constexpr Vector4t Max(Vector4t a, Vector4t b)
+        static constexpr Vector4T Max(Vector4T a, Vector4T b)
         {
-            return Vector4t(Math::Max(a.x, b.x), Math::Max(a.y, b.y), Math::Max(a.z, b.z), Math::Max(a.w, b.w));
+            return Vector4T(Math::Max(a.x, b.x), Math::Max(a.y, b.y), Math::Max(a.z, b.z), Math::Max(a.w, b.w));
         }
 
-        static constexpr Vector4t Max(Vector4t a, Vector4t b, Vector4t c)
+        static constexpr Vector4T Max(Vector4T a, Vector4T b, Vector4T c)
         {
-            return Vector4t(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y), Math::Max(a.z, b.z, c.z), Math::Max(a.w, b.w, c.w));
+            return Vector4T(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y), Math::Max(a.z, b.z, c.z), Math::Max(a.w, b.w, c.w));
         }
 
-        static constexpr Vector4t Zero() { return Vector4t(0); }
-        static constexpr Vector4t One() { return Vector4t(1); }
+        static constexpr Vector4T Zero() { return Vector4T(0); }
+        static constexpr Vector4T One() { return Vector4T(1); }
 
-        constexpr Vector4t operator+() const { return Vector4t(+x, +y, +z, +w); }
-        constexpr Vector4t operator-() const { return Vector4t(-x, -y, -z, -w); }
+        constexpr Vector4T operator+() const { return Vector4T(+x, +y, +z, +w); }
+        constexpr Vector4T operator-() const { return Vector4T(-x, -y, -z, -w); }
 
-        constexpr Vector4t operator+(Vector4t a) const { return Vector4t(a.x + x, a.y + y, a.z + z, a.w + w); }
-        constexpr Vector4t operator+(T s) const { return Vector4t(s + x, s + y, s + z, s + w); }
-        constexpr Vector4t operator-(Vector4t a) const { return Vector4t(x - a.x, y - a.y, z - a.z, w - a.w); }
-        constexpr Vector4t operator-(T s) const { return Vector4t(x - s, y - s, z - s, w - s); }
+        constexpr Vector4T operator+(Vector4T a) const { return Vector4T(a.x + x, a.y + y, a.z + z, a.w + w); }
+        constexpr Vector4T operator+(T s) const { return Vector4T(s + x, s + y, s + z, s + w); }
+        constexpr Vector4T operator-(Vector4T a) const { return Vector4T(x - a.x, y - a.y, z - a.z, w - a.w); }
+        constexpr Vector4T operator-(T s) const { return Vector4T(x - s, y - s, z - s, w - s); }
 
-        constexpr Vector4t& operator+=(Vector4t a)
+        constexpr Vector4T& operator+=(Vector4T a)
         {
             x += a.x;
             y += a.y;
@@ -160,7 +160,7 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector4t& operator+=(T s)
+        constexpr Vector4T& operator+=(T s)
         {
             x += s;
             y += s;
@@ -169,7 +169,7 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector4t& operator-=(Vector4t a)
+        constexpr Vector4T& operator-=(Vector4T a)
         {
             x -= a.x;
             y -= a.y;
@@ -178,7 +178,7 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector4t& operator-=(T a)
+        constexpr Vector4T& operator-=(T a)
         {
             x -= a;
             y -= a;
@@ -187,11 +187,11 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector4t operator*(Vector4t a) const { return Vector4t(x * a.x, y * a.y, z * a.z, w * a.w); }
-        constexpr Vector4t operator*(T s) const { return Vector4t(x * s, y * s, z * s, w * s); }
-        friend constexpr Vector4t operator*(T s, Vector4t v) { return v * s; }
+        constexpr Vector4T operator*(Vector4T a) const { return Vector4T(x * a.x, y * a.y, z * a.z, w * a.w); }
+        constexpr Vector4T operator*(T s) const { return Vector4T(x * s, y * s, z * s, w * s); }
+        friend constexpr Vector4T operator*(T s, Vector4T v) { return v * s; }
 
-        constexpr Vector4t& operator*=(Vector4t a)
+        constexpr Vector4T& operator*=(Vector4T a)
         {
             x *= a.x;
             y *= a.y;
@@ -200,7 +200,7 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector4t& operator*=(T s)
+        constexpr Vector4T& operator*=(T s)
         {
             x *= s;
             y *= s;
@@ -209,10 +209,10 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector4t operator/(Vector4t a) const { return Vector4t(x / a.x, y / a.y, z / a.z, w / a.w); }
-        constexpr Vector4t operator/(T s) const { return Vector4t(x / s, y / s, z / s, w / s); }
+        constexpr Vector4T operator/(Vector4T a) const { return Vector4T(x / a.x, y / a.y, z / a.z, w / a.w); }
+        constexpr Vector4T operator/(T s) const { return Vector4T(x / s, y / s, z / s, w / s); }
 
-        constexpr Vector4t& operator/=(Vector4t a)
+        constexpr Vector4T& operator/=(Vector4T a)
         {
             x /= a.x;
             y /= a.y;
@@ -221,7 +221,7 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector4t& operator/=(T s)
+        constexpr Vector4T& operator/=(T s)
         {
             x /= s;
             y /= s;
@@ -230,8 +230,8 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr bool operator==(Vector4t other) const { return x == other.x && y == other.y && z == other.z && w == other.w; }
-        constexpr bool operator!=(Vector4t other) const { return !(*this == other); }
+        constexpr bool operator==(Vector4T other) const { return x == other.x && y == other.y && z == other.z && w == other.w; }
+        constexpr bool operator!=(Vector4T other) const { return !(*this == other); }
 
         T& operator[](int32 index)
         {
@@ -247,23 +247,23 @@ namespace ByteEngine::Math
 
         template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-        operator Vector4t<U>() const { return Vector4t<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z)); }
+        operator Vector4T<U>() const { return Vector4T<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z)); }
 
-        operator Vector2t<T>() const;
-
-        template<Arithmetic U>
-            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-        operator Vector2t<U>() const;
-
-        operator Vector3t<T>() const;
+        operator Vector2T<T>() const;
 
         template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-        operator Vector3t<U>() const;
+        operator Vector2T<U>() const;
+
+        operator Vector3T<T>() const;
+
+        template<Arithmetic U>
+            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
+        operator Vector3T<U>() const;
     };
 
-    using Vector4f = Vector4t<float>;
-    using Vector4d = Vector4t<double>;
-    using Vector4i = Vector4t<int32>;
-    using Vector4 = Vector4f;
+    using Vector4F = Vector4T<float>;
+    using Vector4D = Vector4T<double>;
+    using Vector4I = Vector4T<int32>;
+    using Vector4 = Vector4F;
 }

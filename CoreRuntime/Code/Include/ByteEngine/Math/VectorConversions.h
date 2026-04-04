@@ -7,86 +7,86 @@
 namespace ByteEngine::Math
 {
     template<Arithmetic T>
-    Vector2t<T>::operator Vector3t<T>() const
+    Vector2T<T>::operator Vector3T<T>() const
     {
-        return Vector3t<T>(x, y, 0);
+        return Vector3T<T>(x, y, 0);
     }
 
     template<Arithmetic T>
     template<Arithmetic U>
         requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-    Vector2t<T>::operator Vector3t<U>() const
+    Vector2T<T>::operator Vector3T<U>() const
     {
-        return Vector3t<U>(static_cast<U>(x), static_cast<U>(y), 0);
+        return Vector3T<U>(static_cast<U>(x), static_cast<U>(y), 0);
     }
 
     template<Arithmetic T>
-    Vector2t<T>::operator Vector4t<T>() const
+    Vector2T<T>::operator Vector4T<T>() const
     {
-        return Vector4t<T>(x, y, 0, 0);
-    }
-
-    template<Arithmetic T>
-    template<Arithmetic U>
-        requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-    Vector2t<T>::operator Vector4t<U>() const
-    {
-        return Vector4t<U>(static_cast<U>(x), static_cast<U>(y), 0, 0);
-    }
-
-    template<Arithmetic T>
-    Vector3t<T>::operator Vector2t<T>() const
-    {
-        return Vector2t(x, y);
+        return Vector4T<T>(x, y, 0, 0);
     }
 
     template<Arithmetic T>
     template<Arithmetic U>
         requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-    Vector3t<T>::operator Vector2t<U>() const
+    Vector2T<T>::operator Vector4T<U>() const
     {
-        return Vector2t<U>(static_cast<U>(x), static_cast<U>(y));
+        return Vector4T<U>(static_cast<U>(x), static_cast<U>(y), 0, 0);
     }
 
     template<Arithmetic T>
-    Vector3t<T>::operator Vector4t<T>() const
+    Vector3T<T>::operator Vector2T<T>() const
     {
-        return Vector4t<T>(x, y, z, 0);
-    }
-
-    template<Arithmetic T>
-    template<Arithmetic U>
-        requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-    Vector3t<T>::operator Vector4t<U>() const
-    {
-        return Vector4t<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z), 0);
-    }
-
-    template<Arithmetic T>
-    Vector4t<T>::operator Vector2t<T>() const
-    {
-        return Vector2t<T>(x, y);
+        return Vector2T(x, y);
     }
 
     template<Arithmetic T>
     template<Arithmetic U>
         requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-    Vector4t<T>::operator Vector2t<U>() const
+    Vector3T<T>::operator Vector2T<U>() const
     {
-        return Vector2t<U>(static_cast<U>(x), static_cast<U>(y));
+        return Vector2T<U>(static_cast<U>(x), static_cast<U>(y));
     }
 
     template<Arithmetic T>
-    Vector4t<T>::operator Vector3t<T>() const
+    Vector3T<T>::operator Vector4T<T>() const
     {
-        return Vector3t<T>(x, y, z);
+        return Vector4T<T>(x, y, z, 0);
     }
 
     template<Arithmetic T>
     template<Arithmetic U>
         requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-    Vector4t<T>::operator Vector3t<U>() const
+    Vector3T<T>::operator Vector4T<U>() const
     {
-        return Vector3t<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z));
+        return Vector4T<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z), 0);
+    }
+
+    template<Arithmetic T>
+    Vector4T<T>::operator Vector2T<T>() const
+    {
+        return Vector2T<T>(x, y);
+    }
+
+    template<Arithmetic T>
+    template<Arithmetic U>
+        requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
+    Vector4T<T>::operator Vector2T<U>() const
+    {
+        return Vector2T<U>(static_cast<U>(x), static_cast<U>(y));
+    }
+
+    template<Arithmetic T>
+    Vector4T<T>::operator Vector3T<T>() const
+    {
+        return Vector3T<T>(x, y, z);
+    }
+
+    template<Arithmetic T>
+    template<Arithmetic U>
+        requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
+    Vector4T<T>::operator Vector3T<U>() const
+    {
+        return Vector3T<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z));
     }
 }

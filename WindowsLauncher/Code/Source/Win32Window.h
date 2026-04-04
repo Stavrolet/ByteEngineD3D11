@@ -17,7 +17,7 @@ namespace ByteEngine::WindowsLauncher
         friend extern int WINAPI ::WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPTSTR, _In_ int);
 
     private:
-        Vector2i accumulatedMouseDelta;
+        Vector2I accumulatedMouseDelta;
         float accumulatedHorizontalWheelDelta = 0.0f;
         float accumulatedVerticalWheelDelta = 0.0f;
         

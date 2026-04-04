@@ -30,7 +30,7 @@ namespace ByteEngine::Math
         return copy;
     }
 
-    BYTEENGINE_API Vector3f Quaternion::GetEuler()
+    BYTEENGINE_API Vector3F Quaternion::GetEuler()
     {
         if (!IsNormalized())
             Normalize();
@@ -39,10 +39,10 @@ namespace ByteEngine::Math
         float ySq = y * y;
         float zSq = z * z;
 
-        return Vector3f(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
+        return Vector3F(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
     }
 
-    BYTEENGINE_API Vector3f Quaternion::GetEuler() const
+    BYTEENGINE_API Vector3F Quaternion::GetEuler() const
     {
         assert(IsNormalized());
 
@@ -50,20 +50,20 @@ namespace ByteEngine::Math
         float ySq = y * y;
         float zSq = z * z;
 
-        return Vector3f(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
+        return Vector3F(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
     }
 
-    BYTEENGINE_API Vector3f Quaternion::GetEulerInDegrees() const { return GetEuler() * (180.0f / Math::PI); }
+    BYTEENGINE_API Vector3F Quaternion::GetEulerInDegrees() const { return GetEuler() * (180.0f / Math::PI); }
 
     // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::get_axis
-    BYTEENGINE_API Vector3f Quaternion::GetAxis() const
+    BYTEENGINE_API Vector3F Quaternion::GetAxis() const
     {
         if (Math::Abs(w) > 1 - Math::Epsilon)
-            return Vector3f(x, y, z);
+            return Vector3F(x, y, z);
 
         float invRoot = 1.0f / Math::Sqrt(1 - w * w);
-        return Vector3f(x * invRoot, y * invRoot, z * invRoot);
+        return Vector3F(x * invRoot, y * invRoot, z * invRoot);
     }
 
     // GetAngle implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
@@ -74,7 +74,7 @@ namespace ByteEngine::Math
 
     // FromAngleAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::Quaternion(const Vector3f &p_axis, real_t p_angle)
-    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(RadianF angle, Vector3f axis)
+    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(RadianF angle, Vector3F axis)
     {
         if (!axis.IsNormalized())
             axis.Normalize();
@@ -95,9 +95,9 @@ namespace ByteEngine::Math
         }
     }
 
-    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(DegreeF angle, Vector3f axis) { return FromAngleAxis(angle.ToRadian(    ), axis); }
+    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(DegreeF angle, Vector3F axis) { return FromAngleAxis(angle.ToRadian(    ), axis); }
 
-    BYTEENGINE_API Quaternion Quaternion::FromLookDirection(Vector3f direction, Vector3f worldUp)
+    BYTEENGINE_API Quaternion Quaternion::FromLookDirection(Vector3F direction, Vector3F worldUp)
     {
         if (Math::IsEqualApproximetly(direction.LengthSquared(), 0.0f))
             return Quaternion(0.0f);
@@ -122,19 +122,19 @@ namespace ByteEngine::Math
         return result;
     }
 
-    BYTEENGINE_API Quaternion Quaternion::FromToRotation(Vector3f from, Vector3f to)
+    BYTEENGINE_API Quaternion Quaternion::FromToRotation(Vector3F from, Vector3F to)
     {
         from.Normalize();
         to.Normalize();
 
-        float dot = Math::Clamp(Vector3f::Dot(from, to), -1.0f, 1.0f);
+        float dot = Math::Clamp(Vector3F::Dot(from, to), -1.0f, 1.0f);
         
         if (dot >= 1.0f || Math::IsEqualApproximetly(dot, 0.0f))
             return Quaternion();
         else if (dot <= -1.0f)
-            return FromAngleAxis(static_cast<RadianF>(Math::PI), Vector3f(0.0f, 1.0f, 0.0f));
+            return FromAngleAxis(static_cast<RadianF>(Math::PI), Vector3F(0.0f, 1.0f, 0.0f));
 
-        Vector3f axis = Vector3f::Cross(from, to);
+        Vector3F axis = Vector3F::Cross(from, to);
         float root = Math::Sqrt((1.0f + dot) * 2.0f);
         float invRoot = 1.0f / root;
 

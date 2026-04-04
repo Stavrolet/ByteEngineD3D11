@@ -34,8 +34,8 @@ namespace ByteEngine
     protected:
         void* handle = nullptr;
 
-        ByteEngine::Math::Vector2i size;
-        ByteEngine::Math::Vector2i position;
+        ByteEngine::Math::Vector2I size;
+        ByteEngine::Math::Vector2I position;
 
         bool initialized = false;
 
@@ -50,10 +50,10 @@ namespace ByteEngine
         std::string title;
 
         DelegateVoid<KeyCode, bool> keyStateChanged;
-        DelegateVoid<ByteEngine::Math::Vector2i> mouseMoved;
+        DelegateVoid<ByteEngine::Math::Vector2I> mouseMoved;
         DelegateVoid<float, float> mouseWheelStateChanged;
 
-        MulticastDelegate<ByteEngine::Math::Vector2i> resized;
+        MulticastDelegate<ByteEngine::Math::Vector2I> resized;
 
         MulticastDelegate<bool> focusStateChanged;
 
@@ -61,7 +61,7 @@ namespace ByteEngine
         MulticastDelegate<std::string_view> titleChanged;
 
     public:
-        MulticastDelegate<ByteEngine::Math::Vector2i>& Resized() { return resized; }
+        MulticastDelegate<ByteEngine::Math::Vector2I>& Resized() { return resized; }
         MulticastDelegate<bool>& FocusStateChanged() { return focusStateChanged; }
         MulticastDelegate<WindowMode>& ModeChanged() { return modeChanged; }
         MulticastDelegate<std::string_view>& TitleChanged() { return titleChanged; }
@@ -71,10 +71,10 @@ namespace ByteEngine
         virtual void SetWindowMode(WindowMode modeToSet) = 0;
         virtual void SetWindowTitle(std::string title) = 0;
 
-        virtual void SetWindowSize(::ByteEngine::Math::Vector2i size) { SetWindowSize(size.width, size.height); }
+        virtual void SetWindowSize(::ByteEngine::Math::Vector2I size) { SetWindowSize(size.width, size.height); }
         virtual void SetWindowSize(int32 width, int32 height) = 0;
 
-        virtual void SetWindowPosition(::ByteEngine::Math::Vector2i position) { SetWindowPosition(position.x, position.y); }
+        virtual void SetWindowPosition(::ByteEngine::Math::Vector2I position) { SetWindowPosition(position.x, position.y); }
         virtual void SetWindowPosition(int32 x, int32 y) = 0;
 
         virtual void SetFocus() = 0;
@@ -84,8 +84,8 @@ namespace ByteEngine
         WindowMode GetMode() const { return mode; }
         const std::string& GetTitle() const { return title; }
 
-        ByteEngine::Math::Vector2i GetSize() const { return size; }
-        ByteEngine::Math::Vector2i GetPosition() const { return position; }
+        ByteEngine::Math::Vector2I GetSize() const { return size; }
+        ByteEngine::Math::Vector2I GetPosition() const { return position; }
 
         bool HasFocus() const { return hasFocus; }
 
@@ -95,7 +95,7 @@ namespace ByteEngine
 
     private:
         DelegateVoid<KeyCode, bool>& KeyStateChanged() { return keyStateChanged; }
-        DelegateVoid<ByteEngine::Math::Vector2i>& MouseMoved() { return mouseMoved; }
+        DelegateVoid<ByteEngine::Math::Vector2I>& MouseMoved() { return mouseMoved; }
         DelegateVoid<float, float>& MouseWheelStateChanged() { return mouseWheelStateChanged; }
     };
 }

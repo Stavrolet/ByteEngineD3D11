@@ -6,13 +6,13 @@
 namespace ByteEngine::Math
 {
     template<Arithmetic T>
-    struct Vector2t;
+    struct Vector2T;
 
     template<Arithmetic T>
-    struct Vector4t;
+    struct Vector4T;
 
     template<Arithmetic T>
-    struct Vector3t
+    struct Vector3T
     {
         using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
 
@@ -35,11 +35,11 @@ namespace ByteEngine::Math
             T data[3];
         };
 
-        explicit constexpr Vector3t(T xyz = 0)
+        explicit constexpr Vector3T(T xyz = 0)
             : x(xyz), y(xyz), z(xyz)
         { }
 
-        constexpr Vector3t(T x, T y, T z)
+        constexpr Vector3T(T x, T y, T z)
             : x(x), y(y), z(z)
         { }
 
@@ -56,9 +56,9 @@ namespace ByteEngine::Math
                 *this = Zero();
         }
 
-        Vector3t Normalized() const requires std::floating_point<T>
+        Vector3T Normalized() const requires std::floating_point<T>
         {
-            Vector3t copy = *this;
+            Vector3T copy = *this;
             copy.Normalize();
             return copy;
         }
@@ -76,7 +76,7 @@ namespace ByteEngine::Math
                 *this *= maxLength / Math::Sqrt(currentLength);
         }
 
-        void RotateBy(RadianT<FloatT> angle, Vector3t rotationAxis = Up()) requires std::floating_point<T>
+        void RotateBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up()) requires std::floating_point<T>
         {
             assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
 
@@ -98,20 +98,20 @@ namespace ByteEngine::Math
             *this = (*this * cos) + (Cross(rotationAxis, *this) * sin) + (rotationAxis * Dot(rotationAxis, *this) * (1 - cos));
         }
 
-        Vector3t RotatedBy(RadianT<FloatT> angle, Vector3t rotationAxis = Up()) const requires std::floating_point<T>
+        Vector3T RotatedBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up()) const requires std::floating_point<T>
         {
-            Vector3t copy = *this;
+            Vector3T copy = *this;
             copy.RotateBy(angle, rotationAxis);
             return copy;
         }
 
         // AngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::signed_angle_to
-        static RadianT<FloatT> AngleBetween(Vector3t from, Vector3t to, Vector3t rotationAxis) requires std::floating_point<T>
+        static RadianT<FloatT> AngleBetween(Vector3T from, Vector3T to, Vector3T rotationAxis) requires std::floating_point<T>
         {
             assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
 
-            Vector3t cross = Cross(from, to);
+            Vector3T cross = Cross(from, to);
             RadianT<T> unsignedAngle = Math::Atan2(cross.Length(), Dot(from, to));
             FloatT sign = Math::Sign(Dot(cross, rotationAxis));
             return sign < 0 ? RadianT(-unsignedAngle) : RadianT(unsignedAngle);
@@ -119,17 +119,17 @@ namespace ByteEngine::Math
 
         // UnsigedAngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::angle_to
-        static RadianT<FloatT> UnsigedAngleBetween(Vector3t from, Vector3t to) requires std::floating_point<T>
+        static RadianT<FloatT> UnsigedAngleBetween(Vector3T from, Vector3T to) requires std::floating_point<T>
         {
             return Math::Atan2(Cross(from, to).Length(), Dot(from, to));
         }
 
-        static FloatT Distcance(Vector3t a, Vector3t b) { return Math::Sqrt(DistcanceSquared(a, b)); }
-        static constexpr FloatT DistcanceSquared(Vector3t a, Vector3t b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z); }
+        static FloatT Distcance(Vector3T a, Vector3T b) { return Math::Sqrt(DistcanceSquared(a, b)); }
+        static constexpr FloatT DistcanceSquared(Vector3T a, Vector3T b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z); }
 
-        static Vector3t Direction(Vector3t from, Vector3t to)
+        static Vector3T Direction(Vector3T from, Vector3T to)
         {
-            Vector3t dir = to - from;
+            Vector3T dir = to - from;
 
             if constexpr (std::floating_point<T>)
                 dir.Normalize();
@@ -137,36 +137,36 @@ namespace ByteEngine::Math
             return dir;
         }
 
-        static constexpr Vector3t Cross(Vector3t a, Vector3t b) requires std::floating_point<T>
+        static constexpr Vector3T Cross(Vector3T a, Vector3T b) requires std::floating_point<T>
         {
-            return Vector3t(
+            return Vector3T(
                 a.y * b.z - a.z * b.y,
                 a.z * b.x - a.x * b.z,
                 a.x * b.y - a.y * b.x
             );
         }
 
-        static constexpr FloatT Dot(Vector3t a, Vector3t b) requires std::floating_point<T>
+        static constexpr FloatT Dot(Vector3T a, Vector3T b) requires std::floating_point<T>
         {
             return a.x * b.x + a.y * b.y + a.z * b.z;
         }
 
-        static constexpr Vector3t Lerp(Vector3t from, Vector3t to, FloatT t) requires std::floating_point<T>
+        static constexpr Vector3T Lerp(Vector3T from, Vector3T to, FloatT t) requires std::floating_point<T>
         {
             assert(t >= 0 && t <= 1);
             return from + (to - from) * t;
         }
 
-        static constexpr Vector3t LerpClamped(Vector3t from, Vector3t to, FloatT t) requires std::floating_point<T>
+        static constexpr Vector3T LerpClamped(Vector3T from, Vector3T to, FloatT t) requires std::floating_point<T>
         {
             return from + (to - from) * Math::Clamp(t);
         }
 
         // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::move_toward
-        static Vector3t MoveTowards(Vector3t current, Vector3t target, FloatT maxDelta) requires std::floating_point<T>
+        static Vector3T MoveTowards(Vector3T current, Vector3T target, FloatT maxDelta) requires std::floating_point<T>
         {
-            Vector3t direction = target - current;
+            Vector3T direction = target - current;
             FloatT distance = direction.Length();
 
             if (distance <= maxDelta || distance < Math::Epsilon)
@@ -175,7 +175,7 @@ namespace ByteEngine::Math
                 return current + direction / distance * maxDelta;
         }
 
-        static constexpr Vector3t Project(Vector3t vec, Vector3t projectOnto) requires std::floating_point<T>
+        static constexpr Vector3T Project(Vector3T vec, Vector3T projectOnto) requires std::floating_point<T>
         {
             T dot = Dot(vec, projectOnto);
 
@@ -185,60 +185,60 @@ namespace ByteEngine::Math
             return projectOnto * (dot / projectOnto.LengthSquared());
         }
 
-        static constexpr Vector3t ProjectNormalized(Vector3t vec, Vector3t projectOnto) requires std::floating_point<T>
+        static constexpr Vector3T ProjectNormalized(Vector3T vec, Vector3T projectOnto) requires std::floating_point<T>
         {
             assert(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
             return projectOnto * Dot(vec, projectOnto);
         }
 
-        static constexpr Vector3t Reflect(Vector3t vec, Vector3t normal) requires std::floating_point<T>
+        static constexpr Vector3T Reflect(Vector3T vec, Vector3T normal) requires std::floating_point<T>
         {
             return vec - 2 * Dot(vec, normal) * normal;
         }
 
-        static bool IsEqualApproximetly(Vector3t a, Vector3t b) requires std::floating_point<T>
+        static bool IsEqualApproximetly(Vector3T a, Vector3T b) requires std::floating_point<T>
         {
             return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y) && Math::IsEqualApproximetly(a.z, b.z);
         }
 
-        static constexpr Vector3t Min(Vector3t a, Vector3t b)
+        static constexpr Vector3T Min(Vector3T a, Vector3T b)
         {
-            return Vector3t(Math::Min(a.x, b.x), Math::Min(a.y, b.y), Math::Min(a.z, b.z));
+            return Vector3T(Math::Min(a.x, b.x), Math::Min(a.y, b.y), Math::Min(a.z, b.z));
         }
 
-        static constexpr Vector3t Min(Vector3t a, Vector3t b, Vector3t c)
+        static constexpr Vector3T Min(Vector3T a, Vector3T b, Vector3T c)
         {
-            return Vector3t(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y), Math::Min(c.z, c.z, c.z));
+            return Vector3T(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y), Math::Min(c.z, c.z, c.z));
         }
 
-        static constexpr Vector3t Max(Vector3t a, Vector3t b)
+        static constexpr Vector3T Max(Vector3T a, Vector3T b)
         {
-            return Vector3t(Math::Max(a.x, b.x), Math::Max(a.y, b.y), Math::Max(a.z, b.z));
+            return Vector3T(Math::Max(a.x, b.x), Math::Max(a.y, b.y), Math::Max(a.z, b.z));
         }
 
-        static constexpr Vector3t Max(Vector3t a, Vector3t b, Vector3t c)
+        static constexpr Vector3T Max(Vector3T a, Vector3T b, Vector3T c)
         {
-            return Vector3t(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y), Math::Max(a.z, b.z, c.z));
+            return Vector3T(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y), Math::Max(a.z, b.z, c.z));
         }
 
-        static constexpr Vector3t Zero() { return Vector3t(0); }
-        static constexpr Vector3t One() { return Vector3t(1); }
-        static constexpr Vector3t Up() { return Vector3t(0, 1, 0); }
-        static constexpr Vector3t Down() { return Vector3t(0, -1, 0); }
-        static constexpr Vector3t Left() { return Vector3t(-1, 0, 0); }
-        static constexpr Vector3t Right() { return Vector3t(1, 0, 0); }
-        static constexpr Vector3t Forward() { return Vector3t(0, 0, 1); }
-        static constexpr Vector3t Back() { return Vector3t(0, 0, -1); }
+        static constexpr Vector3T Zero() { return Vector3T(0); }
+        static constexpr Vector3T One() { return Vector3T(1); }
+        static constexpr Vector3T Up() { return Vector3T(0, 1, 0); }
+        static constexpr Vector3T Down() { return Vector3T(0, -1, 0); }
+        static constexpr Vector3T Left() { return Vector3T(-1, 0, 0); }
+        static constexpr Vector3T Right() { return Vector3T(1, 0, 0); }
+        static constexpr Vector3T Forward() { return Vector3T(0, 0, 1); }
+        static constexpr Vector3T Back() { return Vector3T(0, 0, -1); }
 
-        constexpr Vector3t operator+() const { return Vector3t(+x, +y, +z); }
-        constexpr Vector3t operator-() const { return Vector3t(-x, -y, -z); }
+        constexpr Vector3T operator+() const { return Vector3T(+x, +y, +z); }
+        constexpr Vector3T operator-() const { return Vector3T(-x, -y, -z); }
 
-        constexpr Vector3t operator+(Vector3t a) const { return Vector3t(a.x + x, a.y + y, a.z + z); }
-        constexpr Vector3t operator+(T s) const { return Vector3t(s + x, s + y, s + z); }
-        constexpr Vector3t operator-(Vector3t a) const { return Vector3t(x - a.x, y - a.y, z - a.z); }
-        constexpr Vector3t operator-(T s) const { return Vector3t(x - s, y - s, z - s); }
+        constexpr Vector3T operator+(Vector3T a) const { return Vector3T(a.x + x, a.y + y, a.z + z); }
+        constexpr Vector3T operator+(T s) const { return Vector3T(s + x, s + y, s + z); }
+        constexpr Vector3T operator-(Vector3T a) const { return Vector3T(x - a.x, y - a.y, z - a.z); }
+        constexpr Vector3T operator-(T s) const { return Vector3T(x - s, y - s, z - s); }
 
-        constexpr Vector3t& operator+=(Vector3t a)
+        constexpr Vector3T& operator+=(Vector3T a)
         {
             x += a.x;
             y += a.y;
@@ -246,7 +246,7 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector3t& operator+=(T s)
+        constexpr Vector3T& operator+=(T s)
         {
             x += s;
             y += s;
@@ -254,7 +254,7 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector3t& operator-=(Vector3t a)
+        constexpr Vector3T& operator-=(Vector3T a)
         {
             x -= a.x;
             y -= a.y;
@@ -262,7 +262,7 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector3t& operator-=(T a)
+        constexpr Vector3T& operator-=(T a)
         {
             x -= a;
             y -= a;
@@ -270,11 +270,11 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector3t operator*(Vector3t a) const { return Vector3t(x * a.x, y * a.y, z * a.z); }
-        constexpr Vector3t operator*(T s) const { return Vector3t(x * s, y * s, z * s); }
-        friend constexpr Vector3t operator*(T s, Vector3t v) { return v * s; }
+        constexpr Vector3T operator*(Vector3T a) const { return Vector3T(x * a.x, y * a.y, z * a.z); }
+        constexpr Vector3T operator*(T s) const { return Vector3T(x * s, y * s, z * s); }
+        friend constexpr Vector3T operator*(T s, Vector3T v) { return v * s; }
 
-        constexpr Vector3t& operator*=(Vector3t a)
+        constexpr Vector3T& operator*=(Vector3T a)
         {
             x *= a.x;
             y *= a.y;
@@ -282,7 +282,7 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector3t& operator*=(T s)
+        constexpr Vector3T& operator*=(T s)
         {
             x *= s;
             y *= s;
@@ -290,10 +290,10 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector3t operator/(Vector3t a) const { return Vector3t(x / a.x, y / a.y, z / a.z); }
-        constexpr Vector3t operator/(T s) const { return Vector3t(x / s, y / s, z / s); }
+        constexpr Vector3T operator/(Vector3T a) const { return Vector3T(x / a.x, y / a.y, z / a.z); }
+        constexpr Vector3T operator/(T s) const { return Vector3T(x / s, y / s, z / s); }
 
-        constexpr Vector3t& operator/=(Vector3t a)
+        constexpr Vector3T& operator/=(Vector3T a)
         {
             x /= a.x;
             y /= a.y;
@@ -301,7 +301,7 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr Vector3t& operator/=(T s)
+        constexpr Vector3T& operator/=(T s)
         {
             x /= s;
             y /= s;
@@ -309,8 +309,8 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr bool operator==(Vector3t other) const { return x == other.x && y == other.y && z == other.z; }
-        constexpr bool operator!=(Vector3t other) const { return !(*this == other); }
+        constexpr bool operator==(Vector3T other) const { return x == other.x && y == other.y && z == other.z; }
+        constexpr bool operator!=(Vector3T other) const { return !(*this == other); }
 
         T& operator[](int32 index)
         {
@@ -326,23 +326,23 @@ namespace ByteEngine::Math
 
         template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-        operator Vector3t<U>() const { return Vector3t<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z)); }
+        operator Vector3T<U>() const { return Vector3T<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z)); }
 
-        operator Vector2t<T>() const;
-
-        template<Arithmetic U>
-            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-        operator Vector2t<U>() const;
-
-        operator Vector4t<T>() const;
+        operator Vector2T<T>() const;
 
         template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-        operator Vector4t<U>() const;
+        operator Vector2T<U>() const;
+
+        operator Vector4T<T>() const;
+
+        template<Arithmetic U>
+            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
+        operator Vector4T<U>() const;
     };
 
-    using Vector3f = Vector3t<float>;
-    using Vector3d = Vector3t<double>;
-    using Vector3i = Vector3t<int32>;
-    using Vector3 = Vector3f;
+    using Vector3F = Vector3T<float>;
+    using Vector3D = Vector3T<double>;
+    using Vector3I = Vector3T<int32>;
+    using Vector3 = Vector3F;
 }

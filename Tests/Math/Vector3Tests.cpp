@@ -11,14 +11,14 @@ template <typename T>
 class Vector3tTest : public ::testing::Test
 {
 protected:
-    using Vec3 = Vector3t<T>;
+    using Vec3 = Vector3T<T>;
 };
 
 template <typename T>
 class Vector3tFloatTypesTest : public ::testing::Test
 {
 protected:
-    using Vec3 = Vector3t<T>;
+    using Vec3 = Vector3T<T>;
 };
 
 using Types = ::testing::Types<float, double, ByteEngine::int32, ByteEngine::int64>;
@@ -201,11 +201,11 @@ TYPED_TEST(Vector3tTest, AccessAndConversion)
     EXPECT_EQ(v[1], 2.0);
     EXPECT_EQ(v[2], 3.0);
 
-    Vector2t<decltype(v.x)> v2 = v;
+    Vector2T<decltype(v.x)> v2 = v;
     EXPECT_EQ(v2.x, 1.0);
     EXPECT_EQ(v2.y, 2.0);
 
-    Vector4d v4 = v;
+    Vector4D v4 = v;
     EXPECT_EQ(v4.x, 1.0);
     EXPECT_EQ(v4.y, 2.0);
     EXPECT_EQ(v4.z, 3.0);
@@ -224,14 +224,14 @@ template <typename T>
 class Vector3tFloatTypesRobustnessTest : public ::testing::Test
 {
 protected:
-    using Vec3 = Vector3t<T>;
+    using Vec3 = Vector3T<T>;
 };
 
 template <typename T>
 class Vector3tIntTypesRobustnessTest : public ::testing::Test
 {
 protected:
-    using Vec3 = Vector3t<T>;
+    using Vec3 = Vector3T<T>;
 };
 
 using FloatTypes = ::testing::Types<float, double>;

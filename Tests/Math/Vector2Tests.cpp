@@ -11,14 +11,14 @@ template <typename T>
 class Vector2tTest : public ::testing::Test
 {
 protected:
-    using Vec2 = Vector2t<T>;
+    using Vec2 = Vector2T<T>;
 };
 
 template <typename T>
 class Vector2tFloatTypesTest : public ::testing::Test
 {
 protected:
-    using Vec2 = Vector2t<T>;
+    using Vec2 = Vector2T<T>;
 };
 
 using Types = ::testing::Types<float, double, ByteEngine::int32, ByteEngine::int64>;
@@ -186,12 +186,12 @@ TYPED_TEST(Vector2tTest, Conversion)
     using Vec2 = typename TestFixture::Vec2;
     Vec2 v(1.0, 2.0);
 
-    Vector3t<decltype(Vec2(1).x)> v3 = v;
+    Vector3T<decltype(Vec2(1).x)> v3 = v;
     EXPECT_EQ(v3.x, 1.0);
     EXPECT_EQ(v3.y, 2.0);
     EXPECT_EQ(v3.z, 0.0);
 
-    Vector4t<decltype(Vec2(1).x)> v4 = v;
+    Vector4T<decltype(Vec2(1).x)> v4 = v;
     EXPECT_EQ(v4.x, 1.0);
     EXPECT_EQ(v4.y, 2.0);
     EXPECT_EQ(v4.z, 0.0);
@@ -224,13 +224,13 @@ TYPED_TEST(Vector2tFloatTypesTest, IsEqualApproximetly)
 
 TYPED_TEST(Vector2tTest, TypeConversionOperator)
 {
-    Vector2f fVec(1.1f, 2.2f);
-    Vector2d dVec = fVec;
+    Vector2F fVec(1.1f, 2.2f);
+    Vector2D dVec = fVec;
 
     EXPECT_NEAR(dVec.x, 1.1, 1e-6);
     EXPECT_NEAR(dVec.y, 2.2, 1e-6);
 
-    Vector2i iVec = fVec;
+    Vector2I iVec = fVec;
     EXPECT_EQ(iVec.x, 1);
     EXPECT_EQ(iVec.y, 2);
 }
@@ -239,14 +239,14 @@ template <typename T>
 class Vector2tFloatTypesRobustnessTest : public ::testing::Test
 {
 protected:
-    using Vec2 = Vector2t<T>;
+    using Vec2 = Vector2T<T>;
 };
 
 template <typename T>
 class Vector2tIntTypesRobustnessTest : public ::testing::Test
 {
 protected:
-    using Vec2 = Vector2t<T>;
+    using Vec2 = Vector2T<T>;
 };
 
 using FloatTypes = ::testing::Types<float, double>;

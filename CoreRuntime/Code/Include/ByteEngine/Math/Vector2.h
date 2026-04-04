@@ -7,13 +7,13 @@
 namespace ByteEngine::Math
 {
     template<Arithmetic T>
-    struct Vector3t;
+    struct Vector3T;
 
     template<Arithmetic T>
-    struct Vector4t;
+    struct Vector4T;
 
     template<Arithmetic T>
-    struct Vector2t
+    struct Vector2T
     {
         using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
 
@@ -40,11 +40,11 @@ namespace ByteEngine::Math
             T data[2];
         };
 
-        explicit constexpr Vector2t(T xy = 0)
+        explicit constexpr Vector2T(T xy = 0)
             : x(xy), y(xy)
         { }
 
-        constexpr Vector2t(T x, T y)
+        constexpr Vector2T(T x, T y)
             : x(x), y(y)
         { }
 
@@ -61,9 +61,9 @@ namespace ByteEngine::Math
                 *this = Zero();
         }
 
-        Vector2t Normalized() const requires std::floating_point<T>
+        Vector2T Normalized() const requires std::floating_point<T>
         {
-            Vector2t copy = *this;
+            Vector2T copy = *this;
             copy.Normalize();
             return copy;
         }
@@ -94,9 +94,9 @@ namespace ByteEngine::Math
             y = oldX * sin + y * cos;
         }
 
-        constexpr Vector2t RotatedBy(RadianT<FloatT> angle) const requires std::floating_point<T>
+        constexpr Vector2T RotatedBy(RadianT<FloatT> angle) const requires std::floating_point<T>
         {
-            Vector2t copy = *this;
+            Vector2T copy = *this;
             copy.RotateBy(angle);
             return copy;
         }
@@ -112,24 +112,24 @@ namespace ByteEngine::Math
             }
         }
 
-        static RadianT<FloatT> AngleBetween(Vector2t from, Vector2t to) requires std::floating_point<T>
+        static RadianT<FloatT> AngleBetween(Vector2T from, Vector2T to) requires std::floating_point<T>
         {
             FloatT cross = Cross(from, to);
             FloatT dot = Dot(from, to);
             return Math::Atan2(cross, dot);
         }
 
-        static RadianT<FloatT> UnsigedAngleBetween(Vector2t from, Vector2t to) requires std::floating_point<T>
+        static RadianT<FloatT> UnsigedAngleBetween(Vector2T from, Vector2T to) requires std::floating_point<T>
         {
             return RadianT<T>(Math::Abs(AngleBetween(from, to).value));
         }
 
-        static T Distcance(Vector2t a, Vector2t b) { return Math::Sqrt(static_cast<FloatT>(DistcanceSquared(a, b))); }
-        static constexpr T DistcanceSquared(Vector2t a, Vector2t b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y); }
+        static T Distcance(Vector2T a, Vector2T b) { return Math::Sqrt(static_cast<FloatT>(DistcanceSquared(a, b))); }
+        static constexpr T DistcanceSquared(Vector2T a, Vector2T b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y); }
 
-        static Vector2t Direction(Vector2t from, Vector2t to)
+        static Vector2T Direction(Vector2T from, Vector2T to)
         {
-            Vector2t dir = to - from;
+            Vector2T dir = to - from;
 
             if constexpr (std::floating_point<T>)
                 dir.Normalize();
@@ -137,19 +137,19 @@ namespace ByteEngine::Math
             return dir;
         }
 
-        static constexpr FloatT Cross(Vector2t a, Vector2t b) requires std::floating_point<T>
+        static constexpr FloatT Cross(Vector2T a, Vector2T b) requires std::floating_point<T>
         {
             return a.x * b.y - a.y * b.x;
         }
 
-        static constexpr FloatT Dot(Vector2t a, Vector2t b) requires std::floating_point<T>
+        static constexpr FloatT Dot(Vector2T a, Vector2T b) requires std::floating_point<T>
         {
             return a.x * b.x + a.y * b.y;
         }
 
-        static constexpr Vector2t FromAngle(RadianT<FloatT> angle) requires std::floating_point<T>
+        static constexpr Vector2T FromAngle(RadianT<FloatT> angle) requires std::floating_point<T>
         {
-            Vector2t<FloatT> vec;
+            Vector2T<FloatT> vec;
 
             if constexpr (std::is_same_v<FloatT, float>)
             {
@@ -164,25 +164,25 @@ namespace ByteEngine::Math
             return vec;
         }
 
-        static constexpr Vector2t FromAngle(RadianT<FloatT> angle, FloatT length) requires std::floating_point<T>
+        static constexpr Vector2T FromAngle(RadianT<FloatT> angle, FloatT length) requires std::floating_point<T>
         {
             return FromAngle(angle) * length;
         }
 
-        static constexpr Vector2t Lerp(Vector2t from, Vector2t to, FloatT t) requires std::floating_point<T>
+        static constexpr Vector2T Lerp(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
         {
             assert(t >= 0 && t <= 1);
             return from + (to - from) * t;
         }
 
-        static constexpr Vector2t LerpClamped(Vector2t from, Vector2t to, FloatT t) requires std::floating_point<T>
+        static constexpr Vector2T LerpClamped(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
         {
             return from + (to - from) * Math::Clamp(t);
         }
 
         // Slerp implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::slerp
-        static Vector2t Slerp(Vector2t from, Vector2t to, FloatT t) requires std::floating_point<T>
+        static Vector2T Slerp(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
         {
             assert(t >= 0 && t <= 1);
 
@@ -202,9 +202,9 @@ namespace ByteEngine::Math
 
         // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::move_toward
-        static Vector2t MoveTowards(Vector2t current, Vector2t target, FloatT maxDelta) requires std::floating_point<T>
+        static Vector2T MoveTowards(Vector2T current, Vector2T target, FloatT maxDelta) requires std::floating_point<T>
         {
-            Vector2t direction = target - current;
+            Vector2T direction = target - current;
             FloatT distance = direction.Length();
 
             if (distance <= maxDelta || distance < Math::Epsilon)
@@ -213,7 +213,7 @@ namespace ByteEngine::Math
                 return current + direction / distance * maxDelta;
         }
 
-        static constexpr Vector2t Project(Vector2t vec, Vector2t projectOnto) requires std::floating_point<T>
+        static constexpr Vector2T Project(Vector2T vec, Vector2T projectOnto) requires std::floating_point<T>
         {
             T dot = Dot(vec, projectOnto);
             if (dot < Math::Epsilon)
@@ -222,106 +222,106 @@ namespace ByteEngine::Math
             return projectOnto * (dot / projectOnto.LengthSquared());
         }
 
-        static Vector2t ProjectNormalized(Vector2t vec, Vector2t projectOnto) requires std::floating_point<T>
+        static Vector2T ProjectNormalized(Vector2T vec, Vector2T projectOnto) requires std::floating_point<T>
         {
             assert(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
             return projectOnto * Dot(vec, projectOnto);
         }
 
-        static Vector2t Reflect(Vector2t vec, Vector2t normal) requires std::floating_point<T>
+        static Vector2T Reflect(Vector2T vec, Vector2T normal) requires std::floating_point<T>
         {
             assert(normal.IsNormalized() || IsEqualApproximetly(normal, Zero()));
             return vec - T(2) * Dot(vec, normal) * normal;
         }
 
-        static bool IsEqualApproximetly(Vector2t a, Vector2t b) requires std::floating_point<T> { return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y); }
+        static bool IsEqualApproximetly(Vector2T a, Vector2T b) requires std::floating_point<T> { return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y); }
 
-        static constexpr Vector2t Min(Vector2t a, Vector2t b) { return Vector2t(Math::Min(a.x, b.x), Math::Min(a.y, b.y)); }
-        static constexpr Vector2t Min(Vector2t a, Vector2t b, Vector2t c) { return Vector2t(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y)); }
+        static constexpr Vector2T Min(Vector2T a, Vector2T b) { return Vector2T(Math::Min(a.x, b.x), Math::Min(a.y, b.y)); }
+        static constexpr Vector2T Min(Vector2T a, Vector2T b, Vector2T c) { return Vector2T(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y)); }
 
-        static constexpr Vector2t Max(Vector2t a, Vector2t b) { return Vector2t(Math::Max(a.x, b.x), Math::Max(a.y, b.y)); }
-        static constexpr Vector2t Max(Vector2t a, Vector2t b, Vector2t c) { return Vector2t(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y)); }
+        static constexpr Vector2T Max(Vector2T a, Vector2T b) { return Vector2T(Math::Max(a.x, b.x), Math::Max(a.y, b.y)); }
+        static constexpr Vector2T Max(Vector2T a, Vector2T b, Vector2T c) { return Vector2T(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y)); }
 
-        static constexpr Vector2t Zero() { return Vector2t(0); }
-        static constexpr Vector2t One() { return Vector2t(1); }
-        static constexpr Vector2t Up() { return Vector2t(0, 1); }
-        static constexpr Vector2t Down() { return Vector2t(0, -1); }
-        static constexpr Vector2t Left() { return Vector2t(-1, 0); }
-        static constexpr Vector2t Right() { return Vector2t(1, 0); }
+        static constexpr Vector2T Zero() { return Vector2T(0); }
+        static constexpr Vector2T One() { return Vector2T(1); }
+        static constexpr Vector2T Up() { return Vector2T(0, 1); }
+        static constexpr Vector2T Down() { return Vector2T(0, -1); }
+        static constexpr Vector2T Left() { return Vector2T(-1, 0); }
+        static constexpr Vector2T Right() { return Vector2T(1, 0); }
 
-        constexpr Vector2t operator+() const { return Vector2t(+x, +y); }
-        constexpr Vector2t operator-() const { return Vector2t(-x, -y); }
+        constexpr Vector2T operator+() const { return Vector2T(+x, +y); }
+        constexpr Vector2T operator-() const { return Vector2T(-x, -y); }
 
-        constexpr Vector2t operator+(Vector2t a) const { return Vector2t(a.x + x, a.y + y); }
-        constexpr Vector2t operator+(T a) const { return Vector2t(a + x, a + y); }
-        constexpr Vector2t operator-(Vector2t a) const { return Vector2t(x - a.x, y - a.y); }
-        constexpr Vector2t operator-(T a) const { return Vector2t(x - a, y - a); }
+        constexpr Vector2T operator+(Vector2T a) const { return Vector2T(a.x + x, a.y + y); }
+        constexpr Vector2T operator+(T a) const { return Vector2T(a + x, a + y); }
+        constexpr Vector2T operator-(Vector2T a) const { return Vector2T(x - a.x, y - a.y); }
+        constexpr Vector2T operator-(T a) const { return Vector2T(x - a, y - a); }
 
-        constexpr Vector2t& operator+=(Vector2t a)
+        constexpr Vector2T& operator+=(Vector2T a)
         {
             x += a.x;
             y += a.y;
             return *this;
         }
 
-        constexpr Vector2t& operator+=(T a)
+        constexpr Vector2T& operator+=(T a)
         {
             x += a;
             y += a;
             return *this;
         }
 
-        constexpr Vector2t& operator-=(Vector2t a)
+        constexpr Vector2T& operator-=(Vector2T a)
         {
             x -= a.x;
             y -= a.y;
             return *this;
         }
 
-        constexpr Vector2t& operator-=(T a)
+        constexpr Vector2T& operator-=(T a)
         {
             x -= a;
             y -= a;
             return *this;
         }
 
-        constexpr Vector2t operator*(Vector2t a) const { return Vector2t(x * a.x, y * a.y); }
-        constexpr Vector2t operator*(T s) const { return Vector2t(x * s, y * s); }
-        friend constexpr Vector2t operator*(T s, Vector2t v) { return v * s; }
+        constexpr Vector2T operator*(Vector2T a) const { return Vector2T(x * a.x, y * a.y); }
+        constexpr Vector2T operator*(T s) const { return Vector2T(x * s, y * s); }
+        friend constexpr Vector2T operator*(T s, Vector2T v) { return v * s; }
 
-        constexpr Vector2t& operator*=(Vector2t a)
+        constexpr Vector2T& operator*=(Vector2T a)
         {
             x *= a.x;
             y *= a.y;
             return *this;
         }
 
-        constexpr Vector2t& operator*=(T s)
+        constexpr Vector2T& operator*=(T s)
         {
             x *= s;
             y *= s;
             return *this;
         }
 
-        constexpr Vector2t operator/(Vector2t a) const { return Vector2t(x / a.x, y / a.y); }
-        constexpr Vector2t operator/(T s) const { return Vector2t(x / s, y / s); }
+        constexpr Vector2T operator/(Vector2T a) const { return Vector2T(x / a.x, y / a.y); }
+        constexpr Vector2T operator/(T s) const { return Vector2T(x / s, y / s); }
 
-        constexpr Vector2t& operator/=(Vector2t a)
+        constexpr Vector2T& operator/=(Vector2T a)
         {
             x /= a.x;
             y /= a.y;
             return *this;
         }
 
-        constexpr Vector2t& operator/=(T s)
+        constexpr Vector2T& operator/=(T s)
         {
             x /= s;
             y /= s;
             return *this;
         }
 
-        constexpr bool operator==(Vector2t other) const { return x == other.x && y == other.y; }
-        constexpr bool operator!=(Vector2t other) const { return !(*this == other); }
+        constexpr bool operator==(Vector2T other) const { return x == other.x && y == other.y; }
+        constexpr bool operator!=(Vector2T other) const { return !(*this == other); }
 
         T& operator[](int32 index)
         {
@@ -337,23 +337,23 @@ namespace ByteEngine::Math
 
         template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-        operator Vector2t<U>() const { return Vector2t<U>(static_cast<U>(x), static_cast<U>(y)); }
+        operator Vector2T<U>() const { return Vector2T<U>(static_cast<U>(x), static_cast<U>(y)); }
 
-        operator Vector3t<T>() const;
-
-        template<Arithmetic U>
-            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-        operator Vector3t<U>() const;
-
-        operator Vector4t<T>() const;
+        operator Vector3T<T>() const;
 
         template<Arithmetic U>
             requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-        operator Vector4t<U>() const;
+        operator Vector3T<U>() const;
+
+        operator Vector4T<T>() const;
+
+        template<Arithmetic U>
+            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
+        operator Vector4T<U>() const;
     };
 
-    using Vector2f = Vector2t<float>;
-    using Vector2d = Vector2t<double>;
-    using Vector2i = Vector2t<int32>;
-    using Vector2 = Vector2f;
+    using Vector2F = Vector2T<float>;
+    using Vector2D = Vector2T<double>;
+    using Vector2I = Vector2T<int32>;
+    using Vector2 = Vector2F;
 }

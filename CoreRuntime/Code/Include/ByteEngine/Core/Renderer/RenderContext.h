@@ -41,10 +41,10 @@ namespace ByteEngine
         bool CreateRenderTargetAndDepthStencil();
 
         void Update(const float* backgroundColor);
-        void OnWindowResized(ByteEngine::Math::Vector2i size);
+        void OnWindowResized(ByteEngine::Math::Vector2I size);
         void OnWindowModeChanged(WindowMode mode);
 
-        void ResizeSwapchain(ByteEngine::Math::Vector2i size);
+        void ResizeSwapchain(ByteEngine::Math::Vector2I size);
         void SetSwapChainFullscreenState(bool fullscreen);
 
         void Reinitialize()
