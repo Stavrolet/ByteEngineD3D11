@@ -30,7 +30,7 @@ namespace ByteEngine::Math
         return copy;
     }
 
-    BYTEENGINE_API Vector3F Quaternion::GetEuler()
+    BYTEENGINE_API EulerRad Quaternion::GetEuler()
     {
         if (!IsNormalized())
             Normalize();
@@ -39,10 +39,10 @@ namespace ByteEngine::Math
         float ySq = y * y;
         float zSq = z * z;
 
-        return Vector3F(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
+        return EulerRad { Math::Asin(2 * (w * x - y * z)), Math::Atan2(2 * (w * y + x * z), num + ySq - zSq), Math::Atan2(2 * (w * z + x * y), num - ySq + zSq) };
     }
 
-    BYTEENGINE_API Vector3F Quaternion::GetEuler() const
+    BYTEENGINE_API EulerRad Quaternion::GetEuler() const
     {
         assert(IsNormalized());
 
@@ -50,10 +50,14 @@ namespace ByteEngine::Math
         float ySq = y * y;
         float zSq = z * z;
 
-        return Vector3F(Math::Asin(2 * (w * x - y * z)).value, Math::Atan2(2 * (w * y + x * z), num + ySq - zSq).value, Math::Atan2(2 * (w * z + x * y), num - ySq + zSq).value);
+        return EulerRad { Math::Asin(2 * (w * x - y * z)), Math::Atan2(2 * (w * y + x * z), num + ySq - zSq), Math::Atan2(2 * (w * z + x * y), num - ySq + zSq) };
     }
 
-    BYTEENGINE_API Vector3F Quaternion::GetEulerInDegrees() const { return GetEuler() * (180.0f / Math::PI); }
+    BYTEENGINE_API EulerDeg Quaternion::GetEulerInDegrees() const
+    {
+        EulerRad euler = GetEuler();
+        return euler.ToDeg();
+    }
 
     // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::get_axis

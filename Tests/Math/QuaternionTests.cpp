@@ -118,19 +118,19 @@ TEST_F(QuaternionTest, FromEulerDegreeComponents)
 TEST_F(QuaternionTest, GetEuler)
 {
     Quaternion q = Quaternion::FromEuler(0.0_df, 0.0_df, 0.0_df);
-    Vector3 euler = q.GetEuler();
-    EXPECT_NEAR(euler.x, 0.0f, EPSILON);
-    EXPECT_NEAR(euler.y, 0.0f, EPSILON);
-    EXPECT_NEAR(euler.z, 0.0f, EPSILON);
+    EulerRad euler = q.GetEuler();
+    EXPECT_NEAR(euler.pitch.value, 0.0f, EPSILON);
+    EXPECT_NEAR(euler.yaw.value, 0.0f, EPSILON);
+    EXPECT_NEAR(euler.roll.value, 0.0f, EPSILON);
 }
 
 TEST_F(QuaternionTest, GetEulerInDegrees)
 {
     Quaternion q = Quaternion::FromEuler(0.0_df, 0.0_df, 0.0_df);
-    Vector3 euler = q.GetEulerInDegrees();
-    EXPECT_NEAR(euler.x, 0.0f, EPSILON);
-    EXPECT_NEAR(euler.y, 0.0f, EPSILON);
-    EXPECT_NEAR(euler.z, 0.0f, EPSILON);
+    EulerDeg euler = q.GetEulerInDegrees();
+    EXPECT_NEAR(euler.pitch.value, 0.0f, EPSILON);
+    EXPECT_NEAR(euler.yaw.value, 0.0f, EPSILON);
+    EXPECT_NEAR(euler.roll.value, 0.0f, EPSILON);
 }
 
 TEST_F(QuaternionTest, FromAngleAxisRadian)

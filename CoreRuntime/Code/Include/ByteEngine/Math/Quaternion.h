@@ -6,6 +6,29 @@
 
 namespace ByteEngine::Math
 {
+    struct EulerDeg;
+
+    struct EulerRad
+    {
+        RadianF pitch;
+        RadianF yaw;
+        RadianF roll;
+
+        [[nodiscard]] constexpr EulerDeg ToDeg() const;
+    };
+
+    struct EulerDeg
+    {
+        DegreeF pitch;
+        DegreeF yaw;
+        DegreeF roll;
+
+        [[nodiscard]] constexpr EulerRad ToRad() const;
+    };
+
+    constexpr EulerDeg EulerRad::ToDeg() const { return EulerDeg { pitch.ToDegree(), yaw.ToDegree(), roll.ToDegree() }; }
+    constexpr EulerRad EulerDeg::ToRad() const { return EulerRad { pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian() }; }
+
     struct Quaternion
     {
         union
@@ -55,9 +78,9 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        BYTEENGINE_API [[nodiscard]] Vector3F GetEuler();
-        BYTEENGINE_API [[nodiscard]] Vector3F GetEuler() const;
-        BYTEENGINE_API [[nodiscard]] Vector3F GetEulerInDegrees() const;
+        BYTEENGINE_API [[nodiscard]] EulerRad GetEuler();
+        BYTEENGINE_API [[nodiscard]] EulerRad GetEuler() const;
+        BYTEENGINE_API [[nodiscard]] EulerDeg GetEulerInDegrees() const;
 
         // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Quaternion::get_axis
