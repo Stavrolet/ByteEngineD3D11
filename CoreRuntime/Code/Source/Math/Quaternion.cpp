@@ -7,6 +7,8 @@ using namespace DirectX;
 
 namespace ByteEngine::Math
 {
+    const Quaternion Quaternion::Identity { 0.0f, 0.0f, 0.0f, 1.0f };
+
     BYTEENGINE_API float Quaternion::Length() const { return Math::Sqrt(LengthSquared()); }
 
     BYTEENGINE_API void Quaternion::Normalize()

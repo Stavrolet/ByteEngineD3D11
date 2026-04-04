@@ -44,8 +44,8 @@ namespace ByteEngine::Math
             float data[4];
         };
 
-        explicit constexpr Quaternion(float xyz = 0.0f, float w = 1.0f)
-            : x(xyz), y(xyz), z(xyz), w(w)
+        explicit constexpr Quaternion(float xyzw = 0.0f)
+            : x(xyzw), y(xyzw), z(xyzw), w(xyzw)
         { }
 
         constexpr Quaternion(float x, float y, float z, float w)
@@ -155,5 +155,7 @@ namespace ByteEngine::Math
         [[nodiscard]] constexpr explicit operator Vector3F() const { return Vector3F(x, y, z); }
         [[nodiscard]] constexpr explicit operator Vector2F() const { return Vector2F(x, y); }
         [[nodiscard]] constexpr explicit operator Vector4F() const { return Vector4F(x, y, z, w); }
+
+        BYTEENGINE_API static const Quaternion Identity;
     };
 }
