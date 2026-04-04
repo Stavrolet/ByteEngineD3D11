@@ -13,13 +13,13 @@ namespace ByteEngine::Math
     {
         float length = LengthSquared();
 
-        if (length != 0.0f)
+        if (length > Math::Epsilon)
         {
-            length = Math::Sqrt(length);
-            x /= length;
-            y /= length;
-            z /= length;
-            w /= length;
+            float invLength = 1.0f / Math::Sqrt(length);
+            x *= invLength;
+            y *= invLength;
+            z *= invLength;
+            w *= invLength;
         }
     }
 
@@ -81,21 +81,31 @@ namespace ByteEngine::Math
 
         float length = axis.Length();
 
-        if (length == 0)
+        if (Math::IsEqualApproximetly(length, 0.0f))
         {
-            return Quaternion(0.0f);
+            return Quaternion(0.0f, 0.0f);
         }
         else
         {
-            float sin = Math::Sin(static_cast<RadianF>(angle * 0.5f));
-            float cos = Math::Cos(static_cast<RadianF>(angle * 0.5f));
-            float s = sin / length;
+            float sin, cos;
+            Math::SinCos(sin, cos, angle * 0.5f);
 
+            float s = sin / length;
             return Quaternion(axis.x * s, axis.y * s, axis.z * s, cos);
         }
     }
 
-    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(DegreeF angle, Vector3F axis) { return FromAngleAxis(angle.ToRadian(    ), axis); }
+    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(DegreeF angle, Vector3F axis) { return FromAngleAxis(angle.ToRadian(), axis); }
+
+    BYTEENGINE_API Quaternion Quaternion::FromEulerInRadians(RadianF pitch, RadianF yaw, RadianF roll)
+    {
+        XMVECTOR q = XMQuaternionRotationRollPitchYaw(pitch.value, yaw.value, roll.value);
+        Quaternion result;
+        XMStoreFloat4(reinterpret_cast<XMFLOAT4*>(&result), q);
+        return result;
+    }
+
+    BYTEENGINE_API Quaternion Quaternion::FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEulerInRadians(pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian()); }
 
     BYTEENGINE_API Quaternion Quaternion::FromLookDirection(Vector3F direction, Vector3F worldUp)
     {
@@ -111,10 +121,7 @@ namespace ByteEngine::Math
         XMVECTOR right = XMVector3Cross(worldUp2, forward);
         XMVECTOR up = XMVector3Cross(forward, right);
 
-        XMMATRIX m = XMMatrixIdentity();
-        m.r[0] = right;
-        m.r[1] = up;
-        m.r[2] = forward;
+        XMMATRIX m { right, up, forward, g_XMIdentityR3 };
 
         XMVECTOR q = XMQuaternionRotationMatrix(m);
         Quaternion result;
@@ -128,7 +135,7 @@ namespace ByteEngine::Math
         to.Normalize();
 
         float dot = Math::Clamp(Vector3F::Dot(from, to), -1.0f, 1.0f);
-        
+
         if (dot >= 1.0f || Math::IsEqualApproximetly(dot, 0.0f))
             return Quaternion();
         else if (dot <= -1.0f)
@@ -177,7 +184,7 @@ namespace ByteEngine::Math
             scale0 = 1.0f - t;
             scale1 = t;
         }
-        
+
         return Quaternion(
             scale0 * from.x + scale1 * to1.x,
             scale0 * from.y + scale1 * to1.y,
