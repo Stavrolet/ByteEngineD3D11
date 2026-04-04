@@ -56,9 +56,14 @@ namespace ByteEngine::Math
             FloatT lengthSq = LengthSquared();
 
             if (lengthSq > Math::Epsilon)
-                *this /= Math::Sqrt(lengthSq);
+            {
+                FloatT invLength = 1 / Math::Sqrt(lengthSq);
+                *this *= invLength;
+            }
             else
+            {
                 *this = Zero();
+            }
         }
 
         Vector2T Normalized() const requires std::floating_point<T>

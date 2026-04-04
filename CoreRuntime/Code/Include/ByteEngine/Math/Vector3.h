@@ -50,10 +50,15 @@ namespace ByteEngine::Math
         {
             FloatT length = LengthSquared();
 
-            if (length > 1e-10)
-                *this /= Math::Sqrt(length);
+            if (length > Math::Epsilon)
+            {
+                FloatT invLength = 1 / Math::Sqrt(length);
+                *this *= invLength;
+            }
             else
+            {
                 *this = Zero();
+            }
         }
 
         Vector3T Normalized() const requires std::floating_point<T>
