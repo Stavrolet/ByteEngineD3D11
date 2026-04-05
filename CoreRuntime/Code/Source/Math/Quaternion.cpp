@@ -89,7 +89,7 @@ namespace ByteEngine::Math
 
         if (Math::IsEqualApproximetly(length, 0.0f))
         {
-            return Quaternion(0.0f, 0.0f);
+            return Quaternion(0.0f);
         }
         else
         {
@@ -116,7 +116,7 @@ namespace ByteEngine::Math
     BYTEENGINE_API Quaternion Quaternion::FromLookDirection(Vector3F direction, Vector3F worldUp)
     {
         if (Math::IsEqualApproximetly(direction.LengthSquared(), 0.0f))
-            return Quaternion(0.0f);
+            return Identity;
 
         XMVECTOR forward = XMLoadFloat3(reinterpret_cast<XMFLOAT3*>(&direction));
         XMVECTOR worldUp2 = XMLoadFloat3(reinterpret_cast<XMFLOAT3*>(&worldUp));
@@ -143,7 +143,7 @@ namespace ByteEngine::Math
         float dot = Math::Clamp(Vector3F::Dot(from, to), -1.0f, 1.0f);
 
         if (dot >= 1.0f || Math::IsEqualApproximetly(dot, 0.0f))
-            return Quaternion();
+            return Identity;
         else if (dot <= -1.0f)
             return FromAngleAxis(static_cast<RadianF>(Math::PI), Vector3F(0.0f, 1.0f, 0.0f));
 

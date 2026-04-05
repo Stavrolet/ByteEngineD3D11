@@ -565,7 +565,7 @@ TEST(Matrix4x4FDecompositionTest, GetScaleFromIdentity)
 TEST(Matrix4x4FDecompositionTest, GetRotationIdentity)
 {
     Quaternion q = Matrix4x4F::Identity.GetRotation();
-    Quaternion identity;
+    Quaternion identity = Quaternion::Identity;
 
     bool sameOrNegated =
         (std::fabs(q.x - identity.x) < kEps && std::fabs(q.y - identity.y) < kEps &&

@@ -26,7 +26,7 @@ TEST_F(QuaternionTest, Length)
 
 TEST_F(QuaternionTest, ZeroQuaternionLength)
 {
-    Quaternion q(0.0f, 0.0f);
+    Quaternion q(0.0f);
     EXPECT_NEAR(q.Length(), 0.0f, EPSILON);
 }
 
