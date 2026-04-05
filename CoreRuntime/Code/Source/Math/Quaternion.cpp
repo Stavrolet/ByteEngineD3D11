@@ -48,11 +48,15 @@ namespace ByteEngine::Math
     {
         assert(IsNormalized());
 
-        float num = w * w - x * x;
-        float ySq = y * y;
-        float zSq = z * z;
+        float sinp = 2.0f * (w * x - z * y);
 
-        return EulerRad { Math::Asin(2 * (w * x - y * z)), Math::Atan2(2 * (w * y + x * z), num + ySq - zSq), Math::Atan2(2 * (w * z + x * y), num - ySq + zSq) };
+        float siny = 2.0f * (w * y + x * z);
+        float cosy = 1.0f - 2.0f * (x * x + y * y);
+
+        float sinr = 2.0f * (w * z + x * y);
+        float cosr = 1.0f - 2.0f * (x * x + z * z);
+
+        return EulerRad { Math::Asin(sinp), Math::Atan2(siny, cosy), Math::Atan2(sinr, cosr) };
     }
 
     BYTEENGINE_API EulerDeg Quaternion::GetEulerInDegrees() const
