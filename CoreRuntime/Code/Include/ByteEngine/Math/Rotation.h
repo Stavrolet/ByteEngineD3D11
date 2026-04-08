@@ -1,4 +1,6 @@
-﻿#include "ByteEngine/Math/Math.h"
+﻿#pragma once
+
+#include "ByteEngine/Math/Math.h"
 #include "ByteEngine/Math/Quaternion.h"
 
 namespace ByteEngine::Math
@@ -29,23 +31,23 @@ namespace ByteEngine::Math
             : pitch(pitch.ToDegree()), yaw(yaw.ToDegree()), roll(roll.ToDegree())
         { }
 
-        constexpr Rotation(const DegreeF arr[3])
+        explicit constexpr Rotation(const DegreeF arr[3])
             : pitch(arr[0]), yaw(arr[1]), roll(arr[2])
         { }
 
-        constexpr Rotation(const RadianF arr[3])
+        explicit constexpr Rotation(const RadianF arr[3])
             : pitch(arr[0].ToDegree()), yaw(arr[1].ToDegree()), roll(arr[2].ToDegree())
         { }
 
-        constexpr Rotation(const EulerDeg& euler)
+        explicit constexpr Rotation(const EulerDeg& euler)
             : pitch(euler.pitch), yaw(euler.yaw), roll(euler.roll)
         { }
 
-        constexpr Rotation(const EulerRad& euler)
+        explicit constexpr Rotation(const EulerRad& euler)
             : pitch(euler.pitch.ToDegree()), yaw(euler.yaw.ToDegree()), roll(euler.roll.ToDegree())
         { }
 
-        constexpr Rotation(const Quaternion& q)
+        explicit constexpr Rotation(const Quaternion& q)
             : Rotation(q.GetEulerInDegrees())
         { }
 
@@ -84,6 +86,12 @@ namespace ByteEngine::Math
 
         [[nodiscard]] constexpr EulerDeg ToEulerDeg() const { return EulerDeg { pitch, yaw, roll }; }
         [[nodiscard]] constexpr EulerRad ToEulerRad() const { return EulerRad { pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian() }; }
+
+        [[nodiscard]] Vector3F RotateVector(Vector3F vector) const
+        {
+            Quaternion q = ToQuaternion();
+            return q * vector;
+        }
 
         [[nodiscard]] static Rotation FromQuaternion(Quaternion q)
         {

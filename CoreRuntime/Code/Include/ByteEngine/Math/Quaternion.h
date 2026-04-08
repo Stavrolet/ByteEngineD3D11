@@ -131,6 +131,13 @@ namespace ByteEngine::Math
             );
         }
 
+        constexpr Vector3F operator*(Vector3F v) const
+        {
+            Vector3F uv = Vector3F::Cross(Vector3F(x, y, z), v);
+            Vector3F uuv = Vector3F::Cross(Vector3F(x, y, z), uv);
+            return v + ((uv * w) + uuv) * 2.0f;
+        }
+
         constexpr Quaternion& operator*=(Quaternion q)
         {
             *this = *this * q;

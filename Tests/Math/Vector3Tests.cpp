@@ -1,5 +1,7 @@
 ﻿#include <gtest/gtest.h>
 #include <cmath>
+
+#include "ByteEngine/Math/Rotation.h"
 #include "ByteEngine/Math/Vector3.h"
 #include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Math/Vector4.h"
@@ -62,6 +64,30 @@ TYPED_TEST(Vector3tFloatTypesTest, Rotation)
     EXPECT_NEAR(v.x, 0.0, 1e-5);
     EXPECT_NEAR(v.y, 0.0, 1e-5);
     EXPECT_NEAR(v.z, 1.0, 1e-5);
+
+    if constexpr (std::same_as<typename Vec3::FloatT, float>)
+    {
+        Vec3 v2(1.0, 0.0, 0.0);
+        Rotation rot(90.0_df, 90.0_df, 0.0_df);
+        Vec3 rotated = rot.RotateVector(v2);
+        EXPECT_NEAR(rotated.x, 0.0, 1e-5);
+        EXPECT_NEAR(rotated.y, 0.0, 1e-5);
+        EXPECT_NEAR(rotated.z, -1.0, 1e-5);
+
+        Vec3 v3(0.0, 2.0, 1.0);
+        Quaternion q = Quaternion::FromEuler(0.0_df, 90.0_df, 180.0_df);
+        rotated = q * v3;
+        EXPECT_NEAR(rotated.x, 1.0, 1e-5);
+        EXPECT_NEAR(rotated.y, -2.0, 1e-5);
+        EXPECT_NEAR(rotated.z, 0.0, 1e-5);
+
+        Quaternion q1 = Quaternion::FromEuler(45.0_df, 90.0_df, 0.0_df);
+        Rotation rot1(45.0_df, 90.0_df, 0.0_df);
+        Vec3 vec4(1.0, 0.0, 0.0);
+        Vec3 rotated1 = q1 * vec4;
+        Vec3 rotated2 = rot1.RotateVector(vec4);
+        EXPECT_TRUE(Vec3::IsEqualApproximetly(rotated1, rotated2));
+    }
 }
 
 TYPED_TEST(Vector3tFloatTypesTest, AngleMethods)
