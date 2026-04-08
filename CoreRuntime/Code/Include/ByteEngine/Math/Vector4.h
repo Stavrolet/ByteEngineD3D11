@@ -238,13 +238,13 @@ namespace ByteEngine::Math
         constexpr bool operator==(Vector4T other) const { return x == other.x && y == other.y && z == other.z && w == other.w; }
         constexpr bool operator!=(Vector4T other) const { return !(*this == other); }
 
-        T& operator[](int32 index)
+        constexpr T& operator[](int32 index)
         {
             assert(index >= 0 && index < 4);
             return data[index];
         }
 
-        T operator[](int32 index) const
+        constexpr T operator[](int32 index) const
         {
             assert(index >= 0 && index < 4);
             return data[index];

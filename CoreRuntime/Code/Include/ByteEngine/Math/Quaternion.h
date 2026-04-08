@@ -149,13 +149,13 @@ namespace ByteEngine::Math
         constexpr bool operator==(Quaternion other) const { return x == other.x && y == other.y && z == other.z && w == other.w; }
         constexpr bool operator!=(Quaternion other) const { return !(*this == other); }
 
-        float& operator[](int32 index)
+        constexpr float& operator[](int32 index)
         {
             assert(index >= 0 && index < 4);
             return data[index];
         }
 
-        float operator[](int32 index) const
+        constexpr float operator[](int32 index) const
         {
             assert(index >= 0 && index < 4);
             return data[index];

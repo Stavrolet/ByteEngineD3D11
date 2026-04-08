@@ -223,14 +223,14 @@ namespace ByteEngine::Math
             return elements[index];
         }
 
-        [[nodiscard]] float operator[](int32 row, int32 column) const
+        [[nodiscard]] constexpr float operator[](int32 row, int32 column) const
         {
             assert(row >= 0 && row < RowCount);
             assert(column >= 0 && column < ColumnCount);
             return rows[row][column];
         }
 
-        [[nodiscard]] float& operator[](int32 row, int32 column)
+        [[nodiscard]] constexpr float& operator[](int32 row, int32 column)
         {
             assert(row >= 0 && row < RowCount);
             assert(column >= 0 && column < ColumnCount);
