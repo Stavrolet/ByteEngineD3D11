@@ -533,6 +533,9 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] constexpr bool IsFinite(T value) noexcept { return std::isfinite(value); }
 
     template<Arithmetic T>
+    [[nodiscard]] constexpr bool IsInfinity(T value) noexcept { return std::isinf(value); }
+
+    template<Arithmetic T>
     [[nodiscard]] constexpr bool IsNaN(T value) noexcept { return std::isnan(value); }
 
     template<Arithmetic T, Arithmetic U, Arithmetic V, Arithmetic W, Arithmetic X>
