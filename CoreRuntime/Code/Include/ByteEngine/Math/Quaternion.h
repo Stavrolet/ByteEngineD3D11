@@ -103,6 +103,8 @@ namespace ByteEngine::Math
         BYTEENGINE_API [[nodiscard]] static Quaternion SlerpUnclamped(Quaternion from, Quaternion to, float t);
         BYTEENGINE_API [[nodiscard]] static Quaternion Slerp(Quaternion from, Quaternion to, float t);
 
+        BYTEENGINE_API [[nodiscard]] static bool IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance = Math::Epsilon);
+
         [[nodiscard]] constexpr Quaternion operator+() const { return Quaternion(+x, +y, +z, +w); }
         [[nodiscard]] constexpr Quaternion operator-() const { return Quaternion(-x, -y, -z, -w); }
 

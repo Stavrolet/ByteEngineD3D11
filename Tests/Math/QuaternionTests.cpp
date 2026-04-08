@@ -57,6 +57,14 @@ TEST_F(QuaternionTest, IsNormalized)
     EXPECT_FALSE(notNormalized.IsNormalized());
 }
 
+TEST_F(QuaternionTest, IsEqualApproximetly)
+{
+    Quaternion q1(1.00001f, 2.00001f, 3.00001f, 4.00001f);
+    Quaternion q2(1.00002f, 2.00002f, 3.00002f, 4.00002f);
+    EXPECT_TRUE(Quaternion::IsEqualApproximetly(q1, q2, 0.0001f));
+    EXPECT_FALSE(Quaternion::IsEqualApproximetly(q1, q2, 0.000001f));
+}
+
 TEST_F(QuaternionTest, Inverse)
 {
     Quaternion q = Quaternion(0.0f, 0.0f, 1.0f, 0.0f).Normalized();

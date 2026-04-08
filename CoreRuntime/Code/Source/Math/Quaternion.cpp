@@ -204,4 +204,9 @@ namespace ByteEngine::Math
     }
 
     BYTEENGINE_API Quaternion Quaternion::Slerp(Quaternion from, Quaternion to, float t) { return SlerpUnclamped(from, to, Math::Clamp(t)); }
+
+    BYTEENGINE_API bool Quaternion::IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance)
+    {
+        return Math::IsEqualApproximetly(a.x, b.x, tolerance) && Math::IsEqualApproximetly(a.y, b.y, tolerance) && Math::IsEqualApproximetly(a.z, b.z, tolerance) && Math::IsEqualApproximetly(a.w, b.w, tolerance);
+    }
 }

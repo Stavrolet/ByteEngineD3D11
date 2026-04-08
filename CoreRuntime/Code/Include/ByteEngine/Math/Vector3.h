@@ -201,9 +201,9 @@ namespace ByteEngine::Math
             return vec - 2 * Dot(vec, normal) * normal;
         }
 
-        static bool IsEqualApproximetly(Vector3T a, Vector3T b) requires std::floating_point<T>
+        static bool IsEqualApproximetly(Vector3T a, Vector3T b, FloatT tolerance = Math::Epsilon) requires std::floating_point<T>
         {
-            return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y) && Math::IsEqualApproximetly(a.z, b.z);
+            return Math::IsEqualApproximetly(a.x, b.x, tolerance) && Math::IsEqualApproximetly(a.y, b.y, tolerance) && Math::IsEqualApproximetly(a.z, b.z, tolerance);
         }
 
         static constexpr Vector3T Min(Vector3T a, Vector3T b)

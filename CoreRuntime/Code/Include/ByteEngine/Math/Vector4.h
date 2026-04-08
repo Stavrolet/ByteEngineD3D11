@@ -120,9 +120,9 @@ namespace ByteEngine::Math
                 return current + direction / distance * maxDelta;
         }
 
-        static bool IsEqualApproximetly(Vector4T a, Vector4T b) requires std::floating_point<T>
+        static bool IsEqualApproximetly(Vector4T a, Vector4T b, FloatT tolerance = Math::Epsilon) requires std::floating_point<T>
         {
-            return Math::IsEqualApproximetly(a.x, b.x) && Math::IsEqualApproximetly(a.y, b.y) && Math::IsEqualApproximetly(a.z, b.z);
+            return Math::IsEqualApproximetly(a.x, b.x, tolerance) && Math::IsEqualApproximetly(a.y, b.y, tolerance) && Math::IsEqualApproximetly(a.z, b.z, tolerance) && Math::IsEqualApproximetly(a.w, b.w, tolerance);
         }
 
         static constexpr Vector4T Min(Vector4T a, Vector4T b)
