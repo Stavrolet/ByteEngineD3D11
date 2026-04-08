@@ -51,62 +51,22 @@ namespace ByteEngine::Math
             : Rotation(q.GetEulerInDegrees())
         { }
 
-        void Normalize()
-        {
-            pitch = DegreeF { Math::Fmod(pitch.value, 360.0f) };
-            if (pitch < 0_df)
-                pitch += 360.0_df;
+        BYTEENGINE_API void Normalize();
 
-            if (pitch > 180_df)
-                pitch -= 360.0_df;
+        BYTEENGINE_API [[nodiscard]] Rotation Normalized() const;
 
-            yaw = DegreeF { Math::Fmod(yaw.value, 360.0f) };
-            if (yaw < 0_df)
-                yaw += 360.0_df;
-
-            if (yaw > 180_df)
-                yaw -= 360.0_df;
-
-            roll = DegreeF { Math::Fmod(roll.value, 360.0f) };
-            if (roll < 0_df)
-                roll += 360.0_df;
-
-            if (roll > 180_df)
-                roll -= 360.0_df;
-        }
-
-        [[nodiscard]] Rotation Normalized() const
-        {
-            Rotation copy = *this;
-            copy.Normalize();
-            return copy;
-        }
-
-        [[nodiscard]] Quaternion ToQuaternion() const { return Quaternion::FromEuler(pitch, yaw, roll); }
+        BYTEENGINE_API [[nodiscard]] Quaternion ToQuaternion() const;
 
         [[nodiscard]] constexpr EulerDeg ToEulerDeg() const { return EulerDeg { pitch, yaw, roll }; }
         [[nodiscard]] constexpr EulerRad ToEulerRad() const { return EulerRad { pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian() }; }
 
-        [[nodiscard]] Vector3F RotateVector(Vector3F vector) const
-        {
-            Quaternion q = ToQuaternion();
-            return q * vector;
-        }
+        BYTEENGINE_API [[nodiscard]] Vector3F RotateVector(Vector3F vector) const;
 
-        [[nodiscard]] static Rotation FromQuaternion(Quaternion q)
-        {
-            EulerDeg euler = q.GetEulerInDegrees();
-            return Rotation(euler);
-        }
+        BYTEENGINE_API [[nodiscard]] static Rotation FromQuaternion(Quaternion q);
 
-        [[nodiscard]] static bool IsEqualApproximately(Rotation a, Rotation b, DegreeF epsilon = Math::AngleEpsilon.ToDegree())
-        {
-            return Math::IsEqualApproximetly(a.pitch.value, b.pitch.value, epsilon.value) &&
-                Math::IsEqualApproximetly(a.yaw.value, b.yaw.value, epsilon.value) &&
-                Math::IsEqualApproximetly(a.roll.value, b.roll.value, epsilon.value);
-        }
+        BYTEENGINE_API [[nodiscard]] static bool IsEqualApproximately(Rotation a, Rotation b, DegreeF epsilon = Math::AngleEpsilon.ToDegree());
 
-        [[nodiscard]] static Rotation Lerp(Rotation from, Rotation to, float t)
+        [[nodiscard]] constexpr static Rotation Lerp(Rotation from, Rotation to, float t)
         {
             return Rotation {
                 DegreeF { Math::Lerp(from.pitch.value, to.pitch.value, t) },
@@ -115,7 +75,7 @@ namespace ByteEngine::Math
             };
         }
 
-        [[nodiscard]] static Rotation LerpClamped(Rotation from, Rotation to, float t)
+        [[nodiscard]] constexpr static Rotation LerpClamped(Rotation from, Rotation to, float t)
         {
             return Rotation {
                 DegreeF { Math::LerpClamped(from.pitch.value, to.pitch.value, t) },
@@ -124,13 +84,7 @@ namespace ByteEngine::Math
             };
         }
 
-        [[nodiscard]] static Rotation Slerp(Rotation from, Rotation to, float t)
-        {
-            Quaternion qFrom = from.ToQuaternion();
-            Quaternion qTo = to.ToQuaternion();
-            Quaternion qResult = Quaternion::Slerp(qFrom, qTo, t);
-            return FromQuaternion(qResult);
-        }
+        BYTEENGINE_API [[nodiscard]] static Rotation Slerp(Rotation from, Rotation to, float t);
 
         [[nodiscard]] constexpr Rotation operator+() const { return Rotation { +pitch, +yaw, +roll }; }
         [[nodiscard]] constexpr Rotation operator-() const { return Rotation { -pitch, -yaw, -roll }; }

@@ -44,7 +44,7 @@ add_library(CoreRuntime SHARED
 	"Code/Source/Math/Math.cpp"
 	"Code/Source/Math/Quaternion.cpp"
 	"Code/Source/DebugLogHelper.cpp"
- "Code/Include/ByteEngine/Math/Matrix4x4F.h" "Code/Source/Math/Matrix4x4F.cpp" "Code/Source/Core/Graphics/GraphicsApi.h" "Code/Include/ByteEngine/Math/Rotation.h")
+ "Code/Include/ByteEngine/Math/Matrix4x4F.h" "Code/Source/Math/Matrix4x4F.cpp" "Code/Source/Core/Graphics/GraphicsApi.h" "Code/Include/ByteEngine/Math/Rotation.h" "Code/Source/Math/Rotation.cpp")
 
 target_link_libraries(CoreRuntime PRIVATE project_options ${LIBS})
 target_include_directories(CoreRuntime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Code/Include")
