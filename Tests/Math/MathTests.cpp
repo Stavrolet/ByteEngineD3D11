@@ -69,11 +69,11 @@ TEST(MathTest, Interpolation)
 
 TEST(MathTest, RangeFunctions)
 {
-    EXPECT_NEAR(Math::LoopValue(12.0, 0.0f, 10.0f), 2.0f, 1e-5f);
-    EXPECT_NEAR(Math::LoopValue(-2.0f, 0.0f, 10.0f), 8.0f, 1e-5f);
+    EXPECT_NEAR(Math::WrapValue(12.0, 0.0f, 10.0f), 2.0f, 1e-5f);
+    EXPECT_NEAR(Math::WrapValue(-2.0f, 0.0f, 10.0f), 8.0f, 1e-5f);
 
-    EXPECT_EQ(Math::LoopValue(12, 0, 10), 2);
-    EXPECT_EQ(Math::LoopValue(-2, 0, 10ll), 8);
+    EXPECT_EQ(Math::WrapValue(12, 0, 10), 2);
+    EXPECT_EQ(Math::WrapValue(-2, 0, 10ll), 8);
 
     EXPECT_NEAR(Math::PingPong(12.0f, 10.0f), 8.0f, 1e-5f);
 }

@@ -4,9 +4,9 @@ namespace ByteEngine::Math
 {
     void Rotation::Normalize()
     {
-        pitch = DegreeF { Math::LoopValue(pitch.value, -180.0f, 180.0f) };
-        yaw = DegreeF { Math::LoopValue(yaw.value, -180.0f, 180.0f) };
-        roll = DegreeF { Math::LoopValue(roll.value, -180.0f, 180.0f) };
+        pitch = DegreeF { Math::WrapValue(pitch.value, -180.0f, 180.0f) };
+        yaw = DegreeF { Math::WrapValue(yaw.value, -180.0f, 180.0f) };
+        roll = DegreeF { Math::WrapValue(roll.value, -180.0f, 180.0f) };
     }
 
     Rotation Rotation::Normalized() const

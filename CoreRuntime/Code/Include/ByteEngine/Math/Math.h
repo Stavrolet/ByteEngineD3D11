@@ -451,7 +451,7 @@ namespace ByteEngine::Math::Math
     [[nodiscard]] inline bool IsEqualApproximetly(double right, double left, double tolerance = EpsilonD) noexcept { return Abs(left - right) < tolerance; }
 
     template<std::floating_point T, std::floating_point U, std::floating_point V>
-    [[nodiscard]] inline auto LoopValue(T t, U start, V end)
+    [[nodiscard]] inline auto WrapValue(T t, U start, V end)
     {
         using Common = std::common_type_t<T, U, V>;
 
@@ -462,7 +462,7 @@ namespace ByteEngine::Math::Math
     }
 
     template<Integral T, Integral U, Integral V>
-    [[nodiscard]] constexpr auto LoopValue(T t, U start, V end)
+    [[nodiscard]] constexpr auto WrapValue(T t, U start, V end)
     {
         using Common = std::common_type_t<T, U, V>;
 
