@@ -312,7 +312,7 @@ TEST(RotationNormalizeTest, NormalizeAllComponentsIndependently)
     r.Normalize();
     EXPECT_NEAR(r.pitch.value, 10.0f, kEps);  // 370 - 360 = 10
     EXPECT_NEAR(r.yaw.value, -10.0f, kEps);  // -370 + 360 = -10
-    EXPECT_NEAR(r.roll.value, 180.0f, kEps);  // 540 - 360 = 180, but 180 > 180 so -180
+    EXPECT_NEAR(r.roll.value, -180.0f, kEps);  // 540 - 360 = 180, but 180 > 180 so -180
 }
 
 TEST(RotationNormalizeTest, NormalizeZeroRemainsZero)

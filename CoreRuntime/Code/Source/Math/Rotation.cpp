@@ -4,26 +4,9 @@ namespace ByteEngine::Math
 {
     void Rotation::Normalize()
     {
-        pitch = DegreeF { Math::Fmod(pitch.value, 360.0f) };
-        if (pitch < 0_df)
-            pitch += 360.0_df;
-
-        if (pitch > 180_df)
-            pitch -= 360.0_df;
-
-        yaw = DegreeF { Math::Fmod(yaw.value, 360.0f) };
-        if (yaw < 0_df)
-            yaw += 360.0_df;
-
-        if (yaw > 180_df)
-            yaw -= 360.0_df;
-
-        roll = DegreeF { Math::Fmod(roll.value, 360.0f) };
-        if (roll < 0_df)
-            roll += 360.0_df;
-
-        if (roll > 180_df)
-            roll -= 360.0_df;
+        pitch = DegreeF { Math::LoopValue(pitch.value, -180.0f, 180.0f) };
+        yaw = DegreeF { Math::LoopValue(yaw.value, -180.0f, 180.0f) };
+        roll = DegreeF { Math::LoopValue(roll.value, -180.0f, 180.0f) };
     }
 
     Rotation Rotation::Normalized() const
