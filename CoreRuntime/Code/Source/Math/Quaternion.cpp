@@ -164,7 +164,6 @@ namespace ByteEngine::Math
     {
         assert(from.IsNormalized());
         assert(to.IsNormalized());
-        assert(t >= 0 && t <= 1);
 
         Quaternion to1;
         RadianF omega;

@@ -176,7 +176,6 @@ namespace ByteEngine::Math
 
         static constexpr Vector2T Lerp(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
         {
-            assert(t >= 0 && t <= 1);
             return from + (to - from) * t;
         }
 
@@ -189,8 +188,6 @@ namespace ByteEngine::Math
         // Source: Vector2::slerp
         static Vector2T Slerp(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
         {
-            assert(t >= 0 && t <= 1);
-
             FloatT startLength = from.LengthSquared();
             FloatT endLength = to.LengthSquared();
 

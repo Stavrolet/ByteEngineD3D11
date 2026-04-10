@@ -158,7 +158,6 @@ namespace ByteEngine::Math
 
         static constexpr Vector3T Lerp(Vector3T from, Vector3T to, FloatT t) requires std::floating_point<T>
         {
-            assert(t >= 0 && t <= 1);
             return from + (to - from) * t;
         }
 
