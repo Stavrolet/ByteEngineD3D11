@@ -166,6 +166,34 @@ namespace ByteEngine::Math
             return from + (to - from) * Math::Clamp(t);
         }
 
+        // Slerp implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
+        // Source: Vector3::slerp
+        static Vector3T Slerp(Vector3T from, Vector3T to, FloatT t) requires std::floating_point<T>
+        {
+            FloatT startLengthSq = from.LengthSquared();
+            FloatT endLengthSq = to.LengthSquared();
+            if (Math::IsEqualApproximetly(startLengthSq, FloatT(0)) || Math::IsEqualApproximetly(endLengthSq, FloatT(0)))
+                return Lerp(from, to, t);
+
+            Vector3T axis = Cross(from, to);
+            FloatT axisLengthSq = axis.LengthSquared();
+
+            if (Math::IsEqualApproximetly(axisLengthSq, FloatT(0)))
+                return Lerp(from, to, t);
+
+            axis *= FloatT(1) / Math::Sqrt(axisLengthSq);
+            FloatT startLength = Math::Sqrt(startLengthSq);
+            FloatT resultLength = Math::Lerp(startLength, Math::Sqrt(endLengthSq), t);
+            RadianT<FloatT> angle = UnsigedAngleBetween(from, to);
+
+            return axis.RotatedBy(angle * t) * (resultLength / startLength);
+        }
+
+        static Vector3T SlerpClamped(Vector3T from, Vector3T to, FloatT t) requires std::floating_point<T>
+        {
+            return Slerp(from, to, Math::Clamp(t));
+        }
+
         // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::move_toward
         static Vector3T MoveTowards(Vector3T current, Vector3T target, FloatT maxDelta) requires std::floating_point<T>

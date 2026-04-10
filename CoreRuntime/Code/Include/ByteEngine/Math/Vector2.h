@@ -202,6 +202,11 @@ namespace ByteEngine::Math
             return from * (resultLength / startLength);
         }
 
+        static Vector2T SlerpClamped(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
+        {
+            return Slerp(from, to, Math::Clamp(t));
+        }
+
         // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::move_toward
         static Vector2T MoveTowards(Vector2T current, Vector2T target, FloatT maxDelta) requires std::floating_point<T>
