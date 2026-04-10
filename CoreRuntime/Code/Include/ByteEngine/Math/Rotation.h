@@ -85,6 +85,7 @@ namespace ByteEngine::Math
         }
 
         BYTEENGINE_API [[nodiscard]] static Rotation Slerp(Rotation from, Rotation to, float t);
+        BYTEENGINE_API [[nodiscard]] static Rotation SlerpClamped(Rotation from, Rotation to, float t);
 
         [[nodiscard]] constexpr Rotation operator+() const { return Rotation { +pitch, +yaw, +roll }; }
         [[nodiscard]] constexpr Rotation operator-() const { return Rotation { -pitch, -yaw, -roll }; }

@@ -44,4 +44,9 @@ namespace ByteEngine::Math
         Quaternion qResult = Quaternion::Slerp(qFrom, qTo, t);
         return FromQuaternion(qResult);
     }
+
+    Rotation Rotation::SlerpClamped(Rotation from, Rotation to, float t)
+    {
+        return Slerp(from, to, Math::Clamp(t));
+    }
 }
