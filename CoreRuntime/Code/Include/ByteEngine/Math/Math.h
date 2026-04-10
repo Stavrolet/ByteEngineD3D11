@@ -583,6 +583,24 @@ namespace ByteEngine::Math::Math
 
     template<std::ranges::range R>
     [[nodiscard]] constexpr std::ranges::range_value_t<R> Max(const R& range) { return std::ranges::max(range); }
+
+    template<std::floating_point T>
+    [[nodiscard]] constexpr T LinearToGammaSpace(T value)
+    {
+        if (value <= T(0.0031308))
+            return value * T(12.92);
+        else
+            return T(1.055) * Pow(value, T(1.0) / T(2.4)) - T(0.055);
+    }
+
+    template<std::floating_point T>
+    [[nodiscard]] constexpr T GammaToLinearSpace(T value)
+    {
+        if (value <= T(0.04045))
+            return value / T(12.92);
+        else
+            return Pow((value + T(0.055)) / T(1.055), T(2.4));
+    }
 }
 
 namespace ByteEngine::Math
