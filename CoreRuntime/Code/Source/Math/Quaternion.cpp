@@ -160,7 +160,7 @@ namespace ByteEngine::Math
 
     // SlerpUnclamped implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::slerp
-    BYTEENGINE_API Quaternion Quaternion::SlerpUnclamped(Quaternion from, Quaternion to, float t)
+    BYTEENGINE_API Quaternion Quaternion::Slerp(Quaternion from, Quaternion to, float t)
     {
         assert(from.IsNormalized());
         assert(to.IsNormalized());
@@ -202,7 +202,10 @@ namespace ByteEngine::Math
         );
     }
 
-    BYTEENGINE_API Quaternion Quaternion::Slerp(Quaternion from, Quaternion to, float t) { return SlerpUnclamped(from, to, Math::Clamp(t)); }
+    BYTEENGINE_API Quaternion Quaternion::SlerpClamped(Quaternion from, Quaternion to, float t)
+    {
+        return Slerp(from, to, Math::Clamp(t));
+    }
 
     BYTEENGINE_API bool Quaternion::IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance)
     {

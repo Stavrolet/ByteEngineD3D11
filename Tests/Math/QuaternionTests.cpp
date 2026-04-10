@@ -343,28 +343,6 @@ TEST_F(QuaternionTest, CastToVector2)
     EXPECT_EQ(v.y, 2.0f);
 }
 
-TEST_F(QuaternionTest, SlerpUnclampedAtZero)
-{
-    Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));
-    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
-    Quaternion result = Quaternion::SlerpUnclamped(q1, q2, 0.0f);
-    EXPECT_NEAR(result.x, q1.x, EPSILON);
-    EXPECT_NEAR(result.y, q1.y, EPSILON);
-    EXPECT_NEAR(result.z, q1.z, EPSILON);
-    EXPECT_NEAR(result.w, q1.w, EPSILON);
-}
-
-TEST_F(QuaternionTest, SlerpUnclampedAtOne)
-{
-    Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));
-    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
-    Quaternion result = Quaternion::SlerpUnclamped(q1, q2, 1.0f);
-    EXPECT_NEAR(result.x, q2.x, EPSILON);
-    EXPECT_NEAR(result.y, q2.y, EPSILON);
-    EXPECT_NEAR(result.z, q2.z, EPSILON);
-    EXPECT_NEAR(result.w, q2.w, EPSILON);
-}
-
 TEST_F(QuaternionTest, SlerpAtZero)
 {
     Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));
@@ -387,11 +365,33 @@ TEST_F(QuaternionTest, SlerpAtOne)
     EXPECT_NEAR(result.w, q2.w, EPSILON);
 }
 
-TEST_F(QuaternionTest, SlerpClamps)
+TEST_F(QuaternionTest, SlerpClampedAtZero)
 {
     Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));
     Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
-    Quaternion result = Quaternion::Slerp(q1, q2, 1.5f);
+    Quaternion result = Quaternion::SlerpClamped(q1, q2, 0.0f);
+    EXPECT_NEAR(result.x, q1.x, EPSILON);
+    EXPECT_NEAR(result.y, q1.y, EPSILON);
+    EXPECT_NEAR(result.z, q1.z, EPSILON);
+    EXPECT_NEAR(result.w, q1.w, EPSILON);
+}
+
+TEST_F(QuaternionTest, SlerpClampedAtOne)
+{
+    Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));
+    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
+    Quaternion result = Quaternion::SlerpClamped(q1, q2, 1.0f);
+    EXPECT_NEAR(result.x, q2.x, EPSILON);
+    EXPECT_NEAR(result.y, q2.y, EPSILON);
+    EXPECT_NEAR(result.z, q2.z, EPSILON);
+    EXPECT_NEAR(result.w, q2.w, EPSILON);
+}
+
+TEST_F(QuaternionTest, SlerpClampedClamps)
+{
+    Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));
+    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
+    Quaternion result = Quaternion::SlerpClamped(q1, q2, 1.5f);
     EXPECT_NEAR(result.x, q2.x, EPSILON);
     EXPECT_NEAR(result.y, q2.y, EPSILON);
     EXPECT_NEAR(result.z, q2.z, EPSILON);

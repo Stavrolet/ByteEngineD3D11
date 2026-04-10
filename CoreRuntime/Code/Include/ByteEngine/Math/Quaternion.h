@@ -100,8 +100,8 @@ namespace ByteEngine::Math
         BYTEENGINE_API [[nodiscard]] static Quaternion FromLookDirection(Vector3F direction, Vector3F worldUp = Vector3F::Up());
         BYTEENGINE_API [[nodiscard]] static Quaternion FromToRotation(Vector3F from, Vector3F target);
 
-        BYTEENGINE_API [[nodiscard]] static Quaternion SlerpUnclamped(Quaternion from, Quaternion to, float t);
         BYTEENGINE_API [[nodiscard]] static Quaternion Slerp(Quaternion from, Quaternion to, float t);
+        BYTEENGINE_API [[nodiscard]] static Quaternion SlerpClamped(Quaternion from, Quaternion to, float t);
 
         BYTEENGINE_API [[nodiscard]] static bool IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance = Math::Epsilon);
 
