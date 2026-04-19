@@ -8,6 +8,9 @@
 #include "ByteEngine/Core/Renderer/RenderContext.h"
 #include "ByteEngine/Utilities/BitFlagsHelper.h"
 #include "ByteEngine/DebugLogHelper.h"
+#include "Platform/Core/Graphics/GraphicsDeviceD3D11.h"
+
+using namespace ByteEngine::Graphics;
 
 namespace ByteEngine
 {
@@ -21,17 +24,27 @@ namespace ByteEngine
     {
         Application::SetInstance(this);
 
-        RenderingContext renderingContext;
-        renderingContext.Initialize();
-        RenderingContext::SetInstance(&renderingContext);
+        GraphicsDeviceD3D11 graphicsDeviceD3D11;
+
+#ifdef _DEBUG
+        GraphicsDevice::Error error = graphicsDeviceD3D11.Initialize(true);
+#else
+        GraphicsDevice::Error error = graphicsDeviceD3D11.Initialize(false);
+#endif
+
+        if (error != GraphicsDevice::Error::Success)
+        {
+            DebugHelper::LogDebugMessage("Failed to initialize graphics device. Error code: " + std::to_string(static_cast<int>(error)));
+            return -1;
+        }
+
+        GraphicsDevice::SetInstance(&graphicsDeviceD3D11);
 
         Input input;
         Input::SetInstance(&input);
 
         while (isRunning)
         {
-            float backGroundColor[4] = { 0.0f, 0.1f, 0.15f, 1.0f };
-
             mainWindow.PollEvents();
 
             if (mainWindow.closeRequested)
@@ -59,16 +72,6 @@ namespace ByteEngine
             }
 
             input.Update();
-
-            if (Input::GetInstance().IsActionJustPressed("test1"))
-            {
-                backGroundColor[0] = 1.0f;
-                backGroundColor[1] = 0.4f;
-                backGroundColor[2] = 0.0f;
-                backGroundColor[3] = 1.0f;
-            }
-
-            renderingContext.Update(backGroundColor);
         }
 
         DebugHelper::LogDebugMessage("Application is closing");
