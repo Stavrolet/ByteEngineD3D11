@@ -9,9 +9,9 @@ namespace ByteEngine::Math
 {
     const Quaternion Quaternion::Identity { 0.0f, 0.0f, 0.0f, 1.0f };
 
-    BYTEENGINE_API float Quaternion::Length() const { return Math::Sqrt(LengthSquared()); }
+    float Quaternion::Length() const { return Math::Sqrt(LengthSquared()); }
 
-    BYTEENGINE_API void Quaternion::Normalize()
+    void Quaternion::Normalize()
     {
         float length = LengthSquared();
 
@@ -25,14 +25,14 @@ namespace ByteEngine::Math
         }
     }
 
-    BYTEENGINE_API Quaternion Quaternion::Normalized() const
+    Quaternion Quaternion::Normalized() const
     {
         Quaternion copy = *this;
         copy.Normalize();
         return copy;
     }
 
-    BYTEENGINE_API EulerRad Quaternion::GetEuler()
+    EulerRad Quaternion::GetEuler()
     {
         if (!IsNormalized())
             Normalize();
@@ -44,7 +44,7 @@ namespace ByteEngine::Math
         return EulerRad { Math::Asin(2 * (w * x - y * z)), Math::Atan2(2 * (w * y + x * z), num + ySq - zSq), Math::Atan2(2 * (w * z + x * y), num - ySq + zSq) };
     }
 
-    BYTEENGINE_API EulerRad Quaternion::GetEuler() const
+    EulerRad Quaternion::GetEuler() const
     {
         assert(IsNormalized());
 
@@ -59,7 +59,7 @@ namespace ByteEngine::Math
         return EulerRad { Math::Asin(sinp), Math::Atan2(siny, cosy), Math::Atan2(sinr, cosr) };
     }
 
-    BYTEENGINE_API EulerDeg Quaternion::GetEulerInDegrees() const
+    EulerDeg Quaternion::GetEulerInDegrees() const
     {
         EulerRad euler = GetEuler();
         return euler.ToDeg();
@@ -67,7 +67,7 @@ namespace ByteEngine::Math
 
     // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::get_axis
-    BYTEENGINE_API Vector3F Quaternion::GetAxis() const
+    Vector3F Quaternion::GetAxis() const
     {
         if (Math::Abs(w) > 1 - Math::Epsilon)
             return Vector3F(x, y, z);
@@ -78,13 +78,13 @@ namespace ByteEngine::Math
 
     // GetAngle implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::get_angle
-    BYTEENGINE_API RadianF Quaternion::GetAngle() const { return 2 * Math::Acos(w); }
+    RadianF Quaternion::GetAngle() const { return 2 * Math::Acos(w); }
 
-    BYTEENGINE_API RadianF Quaternion::AngleBetween(Quaternion a, Quaternion b) { return 2 * Math::Acos(Math::Abs(Dot(a, b))); }
+    RadianF Quaternion::AngleBetween(Quaternion a, Quaternion b) { return 2 * Math::Acos(Math::Abs(Dot(a, b))); }
 
     // FromAngleAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::Quaternion(const Vector3f &p_axis, real_t p_angle)
-    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(RadianF angle, Vector3F axis)
+    Quaternion Quaternion::FromAngleAxis(RadianF angle, Vector3F axis)
     {
         if (!axis.IsNormalized())
             axis.Normalize();
@@ -105,9 +105,9 @@ namespace ByteEngine::Math
         }
     }
 
-    BYTEENGINE_API Quaternion Quaternion::FromAngleAxis(DegreeF angle, Vector3F axis) { return FromAngleAxis(angle.ToRadian(), axis); }
+    Quaternion Quaternion::FromAngleAxis(DegreeF angle, Vector3F axis) { return FromAngleAxis(angle.ToRadian(), axis); }
 
-    BYTEENGINE_API Quaternion Quaternion::FromEuler(RadianF pitch, RadianF yaw, RadianF roll)
+    Quaternion Quaternion::FromEuler(RadianF pitch, RadianF yaw, RadianF roll)
     {
         XMVECTOR q = XMQuaternionRotationRollPitchYaw(pitch.value, yaw.value, roll.value);
         Quaternion result;
@@ -115,9 +115,9 @@ namespace ByteEngine::Math
         return result;
     }
 
-    BYTEENGINE_API Quaternion Quaternion::FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEuler(pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian()); }
+    Quaternion Quaternion::FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll) { return FromEuler(pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian()); }
 
-    BYTEENGINE_API Quaternion Quaternion::FromLookDirection(Vector3F direction, Vector3F worldUp)
+    Quaternion Quaternion::FromLookDirection(Vector3F direction, Vector3F worldUp)
     {
         if (Math::IsEqualApproximetly(direction.LengthSquared(), 0.0f))
             return Identity;
@@ -139,7 +139,7 @@ namespace ByteEngine::Math
         return result;
     }
 
-    BYTEENGINE_API Quaternion Quaternion::FromToRotation(Vector3F from, Vector3F to)
+    Quaternion Quaternion::FromToRotation(Vector3F from, Vector3F to)
     {
         from.Normalize();
         to.Normalize();
@@ -160,7 +160,7 @@ namespace ByteEngine::Math
 
     // SlerpUnclamped implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::slerp
-    BYTEENGINE_API Quaternion Quaternion::Slerp(Quaternion from, Quaternion to, float t)
+    Quaternion Quaternion::Slerp(Quaternion from, Quaternion to, float t)
     {
         assert(from.IsNormalized());
         assert(to.IsNormalized());
@@ -202,12 +202,12 @@ namespace ByteEngine::Math
         );
     }
 
-    BYTEENGINE_API Quaternion Quaternion::SlerpClamped(Quaternion from, Quaternion to, float t)
+    Quaternion Quaternion::SlerpClamped(Quaternion from, Quaternion to, float t)
     {
         return Slerp(from, to, Math::Clamp(t));
     }
 
-    BYTEENGINE_API bool Quaternion::IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance)
+    bool Quaternion::IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance)
     {
         return Math::IsEqualApproximetly(a.x, b.x, tolerance) && Math::IsEqualApproximetly(a.y, b.y, tolerance) && Math::IsEqualApproximetly(a.z, b.z, tolerance) && Math::IsEqualApproximetly(a.w, b.w, tolerance);
     }

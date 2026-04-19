@@ -51,20 +51,20 @@ namespace ByteEngine::Math
             : Rotation(q.GetEulerInDegrees())
         { }
 
-        BYTEENGINE_API void Normalize();
+        void Normalize();
 
-        BYTEENGINE_API [[nodiscard]] Rotation Normalized() const;
+        [[nodiscard]] Rotation Normalized() const;
 
-        BYTEENGINE_API [[nodiscard]] Quaternion ToQuaternion() const;
+        [[nodiscard]] Quaternion ToQuaternion() const;
 
         [[nodiscard]] constexpr EulerDeg ToEulerDeg() const { return EulerDeg { pitch, yaw, roll }; }
         [[nodiscard]] constexpr EulerRad ToEulerRad() const { return EulerRad { pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian() }; }
 
-        BYTEENGINE_API [[nodiscard]] Vector3F RotateVector(Vector3F vector) const;
+        [[nodiscard]] Vector3F RotateVector(Vector3F vector) const;
 
-        BYTEENGINE_API [[nodiscard]] static Rotation FromQuaternion(Quaternion q);
+        [[nodiscard]] static Rotation FromQuaternion(Quaternion q);
 
-        BYTEENGINE_API [[nodiscard]] static bool IsEqualApproximately(Rotation a, Rotation b, DegreeF epsilon = Math::AngleEpsilon.ToDegree());
+        [[nodiscard]] static bool IsEqualApproximately(Rotation a, Rotation b, DegreeF epsilon = Math::AngleEpsilon.ToDegree());
 
         [[nodiscard]] constexpr static Rotation Lerp(Rotation from, Rotation to, float t)
         {
@@ -84,8 +84,8 @@ namespace ByteEngine::Math
             };
         }
 
-        BYTEENGINE_API [[nodiscard]] static Rotation Slerp(Rotation from, Rotation to, float t);
-        BYTEENGINE_API [[nodiscard]] static Rotation SlerpClamped(Rotation from, Rotation to, float t);
+        [[nodiscard]] static Rotation Slerp(Rotation from, Rotation to, float t);
+        [[nodiscard]] static Rotation SlerpClamped(Rotation from, Rotation to, float t);
 
         [[nodiscard]] constexpr Rotation operator+() const { return Rotation { +pitch, +yaw, +roll }; }
         [[nodiscard]] constexpr Rotation operator-() const { return Rotation { -pitch, -yaw, -roll }; }

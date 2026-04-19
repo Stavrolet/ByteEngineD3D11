@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "ByteEngine/CoreDefs.h"
 #include "ByteEngine/Core/Base/Singleton.h"
 #include "ByteEngine/Core/EventSystem/Delegate.h"
 #include "ByteEngine/Primitives.h"
@@ -29,10 +28,10 @@ namespace ByteEngine
         Delegate<bool> quitRequest;
 
     public:
-        BYTEENGINE_API void Quit(int32 exitCode);
+        void Quit(int32 exitCode);
         Delegate<bool>& QuitRequest() { return quitRequest; }
 
     private:
-        BYTEENGINE_API int32 Run(MainWindow& mainWindow);
+        int32 Run(MainWindow& mainWindow);
     };
 }

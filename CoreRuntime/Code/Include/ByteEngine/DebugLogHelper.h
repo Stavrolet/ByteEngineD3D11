@@ -5,7 +5,6 @@
 #include <string_view>
 #include <type_traits>
 
-#include "ByteEngine/CoreDefs.h"
 #include "ByteEngine/Primitives.h"
 
 namespace ByteEngine::DebugHelper
@@ -22,9 +21,9 @@ namespace ByteEngine::DebugHelper
         { }
     };
 
-    [[noreturn]] BYTEENGINE_API void LogCriticalError(std::string_view errorMessageForUser, uint32 errorCode, const ::std::source_location& loc = ::std::source_location::current());
-    BYTEENGINE_API void LogDebugError(uint32 errorCode, const ::std::source_location& loc = ::std::source_location::current());
-    BYTEENGINE_API void LogDebugMessageInternal(FmtWithLocation fmt, std::format_args args);
+    [[noreturn]] void LogCriticalError(std::string_view errorMessageForUser, uint32 errorCode, const ::std::source_location& loc = ::std::source_location::current());
+    void LogDebugError(uint32 errorCode, const ::std::source_location& loc = ::std::source_location::current());
+    void LogDebugMessageInternal(FmtWithLocation fmt, std::format_args args);
 
     template <typename... Args>
     inline void LogDebugMessage(FmtWithLocation fmt, Args&&... args)

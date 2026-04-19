@@ -2,12 +2,12 @@
 
 namespace ByteEngine::Math::Math
 {
-    BYTEENGINE_API double Sin(RadianD rad) { return std::sin(rad.value); }
-    BYTEENGINE_API double Cos(RadianD rad) { return std::cos(rad.value); }
+    double Sin(RadianD rad) { return std::sin(rad.value); }
+    double Cos(RadianD rad) { return std::cos(rad.value); }
 
     // Asin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     // Source: DirectX::XMScalarASin
-    BYTEENGINE_API RadianF Asin(float value) noexcept
+    RadianF Asin(float value) noexcept
     {
         // Clamp input to [-1,1].
         bool nonnegative = (value >= 0.0f);
@@ -27,11 +27,11 @@ namespace ByteEngine::Math::Math
         return RadianF(nonnegative ? PI / 2.0f - result : result - PI / 2.0f);
     }
 
-    BYTEENGINE_API RadianD Asin(double value) { return RadianD(std::asin(value)); }
+    RadianD Asin(double value) { return RadianD(std::asin(value)); }
 
     // Acos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     // Source: DirectX::XMScalarACos
-    BYTEENGINE_API RadianF Acos(float value) noexcept
+    RadianF Acos(float value) noexcept
     {
         // Clamp input to [-1,1].
         bool nonnegative = (value >= 0.0f);
@@ -51,23 +51,23 @@ namespace ByteEngine::Math::Math
         return RadianF(nonnegative ? result : PI - result);
     }
 
-    BYTEENGINE_API RadianD Acos(double value) { return RadianD(std::acos(value)); }
+    RadianD Acos(double value) { return RadianD(std::acos(value)); }
 
-    BYTEENGINE_API RadianF AngleDifference(RadianF from, RadianF to) noexcept
+    RadianF AngleDifference(RadianF from, RadianF to) noexcept
     {
         float difference = Fmod(to.value - from.value, 2.0f * PI);
         return RadianF(Fmod(2.0f * difference, 2.0f * PI) - difference);
     }
 
-    BYTEENGINE_API RadianD AngleDifference(RadianD from, RadianD to) noexcept
+    RadianD AngleDifference(RadianD from, RadianD to) noexcept
     {
         double difference = Fmod(to.value - from.value, 2.0 * PI_D);
         return RadianD(Fmod(2.0 * difference, 2.0 * PI_D) - difference);
     }
 
-    BYTEENGINE_API RadianF LerpAngle(RadianF from, RadianF to, float t) noexcept { return from + AngleDifference(from, to) * t; }
-    BYTEENGINE_API RadianD LerpAngle(RadianD from, RadianD to, double t) noexcept { return from + AngleDifference(from, to) * t; }
+    RadianF LerpAngle(RadianF from, RadianF to, float t) noexcept { return from + AngleDifference(from, to) * t; }
+    RadianD LerpAngle(RadianD from, RadianD to, double t) noexcept { return from + AngleDifference(from, to) * t; }
 
-    BYTEENGINE_API RadianF LerpAngleClamped(RadianF from, RadianF to, float t) noexcept { return LerpAngle(from, to, Clamp(t)); }
-    BYTEENGINE_API RadianD LerpAngleClamped(RadianD from, RadianD to, double t) noexcept { return LerpAngle(from, to, Clamp(t)); }
+    RadianF LerpAngleClamped(RadianF from, RadianF to, float t) noexcept { return LerpAngle(from, to, Clamp(t)); }
+    RadianD LerpAngleClamped(RadianD from, RadianD to, double t) noexcept { return LerpAngle(from, to, Clamp(t)); }
 }

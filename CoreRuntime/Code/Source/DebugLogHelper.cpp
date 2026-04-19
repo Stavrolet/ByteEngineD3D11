@@ -12,7 +12,7 @@
 
 namespace ByteEngine::DebugHelper
 {
-    BYTEENGINE_API void LogCriticalError(std::string_view errorMessageForUser, uint32 errorCode, const ::std::source_location& loc)
+    void LogCriticalError(std::string_view errorMessageForUser, uint32 errorCode, const ::std::source_location& loc)
     {
 #ifdef _DEBUG
         LogDebugError(errorCode, loc);
@@ -31,7 +31,7 @@ namespace ByteEngine::DebugHelper
 #endif
     }
 
-    BYTEENGINE_API void LogDebugError(uint32 errorCode, const ::std::source_location& loc)
+    void LogDebugError(uint32 errorCode, const ::std::source_location& loc)
     {
 #ifdef _DEBUG
         void* formattedMessageBuff = nullptr;
@@ -68,7 +68,7 @@ namespace ByteEngine::DebugHelper
 #endif
     }
 
-    BYTEENGINE_API void LogDebugMessageInternal(FmtWithLocation fmt, std::format_args args)
+    void LogDebugMessageInternal(FmtWithLocation fmt, std::format_args args)
     {
         std::string fmtStr(fmt.fmt);
 

@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "ByteEngine/CoreDefs.h"
 #include "ByteEngine/Math/Concepts.h"
 #include "ByteEngine/Math/Math.h"
 

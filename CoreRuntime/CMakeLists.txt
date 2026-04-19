@@ -8,7 +8,7 @@ if(WIN32)
 	find_package(directxtk CONFIG REQUIRED)
 endif()
 
-add_library(CoreRuntime SHARED 
+add_library(CoreRuntime STATIC 
 	"Code/Include/ByteEngine/Core/Base/Application.h"
 	"Code/Include/ByteEngine/Core/Base/MainWindow.h"
 	"Code/Include/ByteEngine/Core/Base/Singleton.h"
@@ -34,7 +34,7 @@ add_library(CoreRuntime SHARED
 	"Code/Include/ByteEngine/WinApiExcludingDefs/NoLocalization.h"
 	"Code/Include/ByteEngine/WinApiExcludingDefs/NoSys.h"
 	"Code/Include/ByteEngine/WinApiExcludingDefs/NoUiAndWindows.h"
-	"Code/Include/ByteEngine/CoreDefs.h"
+	
 	"Code/Include/ByteEngine/DebugLogHelper.h"
 	"Code/Include/ByteEngine/GameTime.h"
 	"Code/Include/ByteEngine/Primitives.h"

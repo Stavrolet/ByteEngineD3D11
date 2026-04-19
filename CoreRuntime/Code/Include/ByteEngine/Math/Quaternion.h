@@ -56,11 +56,11 @@ namespace ByteEngine::Math
             : x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
         { }
 
-        BYTEENGINE_API [[nodiscard]] float Length() const;
+        [[nodiscard]] float Length() const;
         [[nodiscard]] constexpr float LengthSquared() const { return x * x + y * y + z * z + w * w; }
 
-        BYTEENGINE_API void Normalize();
-        BYTEENGINE_API [[nodiscard]] Quaternion Normalized() const;
+        void Normalize();
+        [[nodiscard]] Quaternion Normalized() const;
         [[nodiscard]] bool IsNormalized() const { return Math::IsEqualApproximetly(LengthSquared(), 1.0f, Math::UnitSizeEpsilon); }
 
         void Inverse()
@@ -78,32 +78,32 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        BYTEENGINE_API [[nodiscard]] EulerRad GetEuler();
-        BYTEENGINE_API [[nodiscard]] EulerRad GetEuler() const;
-        BYTEENGINE_API [[nodiscard]] EulerDeg GetEulerInDegrees() const;
+        [[nodiscard]] EulerRad GetEuler();
+        [[nodiscard]] EulerRad GetEuler() const;
+        [[nodiscard]] EulerDeg GetEulerInDegrees() const;
 
         // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Quaternion::get_axis
-        BYTEENGINE_API [[nodiscard]] Vector3F GetAxis() const;
-        BYTEENGINE_API [[nodiscard]] RadianF GetAngle() const;
+        [[nodiscard]] Vector3F GetAxis() const;
+        [[nodiscard]] RadianF GetAngle() const;
 
         [[nodiscard]] constexpr static float Dot(Quaternion a, Quaternion b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 
-        BYTEENGINE_API [[nodiscard]] static RadianF AngleBetween(Quaternion a, Quaternion b);
+        [[nodiscard]] static RadianF AngleBetween(Quaternion a, Quaternion b);
 
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(RadianF angle, Vector3F axis);
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromAngleAxis(DegreeF angle, Vector3F axis);
+        [[nodiscard]] static Quaternion FromAngleAxis(RadianF angle, Vector3F axis);
+        [[nodiscard]] static Quaternion FromAngleAxis(DegreeF angle, Vector3F axis);
 
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromEuler(RadianF pitch, RadianF yaw, RadianF roll);
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll);
+        [[nodiscard]] static Quaternion FromEuler(RadianF pitch, RadianF yaw, RadianF roll);
+        [[nodiscard]] static Quaternion FromEuler(DegreeF pitch, DegreeF yaw, DegreeF roll);
 
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromLookDirection(Vector3F direction, Vector3F worldUp = Vector3F::Up());
-        BYTEENGINE_API [[nodiscard]] static Quaternion FromToRotation(Vector3F from, Vector3F target);
+        [[nodiscard]] static Quaternion FromLookDirection(Vector3F direction, Vector3F worldUp = Vector3F::Up());
+        [[nodiscard]] static Quaternion FromToRotation(Vector3F from, Vector3F target);
 
-        BYTEENGINE_API [[nodiscard]] static Quaternion Slerp(Quaternion from, Quaternion to, float t);
-        BYTEENGINE_API [[nodiscard]] static Quaternion SlerpClamped(Quaternion from, Quaternion to, float t);
+        [[nodiscard]] static Quaternion Slerp(Quaternion from, Quaternion to, float t);
+        [[nodiscard]] static Quaternion SlerpClamped(Quaternion from, Quaternion to, float t);
 
-        BYTEENGINE_API [[nodiscard]] static bool IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance = Math::Epsilon);
+        [[nodiscard]] static bool IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance = Math::Epsilon);
 
         [[nodiscard]] constexpr Quaternion operator+() const { return Quaternion(+x, +y, +z, +w); }
         [[nodiscard]] constexpr Quaternion operator-() const { return Quaternion(-x, -y, -z, -w); }
@@ -165,6 +165,6 @@ namespace ByteEngine::Math
         [[nodiscard]] constexpr explicit operator Vector2F() const { return Vector2F(x, y); }
         [[nodiscard]] constexpr explicit operator Vector4F() const { return Vector4F(x, y, z, w); }
 
-        BYTEENGINE_API static const Quaternion Identity;
+        static const Quaternion Identity;
     };
 }

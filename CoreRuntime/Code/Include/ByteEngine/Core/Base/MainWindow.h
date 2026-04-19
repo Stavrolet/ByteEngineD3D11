@@ -2,7 +2,6 @@
 
 #include <string>
 
-#include "ByteEngine/CoreDefs.h"
 #include "ByteEngine/Core/Base/Singleton.h"
 #include "ByteEngine/Core/EventSystem/Delegate.h"
 #include "ByteEngine/Core/EventSystem/MulticastDelegate.h"
@@ -22,9 +21,6 @@ namespace ByteEngine
         BorderlessFullscreen,
         ExclusiveFullscreen
     };
-
-    class MainWindow;
-    template class BYTEENGINE_API Singleton<MainWindow>;
 
     class MainWindow : public Singleton<MainWindow>
     {

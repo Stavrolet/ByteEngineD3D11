@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "ByteEngine/CoreDefs.h"
 #include "ByteEngine/Core/Base/Singleton.h"
 #include "ByteEngine/Core/Input/KeyCode.h"
 #include "ByteEngine/Math/Vector2.h"
@@ -54,17 +53,17 @@ namespace ByteEngine
         Input();
 
     public:
-        BYTEENGINE_API bool IsActionPressed(std::string_view actionName) const;
-        BYTEENGINE_API bool IsActionJustPressed(std::string_view actionName) const;
-        BYTEENGINE_API bool IsActionJustReleased(std::string_view actionName) const;
+        bool IsActionPressed(std::string_view actionName) const;
+        bool IsActionJustPressed(std::string_view actionName) const;
+        bool IsActionJustReleased(std::string_view actionName) const;
 
-        BYTEENGINE_API bool IsKeyPressed(KeyCode code) const;
-        BYTEENGINE_API bool IsKeyJustPressed(KeyCode code) const;
-        BYTEENGINE_API bool IsKeyJustReleased(KeyCode code) const;
+        bool IsKeyPressed(KeyCode code) const;
+        bool IsKeyJustPressed(KeyCode code) const;
+        bool IsKeyJustReleased(KeyCode code) const;
         bool IsAnyKeyPressed() const { return isAnyKeyPressed; }
 
         Vector2 GetMouseDelta() const { return mouseDelta; }
-        BYTEENGINE_API Vector2 GetMousePosition() const;
+        Vector2 GetMousePosition() const;
 
     private:
         void Update();

@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "ByteEngine/CoreDefs.h"
 #include "ByteEngine/Math/Vector3.h"
 #include "ByteEngine/Math/Vector4.h"
 
@@ -81,10 +80,10 @@ namespace ByteEngine::Math
             return Vector4F(rows[0][column], rows[1][column], rows[2][column], rows[3][column]);
         }
 
-        BYTEENGINE_API [[nodiscard]] float Determinant() const;
+        [[nodiscard]] float Determinant() const;
 
-        BYTEENGINE_API void Inverse();
-        BYTEENGINE_API [[nodiscard]] Matrix4x4F Inversed() const;
+        void Inverse();
+        [[nodiscard]] Matrix4x4F Inversed() const;
 
         constexpr void Transpose()
         {
@@ -107,12 +106,12 @@ namespace ByteEngine::Math
         }
 
         [[nodiscard]] constexpr Vector3F GetTranslation() const { return Vector3F { m30, m31, m32 }; }
-        BYTEENGINE_API [[nodiscard]] Quaternion GetRotation() const;
-        BYTEENGINE_API [[nodiscard]] Vector3F GetScale() const;
+        [[nodiscard]] Quaternion GetRotation() const;
+        [[nodiscard]] Vector3F GetScale() const;
 
-        BYTEENGINE_API [[nodiscard]] Vector3F MultiplyPoint(Vector3F point) const;
-        BYTEENGINE_API [[nodiscard]] Vector3F MultiplyPointFast(Vector3F point) const;
-        BYTEENGINE_API [[nodiscard]] Vector3F MultiplyVector(Vector3F vector) const;
+        [[nodiscard]] Vector3F MultiplyPoint(Vector3F point) const;
+        [[nodiscard]] Vector3F MultiplyPointFast(Vector3F point) const;
+        [[nodiscard]] Vector3F MultiplyVector(Vector3F vector) const;
 
         [[nodiscard]] static Matrix4x4F CreateTranslation(Vector3F translation)
         {
@@ -124,7 +123,7 @@ namespace ByteEngine::Math
             };
         }
 
-        BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreateRotation(Quaternion quat);
+        [[nodiscard]] static Matrix4x4F CreateRotation(Quaternion quat);
 
         [[nodiscard]] static constexpr Matrix4x4F CreateScale(Vector3F scale)
         {
@@ -136,12 +135,12 @@ namespace ByteEngine::Math
             };
         }
 
-        BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreatePerspectiveProjection(float fovY, float aspectRatio, float nearPlane, float farPlane);
-        BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreateOrthographicProjection(float left, float right, float top, float bottom, float nearPlane, float farPlane);
+        [[nodiscard]] static Matrix4x4F CreatePerspectiveProjection(float fovY, float aspectRatio, float nearPlane, float farPlane);
+        [[nodiscard]] static Matrix4x4F CreateOrthographicProjection(float left, float right, float top, float bottom, float nearPlane, float farPlane);
 
-        BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreateLookAt(Vector3F eyePos, Vector3F targetPos, Vector3F worldUp = Vector3F::Up());
+        [[nodiscard]] static Matrix4x4F CreateLookAt(Vector3F eyePos, Vector3F targetPos, Vector3F worldUp = Vector3F::Up());
 
-        BYTEENGINE_API [[nodiscard]] static Matrix4x4F CreateTRS(Vector3F translation, Quaternion rotation, Vector3F scale);
+        [[nodiscard]] static Matrix4x4F CreateTRS(Vector3F translation, Quaternion rotation, Vector3F scale);
 
         [[nodiscard]] constexpr Matrix4x4F operator+(const Matrix4x4F& other) const
         {
@@ -175,7 +174,7 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        BYTEENGINE_API [[nodiscard]] Matrix4x4F operator*(const Matrix4x4F& other) const;
+        [[nodiscard]] Matrix4x4F operator*(const Matrix4x4F& other) const;
 
         [[nodiscard]] constexpr Matrix4x4F operator*(float scalar) const
         {
@@ -187,7 +186,7 @@ namespace ByteEngine::Math
             return result;
         }
 
-        BYTEENGINE_API Matrix4x4F& operator*=(const Matrix4x4F& other);
+        Matrix4x4F& operator*=(const Matrix4x4F& other);
 
         constexpr Matrix4x4F& operator*=(float scalar)
         {
@@ -237,7 +236,7 @@ namespace ByteEngine::Math
             return rows[row][column];
         }
 
-        BYTEENGINE_API static const Matrix4x4F Identity;
+        static const Matrix4x4F Identity;
 
         inline static const Vector4F IdentityRow0 = Vector4F(1, 0, 0, 0);
         inline static const Vector4F IdentityRow1 = Vector4F(0, 1, 0, 0);

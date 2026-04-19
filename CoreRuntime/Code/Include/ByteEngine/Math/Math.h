@@ -11,7 +11,6 @@
 #undef min
 #undef max
 
-#include "ByteEngine/CoreDefs.h"
 #include "ByteEngine/Primitives.h"
 #include "ByteEngine/Math/Concepts.h"
 
@@ -276,7 +275,7 @@ namespace ByteEngine::Math::Math
         return (((((-2.3889859e-08f * y2 + 2.7525562e-06f) * y2 - 0.00019840874f) * y2 + 0.0083333310f) * y2 - 0.16666667f) * y2 + 1.0f) * y;
     }
 
-    BYTEENGINE_API [[nodiscard]] double Sin(RadianD rad);
+    [[nodiscard]] double Sin(RadianD rad);
 
     // Cos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     // Source: DirectX::XMScalarCos
@@ -317,22 +316,22 @@ namespace ByteEngine::Math::Math
         return sign * p;
     }
 
-    BYTEENGINE_API [[nodiscard]] double Cos(RadianD rad);
+    [[nodiscard]] double Cos(RadianD rad);
 
     template<std::floating_point T>
     [[nodiscard]] T Tan(RadianT<T> rad) { return std::tan(rad); }
 
     // Asin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     // Source: DirectX::XMScalarASin
-    BYTEENGINE_API [[nodiscard]] RadianF Asin(float value) noexcept;
+    [[nodiscard]] RadianF Asin(float value) noexcept;
 
-    BYTEENGINE_API [[nodiscard]] RadianD Asin(double value);
+    [[nodiscard]] RadianD Asin(double value);
 
     // Acos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     // Source: DirectX::XMScalarACos
-    BYTEENGINE_API [[nodiscard]] RadianF Acos(float value) noexcept;
+    [[nodiscard]] RadianF Acos(float value) noexcept;
 
-    BYTEENGINE_API [[nodiscard]] RadianD Acos(double value);
+    [[nodiscard]] RadianD Acos(double value);
 
     template<std::floating_point T>
     [[nodiscard]] RadianT<T> Atan(T value) { return std::atan(value); }
@@ -480,8 +479,8 @@ namespace ByteEngine::Math::Math
         return (length != 0.0f) ? Abs(Fract((t - length) / (length * 2.0f)) * length * 2.0f - length) : 0.0f;
     }
 
-    BYTEENGINE_API [[nodiscard]] RadianF AngleDifference(RadianF from, RadianF to) noexcept;
-    BYTEENGINE_API [[nodiscard]] RadianD AngleDifference(RadianD from, RadianD to) noexcept;
+    [[nodiscard]] RadianF AngleDifference(RadianF from, RadianF to) noexcept;
+    [[nodiscard]] RadianD AngleDifference(RadianD from, RadianD to) noexcept;
 
     template<Arithmetic T, Arithmetic U, Arithmetic V>
         requires Internal::AnyFloating<T, U, V>
@@ -495,11 +494,11 @@ namespace ByteEngine::Math::Math
         requires Internal::AnyFloating<T, U, V>
     [[nodiscard]] constexpr auto InverseLerp(T from, U to, V t) noexcept { return (t - from) / (to - from); }
 
-    BYTEENGINE_API [[nodiscard]] RadianF LerpAngle(RadianF from, RadianF to, float t) noexcept;
-    BYTEENGINE_API [[nodiscard]] RadianD LerpAngle(RadianD from, RadianD to, double t) noexcept;
+    [[nodiscard]] RadianF LerpAngle(RadianF from, RadianF to, float t) noexcept;
+    [[nodiscard]] RadianD LerpAngle(RadianD from, RadianD to, double t) noexcept;
 
-    BYTEENGINE_API [[nodiscard]] RadianF LerpAngleClamped(RadianF from, RadianF to, float t) noexcept;
-    BYTEENGINE_API [[nodiscard]] RadianD LerpAngleClamped(RadianD from, RadianD to, double t) noexcept;
+    [[nodiscard]] RadianF LerpAngleClamped(RadianF from, RadianF to, float t) noexcept;
+    [[nodiscard]] RadianD LerpAngleClamped(RadianD from, RadianD to, double t) noexcept;
 
     template<Arithmetic T, Arithmetic U, Arithmetic V>
         requires Internal::AnyFloating<T, U, V>

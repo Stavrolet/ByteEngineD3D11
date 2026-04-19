@@ -8,11 +8,5 @@ add_executable(Tests
 
 target_link_libraries(Tests PRIVATE GTest::gtest GTest::gtest_main CoreRuntime)
 
-add_custom_command(TARGET Tests POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:CoreRuntime>
-        $<TARGET_FILE_DIR:Tests>
-)
-
 include(GoogleTest)
 gtest_discover_tests(Tests)
